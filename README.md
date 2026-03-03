@@ -27,8 +27,8 @@ transition:0.4s;
 }
 
 @keyframes aurora{
-0%{background-position:100% 50%;}
-50%{background-position:100% 50%;}
+100%{background-position:100% 50%;}
+100%{background-position:100% 50%;}
 100%{background-position:100% 50%;}
 }
 
@@ -76,9 +76,9 @@ padding:10px 20px;
 border:none;
 border-radius:30px;
 background:rgba(255,255,255,0.25);
-color:white;
+color:red/light;
 cursor:pointer;
-transition:0.3s;
+transition:1.0s;
 }
 
 nav button:hover{
@@ -93,7 +93,7 @@ top:15px;
 right:15px;
 cursor:pointer;
 background:white;
-color:black;
+color:yellow/light;
 padding:8px 15px;
 border-radius:20px;
 font-size:14px;
@@ -103,7 +103,7 @@ section{
 display:none;
 padding:30px 20px;
 text-align:center;
-animation:fade 0.5s ease;
+animation:fade 1.0s ease;
 }
 
 section.active{
@@ -159,7 +159,7 @@ opacity:0.8;
 </head>
 <body>
 
-<div id="loader">Loading Website...</div>
+<div id="loader"></div>
 
 <div class="toggle" onclick="toggleMode()">blue Dark/Light</div>
 
