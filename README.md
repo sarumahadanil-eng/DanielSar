@@ -27,9 +27,9 @@ transition:0.4s;
 }
 
 @keyframes aurora{
-0%{background-position:0% 50%;}
+0%{background-position:100% 50%;}
 50%{background-position:100% 50%;}
-100%{background-position:0% 50%;}
+100%{background-position:100% 50%;}
 }
 
 .dark{
@@ -141,7 +141,7 @@ border-radius:20px;
 cursor:pointer;
 }
 
-.comment-box{
+.comment-time{
 background:white;
 color:black;
 padding:10px;
@@ -161,7 +161,7 @@ opacity:0.8;
 
 <div id="loader">Loading DanielSar Website...</div>
 
-<div class="toggle" onclick="toggleMode()">Dark/Light</div>
+<div class="toggle" onclick="toggleMode()">blue Dark/Light</div>
 
 <header>
 <img src="profil.jpg" class="profile-img">
