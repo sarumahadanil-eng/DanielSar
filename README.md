@@ -1,131 +1,126 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="id">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Website Pribadi Daniel</title>
+<title>Website Daniel Dolar Sarumaha</title>
 
 <style>
 :root{
     --primary:#4e73df;
-    --bg:#f4f6f9;
-    --text:#333;
-    --card:#ffffff;
-}
-
-body.dark{
-    --primary:#1cc88a;
-    --bg:#1e1e1e;
-    --text:#f4f4f4;
-    --card:#2c2c2c;
+    --secondary:#1cc88a;
+    --text:#ffffff;
 }
 
 *{
     margin:0;
     padding:0;
     box-sizing:border-box;
-    font-family: Arial, sans-serif;
+    font-family: 'Segoe UI', sans-serif;
     scroll-behavior:smooth;
 }
 
 body{
-    background:var(--bg);
+    background:linear-gradient(135deg,#4e73df,#1cc88a);
     color:var(--text);
+    text-align:center;
 }
 
 /* NAVIGATION */
 nav{
     position:fixed;
     width:100%;
-    background:var(--card);
-    padding:15px 0;
-    box-shadow:0 2px 10px rgba(0,0,0,0.1);
-    z-index:1000;
+    background:rgba(0,0,0,0.3);
+    padding:15px;
+    backdrop-filter:blur(10px);
 }
 
-nav ul{
-    display:flex;
-    justify-content:center;
-    list-style:none;
-}
-
-nav ul li{
-    margin:0 20px;
-}
-
-nav ul li a{
+nav a{
+    color:white;
     text-decoration:none;
-    color:var(--text);
+    margin:0 15px;
     font-weight:bold;
+    transition:0.3s;
 }
 
-nav ul li a:hover{
-    color:var(--primary);
+nav a:hover{
+    color:yellow;
 }
 
 /* SECTION */
 section{
-    padding:100px 20px;
-    text-align:center;
+    padding:120px 20px;
 }
 
 /* PROFILE */
 .profile img{
-    width:160px;
-    height:160px;
+    width:170px;
+    height:170px;
     border-radius:50%;
-    border:5px solid var(--primary);
-    margin-bottom:15px;
-    animation:fadeIn 1.5s ease-in-out;
+    border:5px solid white;
+    animation:float 3s ease-in-out infinite;
 }
 
+.profile h1{
+    margin-top:15px;
+    font-size:28px;
+}
+
+/* CARD */
 .card{
-    background:var(--card);
-    max-width:600px;
-    margin:20px auto;
+    background:rgba(255,255,255,0.15);
+    backdrop-filter:blur(10px);
     padding:25px;
+    margin:20px auto;
+    max-width:600px;
     border-radius:15px;
-    box-shadow:0 5px 20px rgba(0,0,0,0.1);
     animation:fadeUp 1s ease;
 }
 
 /* BUTTON */
 .btn{
     display:inline-block;
-    padding:10px 20px;
+    padding:12px 25px;
     margin:10px;
-    background:var(--primary);
-    color:white;
-    border-radius:8px;
+    background:white;
+    color:#333;
+    border-radius:30px;
     text-decoration:none;
     transition:0.3s;
-}
-
-.btn:hover{
-    opacity:0.8;
-}
-
-/* DARK MODE BUTTON */
-.toggle{
-    position:fixed;
-    right:20px;
-    bottom:20px;
-    background:var(--primary);
-    color:white;
-    padding:12px;
-    border-radius:50%;
     cursor:pointer;
 }
 
+.btn:active{
+    transform:scale(0.9);
+}
+
+.btn:hover{
+    background:yellow;
+}
+
+/* RATING */
+.stars{
+    font-size:30px;
+    cursor:pointer;
+}
+
+.stars span{
+    transition:0.3s;
+}
+
+.stars span:hover{
+    color:yellow;
+}
+
 /* ANIMATION */
-@keyframes fadeIn{
-    from{opacity:0; transform:scale(0.8);}
-    to{opacity:1; transform:scale(1);}
+@keyframes float{
+    0%{transform:translateY(0px);}
+    50%{transform:translateY(-15px);}
+    100%{transform:translateY(0px);}
 }
 
 @keyframes fadeUp{
-    from{opacity:0; transform:translateY(30px);}
+    from{opacity:0; transform:translateY(40px);}
     to{opacity:1; transform:translateY(0);}
 }
 </style>
@@ -134,54 +129,64 @@ section{
 <body>
 
 <nav>
-<ul>
-<li><a href="#home">Beranda</a></li>
-<li><a href="#about">Tentang</a></li>
-<li><a href="#contact">Kontak</a></li>
-</ul>
+<a href="#home">Home</a>
+<a href="#about">Tentang</a>
+<a href="#contact">Kontak</a>
+<a href="#rating">Rating</a>
 </nav>
 
-<section id="home">
+<section id="home" class="profile">
+<img src="foto.jpg" alt="Foto Daniel Dolar Sarumaha">
 <h1>Daniel Dolar Sarumaha</h1>
 <p>Mahasiswa UNIRAYA | Web Developer Pemula</p>
 </section>
 
 <section id="about">
 <div class="card">
-<h2>Data Diri Pemilik Website</h2>
-<p><b>Nama Lengkap:</b> Daniel Dolar Sarumaha</p>
-<p><b>Tempat, Tanggal Lahir:</b> Hiliamaetaniha, 14-05-2006</p>
-<p><b>Alamat:</b> Desa Hiliamaetaniha</p>
-<p><b>Email:</b> sarumahadanil@gmail.com</p>
-<p><b>Hobi:</b> Berenang, Bulutangkis, dan Ngoding</p>
-</div>
-
-<div class="card">
-<h2>Tentang Saya</h2>
-<p>
-Halo, perkenalkan nama saya Daniel Dolar Sarumaha. 
-Saya berusia 19 tahun dan saat ini sedang belajar membuat website pribadi. 
-Saya ingin terus mengembangkan kemampuan saya di bidang pemrograman. 
-Jika ingin mengenal saya lebih jauh, silakan hubungi melalui media sosial di bawah ini.
-</p>
+<h2>Data Diri</h2>
+<p>Nama: Daniel Dolar Sarumaha</p>
+<p>Lahir: Hiliamaetaniha, 14-05-2006</p>
+<p>Alamat: Desa Hiliamaetaniha</p>
+<p>Email: sarumahadanil@gmail.com</p>
+<p>Hobi: Berenang, Bulutangkis, Ngoding</p>
 </div>
 </section>
 
 <section id="contact">
 <div class="card">
 <h2>Hubungi Saya</h2>
-<p>Nomor Telepon: 081388149795</p>
-
 <a href="https://instagram.com/Danieldolars" target="_blank" class="btn">Instagram</a>
 <a href="https://wa.me/081388149795" target="_blank" class="btn">WhatsApp</a>
 </div>
 </section>
 
-<div class="toggle" onclick="toggleDarkMode()">🌙</div>
+<section id="rating">
+<div class="card">
+<h2>Beri Rating Website Ini ⭐</h2>
+<div class="stars">
+<span onclick="rate(1)">⭐</span>
+<span onclick="rate(2)">⭐</span>
+<span onclick="rate(3)">⭐</span>
+<span onclick="rate(4)">⭐</span>
+<span onclick="rate(5)">⭐</span>
+</div>
+<p id="result"></p>
+</div>
+</section>
 
 <script>
-function toggleDarkMode(){
-    document.body.classList.toggle("dark");
+function rate(star){
+    localStorage.setItem("rating", star);
+    document.getElementById("result").innerHTML =
+        "Terima kasih sudah memberi rating " + star + " ⭐";
+}
+
+window.onload = function(){
+    let saved = localStorage.getItem("rating");
+    if(saved){
+        document.getElementById("result").innerHTML =
+        "Rating terakhir yang kamu berikan: " + saved + " ⭐";
+    }
 }
 </script>
 
