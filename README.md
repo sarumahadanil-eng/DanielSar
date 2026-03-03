@@ -1,284 +1,241 @@
+
 <html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DanielSar | Dolar Portfolio</title>
+<title>DanielSar | Premium Aurora</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
 
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
 
 <style>
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:'Poppins',sans-serif;
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
+
+:root{
+--bg:linear-gradient(270deg,#4e73df,#8e44ad,#ff6ec4);
+--card:rgba(255,255,255,0.15);
+--text:white;
+}
+
+body.dark{
+--bg:linear-gradient(270deg,#0f2027,#203a43,#2c5364);
+--card:rgba(0,0,0,0.3);
+--text:white;
 }
 
 body{
-min-height:100vh;
-background:linear-gradient(120deg,#4facfe,#00f2fe,#a18cd1,#fbc2eb);
+background:var(--bg);
 background-size:400% 400%;
 animation:aurora 15s ease infinite;
-color:white;
-transition:0.4s;
+color:var(--text);
+min-height:100vh;
+transition:0.5s;
 }
 
 @keyframes aurora{
-100%{background-position:100% 50%;}
-100%{background-position:100% 50%;}
-100%{background-position:100% 50%;}
+0%{background-position:0% 50%;}
+50%{background-position:100% 50%;}
+100%{background-position:0% 50%;}
 }
 
-.dark{
-background:#111 !important;
-}
-
-#loader{
+.loading{
 position:fixed;
 width:100%;
 height:100%;
 background:black;
 display:flex;
-justify-content:center;
 align-items:center;
-z-index:9999;
-color:white;
-font-size:22px;
-}
-
-header{
-text-align:center;
-padding:40px 20px;
-}
-
-.profile-img{
-width:140px;
-height:140px;
-border-radius:50%;
-object-fit:cover;
-border:4px solid white;
-box-shadow:0 10px 25px rgba(0,0,0,0.3);
-}
-
-nav{
-display:flex;
 justify-content:center;
-gap:15px;
-flex-wrap:wrap;
-padding:15px;
+color:white;
+z-index:999;
 }
 
-nav button{
-padding:10px 20px;
+header{text-align:center;padding:30px;}
+button{
+padding:8px 16px;
 border:none;
-border-radius:30px;
-background:rgba(255,255,255,0.25);
-color:red/light;
-cursor:pointer;
-transition:1.0s;
-}
-
-nav button:hover{
-background:white;
-color:#333;
-transform:scale(1.1);
-}
-
-.toggle{
-position:fixed;
-top:15px;
-right:15px;
-cursor:pointer;
-background:white;
-color:yellow/light;
-padding:8px 15px;
 border-radius:20px;
-font-size:14px;
-}
-
-section{
-display:none;
-padding:30px 20px;
-text-align:center;
-animation:fade 1.0s ease;
-}
-
-section.active{
-display:block;
-}
-
-@keyframes fade{
-from{opacity:0; transform:translateY(15px);}
-to{opacity:1; transform:translateY(0);}
+cursor:pointer;
+margin:5px;
 }
 
 .card{
-background:rgba(255,255,255,0.2);
+background:var(--card);
+backdrop-filter:blur(15px);
 padding:25px;
 border-radius:20px;
-max-width:600px;
+max-width:700px;
 margin:20px auto;
-backdrop-filter:blur(15px);
+box-shadow:0 10px 30px rgba(0,0,0,0.3);
 }
 
-input,textarea{
-width:100%;
-padding:10px;
-margin:8px 0;
-border-radius:10px;
-border:none;
+input,textarea{width:100%;padding:8px;margin:6px 0;border-radius:8px;border:none;}
+
+.comment{
+display:flex;
+gap:12px;
+background:var(--card);
+padding:15px;
+border-radius:15px;
+margin:10px 0;
 }
 
-button.submit{
-background:white;
-color:#333;
-border:none;
-padding:10px 20px;
-border-radius:20px;
-cursor:pointer;
+.avatar{
+width:55px;
+height:55px;
+border-radius:50%;
+object-fit:cover;
 }
 
-.comment-time{
-background:white;
-color:black;
-padding:10px;
-margin:8px 0;
-border-radius:10px;
-text-align:left;
-}
+.star{font-size:20px;color:#ccc;cursor:pointer;}
+.star.active{color:gold;}
 
-footer{
-text-align:center;
-padding:20px;
-opacity:0.8;
-}
+.counter{margin-top:10px;font-weight:600;}
+
+.music-btn{position:fixed;bottom:20px;right:20px;border-radius:50%;width:55px;height:55px;}
+
 </style>
 </head>
 <body>
 
-<div id="loader"></div>
-
-<div class="toggle" onclick="toggleMode()">blue Dark/Light</div>
+<div class="loading" id="loading">Loading Premium...</div>
 
 <header>
-<img src="profil.jpg" class="profile-img">
 <h1>Daniel Dolar Sarumaha</h1>
-<p>Future Programmer👨‍💻 and teacher🧑‍🏫</p>
-<p>Visitors: <b id="visitorCount">0</b></p>
-<p>Total Comments: <b id="commentCount">0</b></p>
-<a href="https://instagram.com/Danieldolars" target="_blank" style="color:white;text-decoration:underline;">Instagram</a>
+<p>Premium Aurora Portfolio 🚀</p>
+<button onclick="toggleMode()">Dark/Light</button>
+<button onclick="login()">Login Google</button>
+<button onclick="logout()">Logout</button>
+<p>Total Visitors: <span id="visitor">0</span></p>
 </header>
 
-<nav>
-<button onclick="showPage('home')">Home</button>
-<button onclick="showPage('profil')">Profile</button>
-<button onclick="showPage('portfolio')">Portfolio</button>
-<button onclick="showPage('kontak')">contact</button>
-</nav>
-
-<section id="home" class="active">
 <div class="card">
-<h2>Welcome 👋
-my name is Daniel Dolar Sarumaha</h2>
-<p>Selamat datang di website pribadi aesthetic saya.</p>
-</div>
-</section>
+<h2>Komentar Premium</h2>
+<input type="text" id="pesan" placeholder="Tulis komentar...">
+<input type="file" id="foto">
 
-<section id="profil">profil.jpg</section>
-<div class="card">
-<h2>Profile</h2>
-<p>TTL: Hiliamaetaniha, 14-05-2006</p>
-<p>Hobby: Swimming & Badminton</p>
-<p>Email: sarumahadanil@gmail.com</p>
+<div>
+<span class="star" onclick="setRating(1)">★</span>
+<span class="star" onclick="setRating(2)">★</span>
+<span class="star" onclick="setRating(3)">★</span>
+<span class="star" onclick="setRating(4)">★</span>
+<span class="star" onclick="setRating(5)">★</span>
 </div>
-</section>
 
-<section id="portfolio">
-<div class="card">
-<h2>Portfolio</h2>
-<p>• Website Daniel Designer</p>
-<p>• Firebase Comment System</p>
-<p>• UI Animation Project</p>
+<button onclick="kirim()">Kirim</button>
+
+<p class="counter">Total Komentar: <span id="total">0</span></p>
+
+<div id="list"></div>
 </div>
-</section>
 
-<section id="kontak">
-<div class="card">
-<h2>Komentar Online</h2>
-<input type="text" id="nama" placeholder="Nama">
-<textarea id="pesan" placeholder="Tulis komentar..."></textarea>
-<button class="submit" onclick="kirim Komentar()">send</button>
-<div id="daftar Komentar pengunjung"></div>
-</div>
-</section>
+<button class="music-btn" onclick="toggleMusic()">🎵</button>
 
-<footer>
-© 2026 DanielSar | Daniel Edition
-</footer>
+<audio id="bgmusic" loop>
+<source src="https://cdn.pixabay.com/audio/2022/03/15/audio_5c1f2c.mp3">
+</audio>
 
 <script>
-
-// LOADER
-window.onload=function(){
-document.getElementById("loader").style.display="block";
-}
-
-// DARK MODE
-function toggleMode(){
-document.body.classList.toggle("bluedark");
-}
-
-// NAVIGATION
-function showPage(id){
-document.querySelectorAll("section").forEach(s=>s.classList.remove("active"));
-document.getElementById(id).classList.add("active");
-}
-
-// FIREBASE CONFIG (GANTI INI)
+// ===== GANTI DENGAN CONFIG FIREBASE KAMU =====
 const firebaseConfig={
-apiKey:"Daniel Dolar Sarumaha",
-authDomain:"danielsar-website-firebaseapp.com",
-databaseURL:" danielsar-website-default-rtdb.asia-southeast1.firebasedatabase.com", 
-projectId:"danielsar-website",
-storageBucket:"danielsar-website-appspot.com",
-messagingSenderId:"14052006",
-appId:"1:14052006:web:danielsar"
+apiKey:"ISI_APIKEY",
+authDomain:"ISI_AUTHDOMAIN",
+databaseURL:"ISI_DATABASEURL",
+projectId:"ISI_PROJECTID",
+storageBucket:"ISI_BUCKET",
+messagingSenderId:"ISI_SENDERID",
+appId:"ISI_APPID"
 };
 
 firebase.initializeApp(firebaseConfig);
+const auth=firebase.auth();
 const db=firebase.database();
+const storage=firebase.storage();
 
-// VISITOR
-let visitorRef=db.ref("visitors");
-visitorRef.transaction(c=>(c||0)+1);
-visitorRef.on("value",snap=>{
-document.getElementById("visitorCount").innerText=snap.val();
-});
+window.onload=()=>setTimeout(()=>document.getElementById("loading").style.display="none",1500);
 
-// KOMENTAR
-function kirimKomentar(){
-let nama=document.getElementById("Name").value;
-let pesan=document.getElementById("Comment").value;
-if(Name&&Comment){
-db.ref("Comment").push({Name,Comment});
-document.getElementById("Name").value="";
-document.getElementById("Comment").value="";
+function toggleMode(){document.body.classList.toggle("dark");}
+
+function login(){
+const provider=new firebase.auth.GoogleAuthProvider();
+auth.signInWithPopup(provider);
+}
+
+function logout(){auth.signOut();}
+
+let rating=0;
+function setRating(r){
+rating=r;
+document.querySelectorAll(".star").forEach((s,i)=>s.classList.toggle("active",i<r));
+}
+
+function kirim(){
+if(!auth.currentUser)return alert("Login dulu!");
+let pesan=document.getElementById("pesan").value;
+let file=document.getElementById("foto").files[0];
+if(!pesan)return alert("Isi pesan!");
+
+if(file){
+let ref=storage.ref("foto/"+Date.now());
+ref.put(file).then(()=>ref.getDownloadURL())
+.then(url=>saveComment(pesan,url));
+}else{
+saveComment(pesan,"https://via.placeholder.com/55");
 }
 }
 
-let count=0;
-db.ref("comment").on("child_added",snap=>{
-let data=snap.val();
-count++;
-document.getElementById("commentCount").innerText=count;
-let div=document.createElement("div");
-div.className="comment-time";
-div.innerHTML="<b>"+data.nama+"</b><br>"+data.pesan;
-document.getElementById("daftarKomentar").appendChild(div);
+function saveComment(pesan,foto){
+db.ref("komentar").push({
+uid:auth.currentUser.uid,
+nama:auth.currentUser.displayName,
+fotoUser:auth.currentUser.photoURL,
+pesan:pesan,
+foto:foto,
+rating:rating,
+like:0,
+timestamp:Date.now()
 });
+document.getElementById("pesan").value="";
+}
+
+db.ref("komentar").on("value",snap=>{
+document.getElementById("list").innerHTML="";
+let total=0;
+snap.forEach(child=>{
+let d=child.val();
+let key=child.key;
+total++;
+let stars="";
+for(let i=0;i<5;i++)stars+=`<span style="color:${i<d.rating?'gold':'#ccc'}">★</span>`;
+document.getElementById("list").innerHTML+=`
+<div class="comment">
+<img class="avatar" src="${d.fotoUser}">
+<div>
+<b>${d.nama}</b><br>
+${d.pesan}<br>
+<img src="${d.foto}" width="100"><br>
+${stars}<br>
+❤️ ${d.like}
+${auth.currentUser && auth.currentUser.uid===d.uid ? `<button onclick="hapus('${key}')">Hapus</button>`:''}
+</div>
+</div>`;
+});
+document.getElementById("total").innerText=total;
+});
+
+function hapus(key){db.ref("komentar/"+key).remove();}
+
+db.ref("visitors").transaction(c=>(c||0)+1);
+db.ref("visitors").on("value",s=>document.getElementById("visitor").innerText=s.val());
+
+function toggleMusic(){
+let music=document.getElementById("bgmusic");
+music.paused?music.play():music.pause();
+}
 </script>
 
 </body>
