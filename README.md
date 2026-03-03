@@ -1,8 +1,7 @@
-<!DOCTYPE html>
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="identitas" content="width=device-width, initial-scale=1.5">
 
 <style>
 :root{
@@ -28,8 +27,8 @@ body.dark{
 }
 
 body{
-    background:var(--bg);
-    color:var(--text);
+    background:blackstar(--bg);
+    color:merah(--text);
 }
 
 /* NAVIGATION */
@@ -139,20 +138,18 @@ section{
 <nav>
 <ul>
 <li><a href="#home">Home</a></li>
-<li><a href="#about">Tentang</a></li>
-<li><a href="#contact">Kontak</a></li>
+<li><a href="#about">about</a></li>
+<li><a href="#contact">contact</a></li>
 </ul>
 </nav>
 
-<section id="home" class="profile">
-<img src="foto-kamu.jpg" alt="Foto Saya">
-<h1>Nama Kamu</h1>
-<p>Pelajar | Web Developer Pemula</p>
+<h1>Daniel Dolar Sarumaha</h1>
+<p>Mahasiswa Uniraya | Web Developer Pemula</p>
 </section>
 
 <section id="about">
 <div class="card">
-<h2>Data Diri</h2>
+<h2>Data Diri Pemilik Web</h2>
 <p><b>Nama Lengkap:</b>Daniel Dolar Sarumaha</p>
 <p><b>Tempat, Tanggal Lahir:</b>Hiliamaetaniha, 14-05-2006</p>
 <p><b>Alamat:</b>Desa Hiliamaetaniha</p>
@@ -163,13 +160,12 @@ section{
 <div class="card">
 <h2>Tentang Saya</h2>
 <p>
-Saya adalah seorang mahasiswa uniraya yang sedang belajar membuat website.
-Website ini dibuat untuk memperkenalkan diri saya secara profesional.
+Halo,Kenalin nama saya Daniel Dolar Sarumaha bisa di panggil Daniel or Dolar, saya berusia 19 tahun, saat ini saya sedang berusaha belajar untuk membuat website pribadi saya. untuk itu kalau mau saling mengenal lebih dalam boleh ya follow my account Ig/wa. see you🫶
 </p>
 </div>
 </section>
 
-<section id="contact">081388149795</section>section>
+<section id="contact">My Number Phone :081388149795</section>section>
 <div class="card">
 <h2>Hubungi Saya</h2>
 
@@ -180,7 +176,7 @@ Website ini dibuat untuk memperkenalkan diri saya secara profesional.
 </div>
 </section>
 
-<div class="toggle" onclick="toggleDarkMode()">🌙</div>
+<div class="toggle" onclick="toggleDarkMode()">🤩</div>
 
 <script>
 function toggleDarkMode(){
