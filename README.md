@@ -6,128 +6,47 @@
 <title>Daniel Dolar Sarumaha</title>
 
 <style>
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family: 'Segoe UI', sans-serif;
-    scroll-behavior:smooth;
-}
-
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif}
 body{
-    background: linear-gradient(135deg,#4e73df,#1cc88a);
-    color:white;
-    text-align:center;
+background:linear-gradient(135deg,#4e73df,#1cc88a);
+color:white;text-align:center;
 }
-
-/* NAVBAR */
 nav{
-    position:fixed;
-    width:100%;
-    background:rgba(0,0,0,0.3);
-    padding:15px;
-    backdrop-filter:blur(10px);
-    z-index:1000;
+position:fixed;width:100%;padding:15px;
+background:rgba(0,0,0,0.3);
+backdrop-filter:blur(10px);
 }
-
 nav a{
-    color:white;
-    text-decoration:none;
-    margin:0 15px;
-    font-weight:bold;
-    transition:0.3s;
+color:white;text-decoration:none;margin:0 15px;font-weight:bold
 }
-
-nav a:hover{
-    color:yellow;
-}
-
-/* SECTION */
-section{
-    padding:120px 20px;
-}
-
-/* PROFILE */
+section{padding:120px 20px}
 .profile img{
-    width:180px;
-    height:180px;
-    border-radius:50%;
-    object-fit:cover;
-    border:5px solid white;
-    box-shadow:0 10px 30px rgba(0,0,0,0.4);
-    animation:float 3s ease-in-out infinite;
+width:180px;height:180px;border-radius:50%;
+object-fit:cover;border:5px solid white;
+box-shadow:0 10px 30px rgba(0,0,0,0.4);
 }
-
-.profile h1{
-    margin-top:15px;
-    font-size:28px;
-}
-
 .card{
-    background:rgba(255,255,255,0.15);
-    backdrop-filter:blur(15px);
-    padding:25px;
-    margin:20px auto;
-    max-width:600px;
-    border-radius:15px;
-    animation:fadeUp 1s ease;
+background:rgba(255,255,255,0.15);
+backdrop-filter:blur(15px);
+padding:25px;margin:20px auto;
+max-width:600px;border-radius:15px;
 }
-
 .btn{
-    display:inline-block;
-    padding:10px 20px;
-    margin:10px;
-    background:white;
-    color:#333;
-    border-radius:30px;
-    text-decoration:none;
-    border:none;
-    cursor:pointer;
-    transition:0.3s;
+padding:10px 20px;margin:10px;
+border:none;border-radius:30px;
+background:white;color:#333;
+cursor:pointer
 }
-
-.btn:hover{
-    background:yellow;
-}
-
-.btn:active{
-    transform:scale(0.9);
-}
-
 textarea{
-    width:100%;
-    padding:10px;
-    margin-top:10px;
-    border-radius:10px;
-    border:none;
-    resize:none;
+width:100%;padding:10px;
+border-radius:10px;border:none;
+margin-top:10px
 }
-
-.stars{
-    font-size:30px;
-    cursor:pointer;
-}
-
-.stars span:hover{
-    color:yellow;
-}
-
+.stars span{font-size:30px;cursor:pointer}
 .review-box{
-    background:rgba(255,255,255,0.2);
-    padding:10px;
-    margin:10px 0;
-    border-radius:10px;
-}
-
-@keyframes float{
-    0%{transform:translateY(0);}
-    50%{transform:translateY(-15px);}
-    100%{transform:translateY(0);}
-}
-
-@keyframes fadeUp{
-    from{opacity:0; transform:translateY(30px);}
-    to{opacity:1; transform:translateY(0);}
+background:rgba(255,255,255,0.2);
+padding:10px;margin:10px 0;
+border-radius:10px
 }
 </style>
 </head>
@@ -136,31 +55,14 @@ textarea{
 
 <nav>
 <a href="#home">Home</a>
-<a href="#about">Tentang</a>
-<a href="#contact">Kontak</a>
 <a href="#rating">Rating</a>
 </nav>
 
 <section id="home" class="profile">
-<img src="daniel.jpg" alt="Foto Daniel">
+<img src="daniel.jpg">
 <h1>Daniel Dolar Sarumaha</h1>
 <p>Mahasiswa UNIRAYA | Web Developer Pemula</p>
-</section>
-
-<section id="about">
-<div class="card">
-<h2>Tentang Saya</h2>
-<p>Halo, saya Daniel Dolar Sarumaha. 
-Saya sedang belajar menjadi web developer dan terus mengembangkan kemampuan di bidang pemrograman.</p>
-</div>
-</section>
-
-<section id="contact">
-<div class="card">
-<h2>Hubungi Saya</h2>
-<a href="https://instagram.com/Danieldolars" target="_blank" class="btn">Instagram</a>
-<a href="https://wa.me/081388149795" target="_blank" class="btn">WhatsApp</a>
-</div>
+<p>Total Pengunjung: <span id="visitorCount">0</span></p>
 </section>
 
 <section id="rating">
@@ -183,69 +85,106 @@ Saya sedang belajar menjadi web developer dan terus mengembangkan kemampuan di b
 <h3>Rata-rata Rating: <span id="average">0</span> ⭐</h3>
 
 <div id="reviewList"></div>
-
 </div>
 </section>
 
-<script>
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { 
+getFirestore, collection, addDoc, getDocs,
+doc, updateDoc, getDoc, setDoc 
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+// 🔴 GANTI DENGAN CONFIG FIREBASE KAMU
+const firebaseConfig = {
+  apiKey: "ISI_API_KEY",
+  authDomain: "ISI_AUTH_DOMAIN",
+  projectId: "ISI_PROJECT_ID",
+  storageBucket: "ISI_STORAGE_BUCKET",
+  messagingSenderId: "ISI_SENDER_ID",
+  appId: "ISI_APP_ID"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
 let selectedRating = 0;
 
-function setRating(star){
-    selectedRating = star;
-    document.getElementById("ratingText").innerHTML =
-        "Rating dipilih: " + star + " ⭐";
+window.setRating = function(star){
+selectedRating = star;
+document.getElementById("ratingText").innerText =
+"Rating dipilih: " + star + " ⭐";
 }
 
-function submitReview(){
-    let comment = document.getElementById("commentInput").value.trim();
+window.submitReview = async function(){
 
-    if(selectedRating === 0){
-        alert("Silakan pilih rating dulu!");
-        return;
-    }
+let comment = document.getElementById("commentInput").value;
 
-    if(comment === ""){
-        alert("Isi komentar dulu ya!");
-        return;
-    }
-
-    let reviews = JSON.parse(localStorage.getItem("reviews")) || [];
-
-    reviews.push({
-        rating: selectedRating,
-        comment: comment
-    });
-
-    localStorage.setItem("reviews", JSON.stringify(reviews));
-
-    document.getElementById("commentInput").value = "";
-    selectedRating = 0;
-    document.getElementById("ratingText").innerHTML = "";
-
-    displayReviews();
+if(selectedRating === 0 || comment.trim() === ""){
+alert("Isi rating & komentar dulu!");
+return;
 }
 
-function displayReviews(){
-    let reviews = JSON.parse(localStorage.getItem("reviews")) || [];
-    let reviewList = document.getElementById("reviewList");
-    let total = 0;
+await addDoc(collection(db,"reviews"),{
+rating:selectedRating,
+comment:comment,
+date:new Date()
+});
 
-    reviewList.innerHTML = "";
-
-    reviews.forEach(r=>{
-        total += r.rating;
-        reviewList.innerHTML += `
-        <div class="review-box">
-            <strong>${r.rating} ⭐</strong>
-            <p>${r.comment}</p>
-        </div>`;
-    });
-
-    let average = reviews.length ? (total/reviews.length).toFixed(1) : 0;
-    document.getElementById("average").innerText = average;
+document.getElementById("commentInput").value="";
+selectedRating=0;
+loadReviews();
 }
 
-window.onload = displayReviews;
+async function loadReviews(){
+
+let querySnapshot = await getDocs(collection(db,"reviews"));
+let reviewList = document.getElementById("reviewList");
+let total = 0;
+let count = 0;
+
+reviewList.innerHTML="";
+
+querySnapshot.forEach((doc)=>{
+let r = doc.data();
+total += r.rating;
+count++;
+
+reviewList.innerHTML += `
+<div class="review-box">
+<strong>${r.rating} ⭐</strong>
+<p>${r.comment}</p>
+</div>`;
+});
+
+let average = count ? (total/count).toFixed(1) : 0;
+document.getElementById("average").innerText = average;
+}
+
+async function updateVisitorCount(){
+const counterRef = doc(db,"stats","visitors");
+const counterSnap = await getDoc(counterRef);
+
+if(!localStorage.getItem("visited")){
+if(counterSnap.exists()){
+await updateDoc(counterRef,{
+count: counterSnap.data().count + 1
+});
+}else{
+await setDoc(counterRef,{count:1});
+}
+localStorage.setItem("visited",true);
+}
+
+const updatedSnap = await getDoc(counterRef);
+document.getElementById("visitorCount").innerText =
+updatedSnap.data().count;
+}
+
+loadReviews();
+updateVisitorCount();
+
 </script>
 
 </body>
