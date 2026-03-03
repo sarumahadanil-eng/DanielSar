@@ -7,9 +7,6 @@
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
 
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
-
 <style>
 *{
 margin:0;
@@ -19,35 +16,33 @@ font-family:'Poppins',sans-serif;
 }
 
 body{
-min-height:100vh;
-background:linear-gradient(135deg,#4e73df,#9b59b6);
+background:linear-gradient(135deg,#3a7bd5,#8e44ad);
 color:white;
+min-height:100vh;
 }
 
 header{
 text-align:center;
-padding:40px 20px 20px;
-font-size:32px;
+padding:40px 20px;
+font-size:30px;
 font-weight:700;
-letter-spacing:2px;
 }
 
 nav{
 display:flex;
 justify-content:center;
 gap:15px;
-padding:20px;
 flex-wrap:wrap;
+padding:15px;
 }
 
 nav button{
 padding:10px 20px;
 border:none;
-border-radius:30px;
+border-radius:25px;
 background:rgba(255,255,255,0.2);
 color:white;
 cursor:pointer;
-backdrop-filter:blur(10px);
 transition:0.3s;
 }
 
@@ -75,12 +70,11 @@ to{opacity:1; transform:translateY(0);}
 
 .card{
 background:rgba(255,255,255,0.15);
-backdrop-filter:blur(15px);
-padding:30px;
+padding:25px;
 border-radius:20px;
 max-width:500px;
 margin:20px auto;
-box-shadow:0 10px 30px rgba(0,0,0,0.2);
+backdrop-filter:blur(15px);
 }
 
 input,textarea{
@@ -89,18 +83,16 @@ padding:10px;
 margin:8px 0;
 border-radius:10px;
 border:none;
-outline:none;
 }
 
 button.submit{
 background:white;
-color:#4e73df;
+color:#3a7bd5;
 border:none;
 padding:10px 20px;
 border-radius:20px;
 cursor:pointer;
 font-weight:600;
-margin-top:10px;
 }
 
 .comment-box{
@@ -110,14 +102,6 @@ padding:10px;
 margin:8px 0;
 border-radius:10px;
 text-align:left;
-}
-
-footer{
-text-align:center;
-padding:20px;
-margin-top:30px;
-font-size:14px;
-opacity:0.8;
 }
 </style>
 </head>
@@ -135,7 +119,7 @@ opacity:0.8;
 <section id="home" class="active">
 <div class="card">
 <h2>Welcome 👋</h2>
-<p>Saya DanielSar, calon Programmer & Guru masa depan 🚀</p>
+<p>Calon Programmer & Guru 🚀</p>
 <p>Visitor: <b id="visitorCount">0</b></p>
 </div>
 </section>
@@ -143,9 +127,9 @@ opacity:0.8;
 <section id="profil">
 <div class="card">
 <h2>Profil Saya</h2>
-<p><b>TTL:</b> Hiliamaetaniha, 14-05-2006</p>
-<p><b>Hobby:</b> Swimming & Badminton</p>
-<p><b>Email:</b> sarumahadanil@gmail.com</p>
+<p>TTL: Hiliamaetaniha, 14-05-2006</p>
+<p>Hobby: Swimming & Badminton</p>
+<p>Email: sarumahadanil@gmail.com</p>
 </div>
 </section>
 
@@ -154,80 +138,66 @@ opacity:0.8;
 <h2>Portfolio</h2>
 <p>• Website Pribadi</p>
 <p>• Project HTML CSS</p>
-<p>• Belajar JavaScript & Firebase</p>
+<p>• Belajar JavaScript</p>
 </div>
 </section>
 
 <section id="kontak">
 <div class="card">
-<h2>Komentar Online</h2>
+<h2>Komentar</h2>
 
 <input type="text" id="nama" placeholder="Nama">
 <textarea id="pesan" placeholder="Tulis komentar..."></textarea>
 <button class="submit" onclick="kirimKomentar()">Kirim</button>
 
-<h3 style="margin-top:20px;">Komentar:</h3>
+<h3 style="margin-top:20px;">Daftar Komentar:</h3>
 <div id="daftarKomentar"></div>
 </div>
 </section>
 
-<footer>
-© 2026 DanielSar | Personal Aesthetic Website
-</footer>
-
 <script>
 
-// ===== FIREBASE CONFIG =====
-const firebaseConfig = {
-  apiKey: "ISI_APIKEY",
-  authDomain: "ISI_AUTHDOMAIN",
-  databaseURL: "ISI_DATABASEURL",
-  projectId: "ISI_PROJECTID",
-  storageBucket: "ISI_BUCKET",
-  messagingSenderId: "ISI_SENDERID",
-  appId: "ISI_APPID"
-};
-
-firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
-
-// NAVIGATION
+// Navigasi
 function showPage(id){
 document.querySelectorAll("section").forEach(s=>s.classList.remove("active"));
 document.getElementById(id).classList.add("active");
 }
 
-// VISITOR COUNTER
-let visitorRef = db.ref("visitors");
-visitorRef.transaction(function(current){
-return (current || 0) + 1;
-});
-visitorRef.on("value",function(snapshot){
-document.getElementById("visitorCount").innerText = snapshot.val();
-});
+// Visitor Counter (Lokal)
+let count = localStorage.getItem("visitorCount") || 0;
+count++;
+localStorage.setItem("visitorCount", count);
+document.getElementById("visitorCount").innerText = count;
 
-// KOMENTAR ONLINE
+// Komentar Lokal
 function kirimKomentar(){
-let nama=document.getElementById("nama").value;
-let pesan=document.getElementById("pesan").value;
+let nama = document.getElementById("nama").value;
+let pesan = document.getElementById("pesan").value;
 
 if(nama && pesan){
-db.ref("komentar").push({
-nama:nama,
-pesan:pesan
-});
+let komentar = JSON.parse(localStorage.getItem("komentar")) || [];
+komentar.push({nama:nama, pesan:pesan});
+localStorage.setItem("komentar", JSON.stringify(komentar));
+tampilkanKomentar();
 document.getElementById("nama").value="";
 document.getElementById("pesan").value="";
 }
 }
 
-db.ref("komentar").on("child_added",function(snapshot){
-let data=snapshot.val();
+function tampilkanKomentar(){
+let komentar = JSON.parse(localStorage.getItem("komentar")) || [];
+let daftar = document.getElementById("daftarKomentar");
+daftar.innerHTML="";
+komentar.forEach(k=>{
 let div=document.createElement("div");
 div.className="comment-box";
-div.innerHTML="<b>"+data.nama+"</b><br>"+data.pesan;
-document.getElementById("daftarKomentar").appendChild(div);
+div.innerHTML="<b>"+k.nama+"</b><br>"+k.pesan;
+daftar.appendChild(div);
 });
+}
+
+tampilkanKomentar();
+
 </script>
 
 </body>
