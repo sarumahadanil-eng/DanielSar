@@ -159,7 +159,7 @@ opacity:0.8;
 </head>
 <body>
 
-<div id="loader">Loading DanielSar Website...</div>
+<div id="loader">Loading Website...</div>
 
 <div class="toggle" onclick="toggleMode()">blue Dark/Light</div>
 
