@@ -3,9 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DanielSar | Personal Website</title>
+<title>DanielSar | Aurora Portfolio</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 
 <style>
 *{
@@ -16,16 +19,49 @@ font-family:'Poppins',sans-serif;
 }
 
 body{
-background:linear-gradient(135deg,#3a7bd5,#8e44ad);
-color:white;
 min-height:100vh;
+background:linear-gradient(120deg,#4facfe,#00f2fe,#a18cd1,#fbc2eb);
+background-size:400% 400%;
+animation:aurora 15s ease infinite;
+color:white;
+transition:0.4s;
+}
+
+@keyframes aurora{
+0%{background-position:0% 50%;}
+50%{background-position:100% 50%;}
+100%{background-position:0% 50%;}
+}
+
+.dark{
+background:#111 !important;
+}
+
+#loader{
+position:fixed;
+width:100%;
+height:100%;
+background:black;
+display:flex;
+justify-content:center;
+align-items:center;
+z-index:9999;
+color:white;
+font-size:22px;
 }
 
 header{
 text-align:center;
 padding:40px 20px;
-font-size:30px;
-font-weight:700;
+}
+
+.profile-img{
+width:140px;
+height:140px;
+border-radius:50%;
+object-fit:cover;
+border:4px solid white;
+box-shadow:0 10px 25px rgba(0,0,0,0.3);
 }
 
 nav{
@@ -39,8 +75,8 @@ padding:15px;
 nav button{
 padding:10px 20px;
 border:none;
-border-radius:25px;
-background:rgba(255,255,255,0.2);
+border-radius:30px;
+background:rgba(255,255,255,0.25);
 color:white;
 cursor:pointer;
 transition:0.3s;
@@ -52,11 +88,23 @@ color:#333;
 transform:scale(1.1);
 }
 
+.toggle{
+position:fixed;
+top:15px;
+right:15px;
+cursor:pointer;
+background:white;
+color:black;
+padding:8px 15px;
+border-radius:20px;
+font-size:14px;
+}
+
 section{
 display:none;
 padding:30px 20px;
 text-align:center;
-animation:fade 0.5s ease-in-out;
+animation:fade 0.5s ease;
 }
 
 section.active{
@@ -64,15 +112,15 @@ display:block;
 }
 
 @keyframes fade{
-from{opacity:0; transform:translateY(10px);}
+from{opacity:0; transform:translateY(15px);}
 to{opacity:1; transform:translateY(0);}
 }
 
 .card{
-background:rgba(255,255,255,0.15);
+background:rgba(255,255,255,0.2);
 padding:25px;
 border-radius:20px;
-max-width:500px;
+max-width:600px;
 margin:20px auto;
 backdrop-filter:blur(15px);
 }
@@ -87,12 +135,11 @@ border:none;
 
 button.submit{
 background:white;
-color:#3a7bd5;
+color:#333;
 border:none;
 padding:10px 20px;
 border-radius:20px;
 cursor:pointer;
-font-weight:600;
 }
 
 .comment-box{
@@ -103,11 +150,28 @@ margin:8px 0;
 border-radius:10px;
 text-align:left;
 }
+
+footer{
+text-align:center;
+padding:20px;
+opacity:0.8;
+}
 </style>
 </head>
 <body>
 
-<header>Daniel Dolar Sarumaha</header>
+<div id="loader">Loading DanielSar Website...</div>
+
+<div class="toggle" onclick="toggleMode()">Dark/Light</div>
+
+<header>
+<img src="profil.jpg" class="profile-img">
+<h1>Daniel Dolar Sarumaha</h1>
+<p>Future Programmer & Educator 🚀</p>
+<p>Visitors: <b id="visitorCount">0</b></p>
+<p>Total Comments: <b id="commentCount">0</b></p>
+<a href="https://instagram.com/USERNAME_KAMU" target="_blank" style="color:white;text-decoration:underline;">Instagram</a>
+</header>
 
 <nav>
 <button onclick="showPage('home')">Home</button>
@@ -119,14 +183,13 @@ text-align:left;
 <section id="home" class="active">
 <div class="card">
 <h2>Welcome 👋</h2>
-<p>Calon Programmer & Guru 🚀</p>
-<p>Visitor: <b id="visitorCount">0</b></p>
+<p>Selamat datang di portfolio aesthetic saya.</p>
 </div>
 </section>
 
 <section id="profil">
 <div class="card">
-<h2>Profil Saya</h2>
+<h2>Profil</h2>
 <p>TTL: Hiliamaetaniha, 14-05-2006</p>
 <p>Hobby: Swimming & Badminton</p>
 <p>Email: sarumahadanil@gmail.com</p>
@@ -136,68 +199,86 @@ text-align:left;
 <section id="portfolio">
 <div class="card">
 <h2>Portfolio</h2>
-<p>• Website Pribadi</p>
-<p>• Project HTML CSS</p>
-<p>• Belajar JavaScript</p>
+<p>• Website Aurora Design</p>
+<p>• Firebase Comment System</p>
+<p>• UI Animation Project</p>
 </div>
 </section>
 
 <section id="kontak">
 <div class="card">
-<h2>Komentar</h2>
-
+<h2>Komentar Online</h2>
 <input type="text" id="nama" placeholder="Nama">
 <textarea id="pesan" placeholder="Tulis komentar..."></textarea>
 <button class="submit" onclick="kirimKomentar()">Kirim</button>
-
-<h3 style="margin-top:20px;">Daftar Komentar:</h3>
 <div id="daftarKomentar"></div>
 </div>
 </section>
 
+<footer>
+© 2026 DanielSar | Aurora Edition
+</footer>
+
 <script>
 
-// Navigasi
+// LOADER
+window.onload=function(){
+document.getElementById("loader").style.display="none";
+}
+
+// DARK MODE
+function toggleMode(){
+document.body.classList.toggle("dark");
+}
+
+// NAVIGATION
 function showPage(id){
 document.querySelectorAll("section").forEach(s=>s.classList.remove("active"));
 document.getElementById(id).classList.add("active");
 }
 
-// Visitor Counter (Lokal)
-let count = localStorage.getItem("visitorCount") || 0;
-count++;
-localStorage.setItem("visitorCount", count);
-document.getElementById("visitorCount").innerText = count;
+// FIREBASE CONFIG (GANTI INI)
+const firebaseConfig={
+apiKey:"ISI_APIKEY",
+authDomain:"ISI_AUTHDOMAIN",
+databaseURL:"ISI_DATABASEURL",
+projectId:"ISI_PROJECTID",
+storageBucket:"ISI_BUCKET",
+messagingSenderId:"ISI_SENDERID",
+appId:"ISI_APPID"
+};
 
-// Komentar Lokal
+firebase.initializeApp(firebaseConfig);
+const db=firebase.database();
+
+// VISITOR
+let visitorRef=db.ref("visitors");
+visitorRef.transaction(c=>(c||0)+1);
+visitorRef.on("value",snap=>{
+document.getElementById("visitorCount").innerText=snap.val();
+});
+
+// KOMENTAR
 function kirimKomentar(){
-let nama = document.getElementById("nama").value;
-let pesan = document.getElementById("pesan").value;
-
-if(nama && pesan){
-let komentar = JSON.parse(localStorage.getItem("komentar")) || [];
-komentar.push({nama:nama, pesan:pesan});
-localStorage.setItem("komentar", JSON.stringify(komentar));
-tampilkanKomentar();
+let nama=document.getElementById("nama").value;
+let pesan=document.getElementById("pesan").value;
+if(nama&&pesan){
+db.ref("komentar").push({nama,pesan});
 document.getElementById("nama").value="";
 document.getElementById("pesan").value="";
 }
 }
 
-function tampilkanKomentar(){
-let komentar = JSON.parse(localStorage.getItem("komentar")) || [];
-let daftar = document.getElementById("daftarKomentar");
-daftar.innerHTML="";
-komentar.forEach(k=>{
+let count=0;
+db.ref("komentar").on("child_added",snap=>{
+let data=snap.val();
+count++;
+document.getElementById("commentCount").innerText=count;
 let div=document.createElement("div");
 div.className="comment-box";
-div.innerHTML="<b>"+k.nama+"</b><br>"+k.pesan;
-daftar.appendChild(div);
+div.innerHTML="<b>"+data.nama+"</b><br>"+data.pesan;
+document.getElementById("daftarKomentar").appendChild(div);
 });
-}
-
-tampilkanKomentar();
-
 </script>
 
 </body>
