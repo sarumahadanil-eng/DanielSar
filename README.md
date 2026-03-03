@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Profil Saya</title>
 
 <style>
 :root{
@@ -154,29 +153,29 @@ section{
 <section id="about">
 <div class="card">
 <h2>Data Diri</h2>
-<p><b>Nama Lengkap:</b> Isi Nama Kamu</p>
-<p><b>Tempat, Tanggal Lahir:</b> Isi TTL</p>
-<p><b>Alamat:</b> Isi Alamat</p>
-<p><b>Email:</b> emailkamu@gmail.com</p>
-<p><b>Hobi:</b> Coding, Membaca</p>
+<p><b>Nama Lengkap:</b>Daniel Dolar Sarumaha</p>
+<p><b>Tempat, Tanggal Lahir:</b>Hiliamaetaniha, 14-05-2006</p>
+<p><b>Alamat:</b>Desa Hiliamaetaniha</p>
+<p><b>Email:</b>sarumahadanil@gmail.com</p>
+<p><b>Hobi:</b>berenang, bulutangkis dan ngoding</p>
 </div>
 
 <div class="card">
 <h2>Tentang Saya</h2>
 <p>
-Saya adalah seorang pelajar yang sedang belajar membuat website.
+Saya adalah seorang mahasiswa uniraya yang sedang belajar membuat website.
 Website ini dibuat untuk memperkenalkan diri saya secara profesional.
 </p>
 </div>
 </section>
 
-<section id="contact">
+<section id="contact">081388149795</section>section>
 <div class="card">
 <h2>Hubungi Saya</h2>
 
-<a href="https://instagram.com/usernamekamu" target="_blank" class="btn">Instagram</a>
+<a href="https://instagram.com/Danieldolars" target="_blank" class="btn">Instagram</a>
 
-<a href="https://wa.me/628xxxxxxxxxx" target="_blank" class="btn">WhatsApp</a>
+<a href="https://wa.me/081388149795" target="_blank" class="btn">WhatsApp</a>
 
 </div>
 </section>
