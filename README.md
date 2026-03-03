@@ -3,15 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Website Daniel Dolar Sarumaha</title>
+<title>Daniel Dolar Sarumaha</title>
 
 <style>
-:root{
-    --primary:#4e73df;
-    --secondary:#1cc88a;
-    --text:#ffffff;
-}
-
 *{
     margin:0;
     padding:0;
@@ -21,18 +15,19 @@
 }
 
 body{
-    background:linear-gradient(135deg,#4e73df,#1cc88a);
-    color:var(--text);
+    background: linear-gradient(135deg,#4e73df,#1cc88a);
+    color:white;
     text-align:center;
 }
 
-/* NAVIGATION */
+/* NAVBAR */
 nav{
     position:fixed;
     width:100%;
     background:rgba(0,0,0,0.3);
     padding:15px;
     backdrop-filter:blur(10px);
+    z-index:1000;
 }
 
 nav a{
@@ -54,10 +49,12 @@ section{
 
 /* PROFILE */
 .profile img{
-    width:170px;
-    height:170px;
+    width:180px;
+    height:180px;
     border-radius:50%;
+    object-fit:cover;
     border:5px solid white;
+    box-shadow:0 10px 30px rgba(0,0,0,0.4);
     animation:float 3s ease-in-out infinite;
 }
 
@@ -66,10 +63,9 @@ section{
     font-size:28px;
 }
 
-/* CARD */
 .card{
     background:rgba(255,255,255,0.15);
-    backdrop-filter:blur(10px);
+    backdrop-filter:blur(15px);
     padding:25px;
     margin:20px auto;
     max-width:600px;
@@ -77,50 +73,60 @@ section{
     animation:fadeUp 1s ease;
 }
 
-/* BUTTON */
 .btn{
     display:inline-block;
-    padding:12px 25px;
+    padding:10px 20px;
     margin:10px;
     background:white;
     color:#333;
     border-radius:30px;
     text-decoration:none;
-    transition:0.3s;
+    border:none;
     cursor:pointer;
-}
-
-.btn:active{
-    transform:scale(0.9);
+    transition:0.3s;
 }
 
 .btn:hover{
     background:yellow;
 }
 
-/* RATING */
+.btn:active{
+    transform:scale(0.9);
+}
+
+textarea{
+    width:100%;
+    padding:10px;
+    margin-top:10px;
+    border-radius:10px;
+    border:none;
+    resize:none;
+}
+
 .stars{
     font-size:30px;
     cursor:pointer;
-}
-
-.stars span{
-    transition:0.3s;
 }
 
 .stars span:hover{
     color:yellow;
 }
 
-/* ANIMATION */
+.review-box{
+    background:rgba(255,255,255,0.2);
+    padding:10px;
+    margin:10px 0;
+    border-radius:10px;
+}
+
 @keyframes float{
-    0%{transform:translateY(0px);}
+    0%{transform:translateY(0);}
     50%{transform:translateY(-15px);}
-    100%{transform:translateY(0px);}
+    100%{transform:translateY(0);}
 }
 
 @keyframes fadeUp{
-    from{opacity:0; transform:translateY(40px);}
+    from{opacity:0; transform:translateY(30px);}
     to{opacity:1; transform:translateY(0);}
 }
 </style>
@@ -136,19 +142,16 @@ section{
 </nav>
 
 <section id="home" class="profile">
-<img src="foto.jpg" alt="Foto Daniel Dolar Sarumaha">
+<img src="daniel.jpg" alt="Foto Daniel">
 <h1>Daniel Dolar Sarumaha</h1>
 <p>Mahasiswa UNIRAYA | Web Developer Pemula</p>
 </section>
 
 <section id="about">
 <div class="card">
-<h2>Data Diri</h2>
-<p>Nama: Daniel Dolar Sarumaha</p>
-<p>Lahir: Hiliamaetaniha, 14-05-2006</p>
-<p>Alamat: Desa Hiliamaetaniha</p>
-<p>Email: sarumahadanil@gmail.com</p>
-<p>Hobi: Berenang, Bulutangkis, Ngoding</p>
+<h2>Tentang Saya</h2>
+<p>Halo, saya Daniel Dolar Sarumaha. 
+Saya sedang belajar menjadi web developer dan terus mengembangkan kemampuan di bidang pemrograman.</p>
 </div>
 </section>
 
@@ -162,32 +165,87 @@ section{
 
 <section id="rating">
 <div class="card">
-<h2>Beri Rating Website Ini ⭐</h2>
+<h2>Beri Rating & Komentar</h2>
+
 <div class="stars">
-<span onclick="rate(1)">⭐</span>
-<span onclick="rate(2)">⭐</span>
-<span onclick="rate(3)">⭐</span>
-<span onclick="rate(4)">⭐</span>
-<span onclick="rate(5)">⭐</span>
+<span onclick="setRating(1)">⭐</span>
+<span onclick="setRating(2)">⭐</span>
+<span onclick="setRating(3)">⭐</span>
+<span onclick="setRating(4)">⭐</span>
+<span onclick="setRating(5)">⭐</span>
 </div>
-<p id="result"></p>
+
+<p id="ratingText"></p>
+
+<textarea id="commentInput" rows="3" placeholder="Tulis komentar..."></textarea>
+<button class="btn" onclick="submitReview()">Kirim</button>
+
+<h3>Rata-rata Rating: <span id="average">0</span> ⭐</h3>
+
+<div id="reviewList"></div>
+
 </div>
 </section>
 
 <script>
-function rate(star){
-    localStorage.setItem("rating", star);
-    document.getElementById("result").innerHTML =
-        "Terima kasih sudah memberi rating " + star + " ⭐";
+let selectedRating = 0;
+
+function setRating(star){
+    selectedRating = star;
+    document.getElementById("ratingText").innerHTML =
+        "Rating dipilih: " + star + " ⭐";
 }
 
-window.onload = function(){
-    let saved = localStorage.getItem("rating");
-    if(saved){
-        document.getElementById("result").innerHTML =
-        "Rating terakhir yang kamu berikan: " + saved + " ⭐";
+function submitReview(){
+    let comment = document.getElementById("commentInput").value.trim();
+
+    if(selectedRating === 0){
+        alert("Silakan pilih rating dulu!");
+        return;
     }
+
+    if(comment === ""){
+        alert("Isi komentar dulu ya!");
+        return;
+    }
+
+    let reviews = JSON.parse(localStorage.getItem("reviews")) || [];
+
+    reviews.push({
+        rating: selectedRating,
+        comment: comment
+    });
+
+    localStorage.setItem("reviews", JSON.stringify(reviews));
+
+    document.getElementById("commentInput").value = "";
+    selectedRating = 0;
+    document.getElementById("ratingText").innerHTML = "";
+
+    displayReviews();
 }
+
+function displayReviews(){
+    let reviews = JSON.parse(localStorage.getItem("reviews")) || [];
+    let reviewList = document.getElementById("reviewList");
+    let total = 0;
+
+    reviewList.innerHTML = "";
+
+    reviews.forEach(r=>{
+        total += r.rating;
+        reviewList.innerHTML += `
+        <div class="review-box">
+            <strong>${r.rating} ⭐</strong>
+            <p>${r.comment}</p>
+        </div>`;
+    });
+
+    let average = reviews.length ? (total/reviews.length).toFixed(1) : 0;
+    document.getElementById("average").innerText = average;
+}
+
+window.onload = displayReviews;
 </script>
 
 </body>
