@@ -1,9 +1,8 @@
-<!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DanielSar | Aurora Portfolio</title>
+<title>DanielSar | Dolar Portfolio</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
 
@@ -167,29 +166,30 @@ opacity:0.8;
 <header>
 <img src="profil.jpg" class="profile-img">
 <h1>Daniel Dolar Sarumaha</h1>
-<p>Future Programmer & Educator 🚀</p>
+<p>Future Programmer👨‍💻 and teacher🧑‍🏫</p>
 <p>Visitors: <b id="visitorCount">0</b></p>
 <p>Total Comments: <b id="commentCount">0</b></p>
-<a href="https://instagram.com/USERNAME_KAMU" target="_blank" style="color:white;text-decoration:underline;">Instagram</a>
+<a href="https://instagram.com/Danieldolars" target="_blank" style="color:white;text-decoration:underline;">Instagram</a>
 </header>
 
 <nav>
 <button onclick="showPage('home')">Home</button>
-<button onclick="showPage('profil')">Profil</button>
+<button onclick="showPage('profil')">Profile</button>
 <button onclick="showPage('portfolio')">Portfolio</button>
-<button onclick="showPage('kontak')">Kontak</button>
+<button onclick="showPage('kontak')">contact</button>
 </nav>
 
 <section id="home" class="active">
 <div class="card">
-<h2>Welcome 👋</h2>
-<p>Selamat datang di portfolio aesthetic saya.</p>
+<h2>Welcome 👋
+my name is Daniel Dolar Sarumaha</h2>
+<p>Selamat datang di website pribadi aesthetic saya.</p>
 </div>
 </section>
 
-<section id="profil">
+<section id="profil">profil.jpg</section>
 <div class="card">
-<h2>Profil</h2>
+<h2>Profile</h2>
 <p>TTL: Hiliamaetaniha, 14-05-2006</p>
 <p>Hobby: Swimming & Badminton</p>
 <p>Email: sarumahadanil@gmail.com</p>
@@ -199,7 +199,7 @@ opacity:0.8;
 <section id="portfolio">
 <div class="card">
 <h2>Portfolio</h2>
-<p>• Website Aurora Design</p>
+<p>• Website Daniel Designer</p>
 <p>• Firebase Comment System</p>
 <p>• UI Animation Project</p>
 </div>
@@ -210,25 +210,25 @@ opacity:0.8;
 <h2>Komentar Online</h2>
 <input type="text" id="nama" placeholder="Nama">
 <textarea id="pesan" placeholder="Tulis komentar..."></textarea>
-<button class="submit" onclick="kirimKomentar()">Kirim</button>
-<div id="daftarKomentar"></div>
+<button class="submit" onclick="kirim Komentar()">send</button>
+<div id="daftar Komentar pengunjung"></div>
 </div>
 </section>
 
 <footer>
-© 2026 DanielSar | Aurora Edition
+© 2026 DanielSar | Daniel Edition
 </footer>
 
 <script>
 
 // LOADER
 window.onload=function(){
-document.getElementById("loader").style.display="none";
+document.getElementById("loader").style.display="block";
 }
 
 // DARK MODE
 function toggleMode(){
-document.body.classList.toggle("dark");
+document.body.classList.toggle("bluedark");
 }
 
 // NAVIGATION
@@ -239,13 +239,13 @@ document.getElementById(id).classList.add("active");
 
 // FIREBASE CONFIG (GANTI INI)
 const firebaseConfig={
-apiKey:"ISI_APIKEY",
-authDomain:"ISI_AUTHDOMAIN",
-databaseURL:"ISI_DATABASEURL",
-projectId:"ISI_PROJECTID",
-storageBucket:"ISI_BUCKET",
-messagingSenderId:"ISI_SENDERID",
-appId:"ISI_APPID"
+apiKey:"Daniel Dolar Sarumaha",
+authDomain:"danielsar-website-firebaseapp.com",
+databaseURL:" danielsar-website-default-rtdb.asia-southeast1.firebasedatabase.com", 
+projectId:"danielsar-website",
+storageBucket:"danielsar-website-appspot.com",
+messagingSenderId:"14052006",
+appId:"1:14052006:web:danielsar"
 };
 
 firebase.initializeApp(firebaseConfig);
@@ -260,22 +260,22 @@ document.getElementById("visitorCount").innerText=snap.val();
 
 // KOMENTAR
 function kirimKomentar(){
-let nama=document.getElementById("nama").value;
-let pesan=document.getElementById("pesan").value;
-if(nama&&pesan){
-db.ref("komentar").push({nama,pesan});
-document.getElementById("nama").value="";
-document.getElementById("pesan").value="";
+let nama=document.getElementById("Name").value;
+let pesan=document.getElementById("Comment").value;
+if(Name&&Comment){
+db.ref("Comment").push({Name,Comment});
+document.getElementById("Name").value="";
+document.getElementById("Comment").value="";
 }
 }
 
 let count=0;
-db.ref("komentar").on("child_added",snap=>{
+db.ref("comment").on("child_added",snap=>{
 let data=snap.val();
 count++;
 document.getElementById("commentCount").innerText=count;
 let div=document.createElement("div");
-div.className="comment-box";
+div.className="comment-time";
 div.innerHTML="<b>"+data.nama+"</b><br>"+data.pesan;
 document.getElementById("daftarKomentar").appendChild(div);
 });
