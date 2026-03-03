@@ -6,47 +6,102 @@
 <title>Daniel Dolar Sarumaha</title>
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif}
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Segoe UI',sans-serif;
+scroll-behavior:smooth;
+}
+
 body{
 background:linear-gradient(135deg,#4e73df,#1cc88a);
-color:white;text-align:center;
+color:white;
+text-align:center;
 }
+
+/* NAVBAR */
 nav{
-position:fixed;width:100%;padding:15px;
+position:fixed;
+width:100%;
 background:rgba(0,0,0,0.3);
+padding:15px;
 backdrop-filter:blur(10px);
+z-index:1000;
 }
+
 nav a{
-color:white;text-decoration:none;margin:0 15px;font-weight:bold
+color:white;
+text-decoration:none;
+margin:0 15px;
+font-weight:bold;
+transition:0.3s;
 }
-section{padding:120px 20px}
+
+nav a:hover{
+color:yellow;
+}
+
+/* SECTION */
+section{
+padding:120px 20px;
+}
+
+/* PROFILE */
 .profile img{
-width:180px;height:180px;border-radius:50%;
-object-fit:cover;border:5px solid white;
+width:180px;
+height:180px;
+border-radius:50%;
+object-fit:cover;
+border:5px solid white;
 box-shadow:0 10px 30px rgba(0,0,0,0.4);
 }
+
+/* CARD */
 .card{
 background:rgba(255,255,255,0.15);
 backdrop-filter:blur(15px);
-padding:25px;margin:20px auto;
-max-width:600px;border-radius:15px;
+padding:25px;
+margin:20px auto;
+max-width:700px;
+border-radius:15px;
 }
+
+/* BUTTON */
 .btn{
-padding:10px 20px;margin:10px;
-border:none;border-radius:30px;
-background:white;color:#333;
-cursor:pointer
+padding:10px 20px;
+margin:10px;
+border:none;
+border-radius:30px;
+background:white;
+color:#333;
+cursor:pointer;
+transition:0.3s;
 }
+
+.btn:hover{
+background:yellow;
+}
+
 textarea{
-width:100%;padding:10px;
-border-radius:10px;border:none;
-margin-top:10px
+width:100%;
+padding:10px;
+margin-top:10px;
+border-radius:10px;
+border:none;
+resize:none;
 }
-.stars span{font-size:30px;cursor:pointer}
+
+.stars span{
+font-size:30px;
+cursor:pointer;
+}
+
 .review-box{
 background:rgba(255,255,255,0.2);
-padding:10px;margin:10px 0;
-border-radius:10px
+padding:10px;
+margin:10px 0;
+border-radius:10px;
 }
 </style>
 </head>
@@ -55,16 +110,38 @@ border-radius:10px
 
 <nav>
 <a href="#home">Home</a>
+<a href="#about">Tentang</a>
+<a href="#contact">Kontak</a>
 <a href="#rating">Rating</a>
 </nav>
 
+<!-- HOME -->
 <section id="home" class="profile">
-<img src="daniel.jpg">
+<img src="daniel.jpg" alt="Foto Daniel">
 <h1>Daniel Dolar Sarumaha</h1>
 <p>Mahasiswa UNIRAYA | Web Developer Pemula</p>
 <p>Total Pengunjung: <span id="visitorCount">0</span></p>
 </section>
 
+<!-- ABOUT -->
+<section id="about">
+<div class="card">
+<h2>Tentang Saya</h2>
+<p>Halo, saya Daniel Dolar Sarumaha. 
+Saya sedang belajar menjadi web developer dan ingin terus berkembang di dunia pemrograman.</p>
+</div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+<div class="card">
+<h2>Hubungi Saya</h2>
+<a href="https://instagram.com/Danieldolars" target="_blank" class="btn">Instagram</a>
+<a href="https://wa.me/081388149795" target="_blank" class="btn">WhatsApp</a>
+</div>
+</section>
+
+<!-- RATING -->
 <section id="rating">
 <div class="card">
 <h2>Beri Rating & Komentar</h2>
@@ -96,14 +173,14 @@ getFirestore, collection, addDoc, getDocs,
 doc, updateDoc, getDoc, setDoc 
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-// 🔴 GANTI DENGAN CONFIG FIREBASE KAMU
+/* 🔴 GANTI DENGAN CONFIG FIREBASE KAMU */
 const firebaseConfig = {
-  apiKey: "ISI_API_KEY",
-  authDomain: "ISI_AUTH_DOMAIN",
-  projectId: "ISI_PROJECT_ID",
-  storageBucket: "ISI_STORAGE_BUCKET",
-  messagingSenderId: "ISI_SENDER_ID",
-  appId: "ISI_APP_ID"
+apiKey: "ISI_API_KEY",
+authDomain: "ISI_AUTH_DOMAIN",
+projectId: "ISI_PROJECT_ID",
+storageBucket: "ISI_STORAGE_BUCKET",
+messagingSenderId: "ISI_SENDER_ID",
+appId: "ISI_APP_ID"
 };
 
 const app = initializeApp(firebaseConfig);
