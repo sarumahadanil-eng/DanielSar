@@ -1,160 +1,109 @@
 <!DOCTYPE html>
-<html lang="id">
+<html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Daniel Dolar Sarumaha</title>
-
-<style>
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:'Segoe UI',sans-serif;
-scroll-behavior:smooth;
-}
-
-body{
-background:linear-gradient(135deg,#4e73df,#1cc88a);
-color:white;
-text-align:center;
-}
-
-/* NAVBAR */
-nav{
-position:fixed;
-width:100%;
-background:rgba(0,0,0,0.3);
-padding:15px;
-backdrop-filter:blur(10px);
-z-index:1000;
-}
-
-nav a{
-color:white;
-text-decoration:none;
-margin:0 15px;
-font-weight:bold;
-transition:0.3s;
-}
-
-nav a:hover{
-color:yellow;
-}
-
-/* SECTION */
-section{
-padding:120px 20px;
-}
-
-/* PROFILE */
-.profile img{
-width:180px;
-height:180px;
-border-radius:50%;
-object-fit:cover;
-border:5px solid white;
-box-shadow:0 10px 30px rgba(0,0,0,0.4);
-}
-
-/* CARD */
-.card{
-background:rgba(255,255,255,0.15);
-backdrop-filter:blur(15px);
-padding:25px;
-margin:20px auto;
-max-width:700px;
-border-radius:15px;
-}
-
-/* BUTTON */
-.btn{
-padding:10px 20px;
-margin:10px;
-border:none;
-border-radius:30px;
-background:white;
-color:#333;
-cursor:pointer;
-transition:0.3s;
-}
-
-.btn:hover{
-background:yellow;
-}
-
-textarea{
-width:100%;
-padding:10px;
-margin-top:10px;
-border-radius:10px;
-border:none;
-resize:none;
-}
-
-.stars span{
-font-size:30px;
-cursor:pointer;
-}
-
-.review-box{
-background:rgba(255,255,255,0.2);
-padding:10px;
-margin:10px 0;
-border-radius:10px;
-}
-</style>
+<title>Home - Daniel</title>
+<link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
 <nav>
-<a href="#home">Home</a>
-<a href="#about">Tentang</a>
-<a href="#contact">Kontak</a>
-<a href="#rating">Rating</a>
+<a href="index.html">Home</a>
+<a href="tentang.html">Tentang</a>
+<a href="kontak.html">Kontak</a>
+<a href="rating.html">Rating</a>
 </nav>
 
-<!-- HOME -->
-<section id="home" class="profile">
-<img src="daniel.jpg" alt="Foto Daniel">
+<div class="container">
+<div class="card">
 <h1>Daniel Dolar Sarumaha</h1>
-<p>Mahasiswa UNIRAYA | Web Developer Pemula</p>
+<p>Selamat datang di website pribadi saya.</p>
 <p>Total Pengunjung: <span id="visitorCount">0</span></p>
-</section>
+</div>
+</div>
 
-<!-- ABOUT -->
-<section id="about">
+<script type="module" src="script.js"></script>
+</body>
+</html>
+<!DOCTYPE html>
+<html>
+<head>
+<title>Tentang - Daniel</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<nav>
+<a href="index.html">Home</a>
+<a href="tentang.html">Tentang</a>
+<a href="kontak.html">Kontak</a>
+<a href="rating.html">Rating</a>
+</nav>
+
+<div class="container">
 <div class="card">
 <h2>Tentang Saya</h2>
-<p>Halo, saya Daniel Dolar Sarumaha. 
-Saya sedang belajar menjadi web developer dan ingin terus berkembang di dunia pemrograman.</p>
+<p>Nama: Daniel Dolar Sarumaha</p>
+<p>Lahir: Hiliamaetaniha, 14-05-2006</p>
+<p>Hobby: Swimming & Badminton</p>
+<p>Cita-cita: Programmer / Guru</p>
 </div>
-</section>
+</div>
 
-<!-- CONTACT -->
-<section id="contact">
+</body>
+</html>
+<!DOCTYPE html>
+<html>
+<head>
+<title>Kontak - Daniel</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<nav>
+<a href="index.html">Home</a>
+<a href="tentang.html">Tentang</a>
+<a href="kontak.html">Kontak</a>
+<a href="rating.html">Rating</a>
+</nav>
+
+<div class="container">
 <div class="card">
 <h2>Hubungi Saya</h2>
-<a href="https://instagram.com/Danieldolars" target="_blank" class="btn">Instagram</a>
-<a href="https://wa.me/081388149795" target="_blank" class="btn">WhatsApp</a>
+<a href="https://instagram.com/Danieldolars" class="btn">Instagram</a>
+<br><br>
+<a href="https://wa.me/081388149795" class="btn">WhatsApp</a>
 </div>
-</section>
+</div>
 
-<!-- RATING -->
-<section id="rating">
+</body>
+</html>
+<!DOCTYPE html>
+<html>
+<head>
+<title>Rating - Daniel</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<nav>
+<a href="index.html">Home</a>
+<a href="tentang.html">Tentang</a>
+<a href="kontak.html">Kontak</a>
+<a href="rating.html">Rating</a>
+</nav>
+
+<div class="container">
 <div class="card">
 <h2>Beri Rating & Komentar</h2>
 
-<div class="stars">
-<span onclick="setRating(1)">⭐</span>
-<span onclick="setRating(2)">⭐</span>
-<span onclick="setRating(3)">⭐</span>
-<span onclick="setRating(4)">⭐</span>
-<span onclick="setRating(5)">⭐</span>
-</div>
-
-<p id="ratingText"></p>
+<select id="ratingSelect">
+<option value="">Pilih Rating</option>
+<option value="1">1 ⭐</option>
+<option value="2">2 ⭐</option>
+<option value="3">3 ⭐</option>
+<option value="4">4 ⭐</option>
+<option value="5">5 ⭐</option>
+</select>
 
 <textarea id="commentInput" rows="3" placeholder="Tulis komentar..."></textarea>
 <button class="btn" onclick="submitReview()">Kirim</button>
@@ -162,18 +111,19 @@ Saya sedang belajar menjadi web developer dan ingin terus berkembang di dunia pe
 <h3>Rata-rata Rating: <span id="average">0</span> ⭐</h3>
 
 <div id="reviewList"></div>
+
 </div>
-</section>
+</div>
 
-<script type="module">
-
+<script type="module" src="script.js"></script>
+</body>
+</html>
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { 
 getFirestore, collection, addDoc, getDocs,
 doc, updateDoc, getDoc, setDoc 
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-/* 🔴 GANTI DENGAN CONFIG FIREBASE KAMU */
 const firebaseConfig = {
 apiKey: "ISI_API_KEY",
 authDomain: "ISI_AUTH_DOMAIN",
@@ -186,83 +136,71 @@ appId: "ISI_APP_ID"
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-let selectedRating = 0;
-
-window.setRating = function(star){
-selectedRating = star;
-document.getElementById("ratingText").innerText =
-"Rating dipilih: " + star + " ⭐";
-}
-
+/* REVIEW */
 window.submitReview = async function(){
+let rating = document.getElementById("ratingSelect")?.value;
+let comment = document.getElementById("commentInput")?.value;
 
-let comment = document.getElementById("commentInput").value;
-
-if(selectedRating === 0 || comment.trim() === ""){
-alert("Isi rating & komentar dulu!");
+if(!rating || !comment){
+alert("Isi dulu rating & komentar!");
 return;
 }
 
 await addDoc(collection(db,"reviews"),{
-rating:selectedRating,
+rating:Number(rating),
 comment:comment,
 date:new Date()
 });
 
 document.getElementById("commentInput").value="";
-selectedRating=0;
 loadReviews();
 }
 
 async function loadReviews(){
-
-let querySnapshot = await getDocs(collection(db,"reviews"));
 let reviewList = document.getElementById("reviewList");
-let total = 0;
-let count = 0;
+if(!reviewList) return;
+
+let snapshot = await getDocs(collection(db,"reviews"));
+let total=0, count=0;
 
 reviewList.innerHTML="";
 
-querySnapshot.forEach((doc)=>{
+snapshot.forEach(doc=>{
 let r = doc.data();
-total += r.rating;
+total+=r.rating;
 count++;
 
-reviewList.innerHTML += `
+reviewList.innerHTML+=`
 <div class="review-box">
 <strong>${r.rating} ⭐</strong>
 <p>${r.comment}</p>
 </div>`;
 });
 
-let average = count ? (total/count).toFixed(1) : 0;
-document.getElementById("average").innerText = average;
+document.getElementById("average").innerText =
+count ? (total/count).toFixed(1) : 0;
 }
 
-async function updateVisitorCount(){
-const counterRef = doc(db,"stats","visitors");
-const counterSnap = await getDoc(counterRef);
+/* VISITOR */
+async function updateVisitor(){
+let visitorEl = document.getElementById("visitorCount");
+if(!visitorEl) return;
+
+const ref = doc(db,"stats","visitors");
+const snap = await getDoc(ref);
 
 if(!localStorage.getItem("visited")){
-if(counterSnap.exists()){
-await updateDoc(counterRef,{
-count: counterSnap.data().count + 1
-});
+if(snap.exists()){
+await updateDoc(ref,{count:snap.data().count+1});
 }else{
-await setDoc(counterRef,{count:1});
+await setDoc(ref,{count:1});
 }
 localStorage.setItem("visited",true);
 }
 
-const updatedSnap = await getDoc(counterRef);
-document.getElementById("visitorCount").innerText =
-updatedSnap.data().count;
+const updated = await getDoc(ref);
+visitorEl.innerText = updated.data().count;
 }
 
 loadReviews();
-updateVisitorCount();
-
-</script>
-
-</body>
-</html>
+updateVisitor();
