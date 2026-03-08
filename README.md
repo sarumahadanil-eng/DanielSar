@@ -26,6 +26,10 @@ input,textarea{padding:10px;margin:5px;border-radius:6px;border:none;width:220px
 .popupProfile{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,0.9);padding:20px;border-radius:10px;color:white;display:none;z-index:10000;}
 </style>
 </head>
+<head>
+<meta name="robots" content="index, follow">
+<meta name="description" content="Website resmi Daniel Dolar Sarumaha, portfolio ultra cinematic dengan rating, komentar, 3D homepage, dan social media.">
+</head>
 <body class="dark">
 
 <!-- Auth -->
