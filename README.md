@@ -1,570 +1,162 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Social Knowledge Platform</title>
-
+<title>Daniel Dolar Sarumaha - Ultra Cinematic SPA</title>
 <style>
-
-body{
-font-family:system-ui;
-margin:0;
-background:#f4f4f4;
-}
-
-header{
-background:#111;
-color:white;
-padding:12px;
-display:flex;
-justify-content:space-between;
-align-items:center;
-}
-
-.container{
-max-width:900px;
-margin:auto;
-padding:20px;
-}
-
-.editor,.post{
-background:white;
-padding:20px;
-border-radius:10px;
-margin-bottom:20px;
-}
-
-textarea{
-width:100%;
-height:120px;
-}
-
-button{
-cursor:pointer;
-padding:6px 10px;
-margin:3px;
-}
-
-.rating span{
-font-size:20px;
-cursor:pointer;
-}
-
-.dark{
-background:#121212;
-color:white;
-}
-
-.dark .post,.dark .editor{
-background:#1e1e1e;
-}
-
-.tag{
-color:#3498db;
-cursor:pointer;
-margin-right:5px;
-}
-
-.comment{
-margin-top:10px;
-font-size:14px;
-}
-
-.reply{
-margin-left:20px;
-font-size:13px;
-}
-
+body, html{margin:0;padding:0;height:100%;font-family:'Segoe UI',sans-serif;background:#0e0e20;color:white;overflow:hidden;}
+*{box-sizing:border-box;}
+.container{display:flex;height:100vh;transition:0.5s;}
+.sidebar{width:220px;background:#11112a;padding:20px;display:flex;flex-direction:column;transition:width 0.4s;}
+.sidebar h3{margin-top:0;margin-bottom:20px;color:#fffb;}
+.sidebar div{margin:12px 0;cursor:pointer;padding:6px 8px;border-radius:6px;transition:0.2s;}
+.sidebar div:hover{background:#3a3a5c;color:#fff;font-weight:600;}
+.main{flex:1;overflow-y:auto;padding:20px;background:linear-gradient(135deg,#1b1b2f,#0e0e20);transition:0.5s;}
+.page{opacity:0;transform:translateY(20px);transition:0.4s;display:none;}
+.page.active{display:block;opacity:1;transform:translateY(0);}
+.card{background:rgba(255,255,255,0.05);backdrop-filter:blur(6px);padding:18px;margin-bottom:20px;border-radius:14px;box-shadow:0 4px 20px rgba(0,0,0,0.4);transition:0.3s transform;}
+.card:hover{transform: translateY(-4px) scale(1.01);box-shadow:0 8px 30px rgba(0,0,0,0.5);}
+textarea,input[type="text"]{width:100%;padding:10px;border-radius:8px;border:none;background:rgba(255,255,255,0.1);color:white;margin-bottom:10px;}
+button{padding:6px 12px;border:none;border-radius:6px;background:#4f46e5;color:white;cursor:pointer;margin-right:6px;transition:0.2s;}
+button:hover{background:#3b36c1;transform:scale(1.05);}
+.rating span,.reaction span{cursor:pointer;font-size:18px;margin-right:6px;transition:0.2s;}
+.rating span:hover,.reaction span:hover{transform:scale(1.3);}
+.comment{margin-top:10px;font-size:14px;}
+.reply{margin-left:20px;font-size:13px;color:#aaa;}
+.tag{color:#3498db;cursor:pointer;margin-right:6px;font-size:13px;}
+#profilePhoto{border-radius:50%;width:80px;height:80px;margin-right:16px;box-shadow:0 4px 12px rgba(0,0,0,0.3);}
+.social a{margin-right:10px;color:#4f46e5;text-decoration:none;font-weight:bold;}
+.social a:hover{text-decoration:underline;}
 </style>
-
 </head>
 <body>
-
-<header>
-
-<b>Social Knowledge</b>
-
-<div>
-
-<input id="search" placeholder="search..." oninput="render()">
-
-<button onclick="theme('dark')">🌙</button>
-<button onclick="theme('neon')">🌈</button>
-
-</div>
-
-</header>
-
 <div class="container">
+  <div class="sidebar">
+    <h3>Platform</h3>
+    <div onclick="showPage('home')">🏠 Home</div>
+    <div onclick="showPage('trending')">🔥 Trending</div>
+    <div onclick="showPage('bookmarks')">🔖 Bookmarks</div>
+    <div onclick="showPage('drafts')">📝 Drafts</div>
+    <div onclick="showPage('notifications')">🔔 Notifications</div>
+    <div onclick="showPage('leaderboard')">🏆 Leaderboard</div>
+    <div onclick="showPage('profile')">👤 Profile</div>
+  </div>
+  <div class="main">
 
-<div class="editor">
+    <!-- HOME PAGE -->
+    <div id="home" class="page active">
+      <h2>Home</h2>
+      <input id="search" placeholder="Search..." oninput="render()">
+      <div class="card">
+        <textarea id="postText" placeholder="Write something..."></textarea><br>
+        <button onclick="createPost()">Post</button>
+        <button onclick="saveDraft()">Save Draft</button>
+      </div>
+      <div id="feed"></div>
+    </div>
 
-<h3>Create Post</h3>
+    <!-- PROFILE PAGE -->
+    <div id="profile" class="page">
+      <h2>Profile</h2>
+      <div style="display:flex;align-items:center;margin-bottom:20px;">
+        <img id="profilePhoto" src="https://via.placeholder.com/80" alt="Profile Photo">
+        <div>
+          <h3 id="profileName">Daniel Dolar Sarumaha</h3>
+          <p id="profileEmail" style="margin:4px 0;color:#ccc;">albumxiimia@gmail.com</p>
+          <p id="profileBio" style="margin:4px 0;font-size:14px;color:#aaa;">Portfolio ultra cinematic, multi-functional SPA</p>
+          <div class="social">
+            <a href="https://wa.me/6281388149795" target="_blank">WhatsApp</a>
+            <a href="https://instagram.com/Danieldolars" target="_blank">Instagram</a>
+            <a href="https://facebook.com/Daniel Sarumaha" target="_blank">Facebook</a>
+          </div>
+        </div>
+      </div>
+      <div>
+        <input type="file" id="uploadPhoto" onchange="changePhoto(event)">
+        <p style="margin:8px 0;">Catatan Pribadi:</p>
+        <textarea id="personalNote" placeholder="Tulis catatan pribadimu di sini..."></textarea><br>
+        <button onclick="saveNote()">Simpan Catatan</button>
+      </div>
+      <div style="display:flex;gap:16px;margin-top:20px;">
+        <div class="card" style="flex:1;text-align:center;">Posts<br><span id="statPosts">0</span></div>
+        <div class="card" style="flex:1;text-align:center;">Comments<br><span id="statComments">0</span></div>
+        <div class="card" style="flex:1;text-align:center;">Reactions<br><span id="statReactions">0</span></div>
+        <div class="card" style="flex:1;text-align:center;"><span id="followBtn" onclick="toggleFollow()" style="cursor:pointer;background:#4f46e5;padding:4px 10px;border-radius:6px;">Follow</span></div>
+      </div>
+    </div>
 
-<textarea id="postText"></textarea>
-
-<br>
-
-<button onclick="createPost()">Publish</button>
-<button onclick="saveDraft()">Save Draft</button>
-
-</div>
-
-<div id="feed"></div>
-
+  </div>
 </div>
 
 <script>
+// Data
+let posts=[], bookmarks=[], drafts=[], notifications=[], currentTag=null;
+let user={name:"Daniel Dolar Sarumaha",email:"albumxiimia@gmail.com",bio:"Portfolio ultra cinematic, multi-functional SPA",photo:"https://via.placeholder.com/80",followed:false,note:""};
 
-let posts=[]
-let drafts=[]
-let bookmarks=[]
-let notifications=[]
-let currentTag=null
-
-let user={
-name:"Guest",
-avatar:"😀"
+// SPA
+function showPage(id){
+  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  render();
 }
 
-function markdown(text){
-
-text=text.replace(/\*\*(.*?)\*\*/g,"<b>$1</b>")
-text=text.replace(/\*(.*?)\*/g,"<i>$1</i>")
-text=text.replace(/`(.*?)`/g,"<code>$1</code>")
-
-return text
-
-}
-
-function addTags(text){
-
-let tags=text.match(/#\w+/g)
-
-return tags||[]
-
-}
-
-function readingTime(text){
-
-let words=text.split(" ").length
-
-return Math.ceil(words/200)+" min read"
-
-}
-
-function summarize(text){
-
-let w=text.split(" ")
-
-if(w.length<40) return ""
-
-return w.slice(0,25).join(" ")+"..."
-
-}
-
-function calcTrending(p){
-
-return p.votes*2 +
-p.reactions.like +
-p.reactions.fire*2 +
-p.reactions.love +
-p.comments.length*2
-
-}
-
-function createPost(){
-
-let text=document.getElementById("postText").value
-
-posts.unshift({
-
-id:Date.now(),
-text:text,
-votes:0,
-rating:0,
-tags:addTags(text),
-time:new Date().toLocaleString(),
-
-reactions:{
-like:0,
-fire:0,
-love:0
-},
-
-comments:[],
-pinned:false,
-poll:null
-
-})
-
-render()
-
-}
-
-function vote(id,val){
-
-let p=posts.find(x=>x.id==id)
-p.votes+=val
-
-render()
-
-}
-
-function rate(id,val){
-
-let p=posts.find(x=>x.id==id)
-p.rating=val
-
-render()
-
-}
-
-function react(id,type){
-
-let p=posts.find(x=>x.id==id)
-p.reactions[type]++
-
-notifications.push("Reaction added")
-
-render()
-
-}
-
-function comment(id){
-
-let input=document.getElementById("c"+id)
-
-let p=posts.find(x=>x.id==id)
-
-p.comments.push({
-text:input.value,
-replies:[]
-})
-
-input.value=""
-
-notifications.push("New comment")
-
-render()
-
-}
-
-function reply(postId,index){
-
-let txt=prompt("Reply")
-
-let p=posts.find(x=>x.id==postId)
-
-p.comments[index].replies.push(txt)
-
-render()
-
-}
-
-function editPost(id){
-
-let p=posts.find(x=>x.id==id)
-
-let txt=prompt("Edit",p.text)
-
-if(txt){
-
-p.text=txt
-p.tags=addTags(txt)
-
-}
-
-render()
-
-}
-
-function deletePost(id){
-
-posts=posts.filter(p=>p.id!=id)
-
-render()
-
-}
-
-function pinPost(id){
-
-let p=posts.find(x=>x.id==id)
-
-p.pinned=!p.pinned
-
-render()
-
-}
-
-function bookmark(id){
-
-if(bookmarks.includes(id))
-bookmarks=bookmarks.filter(x=>x!=id)
-else
-bookmarks.push(id)
-
-render()
-
-}
-
-function createPoll(id){
-
-let q=prompt("Poll question")
-let a=prompt("Option 1")
-let b=prompt("Option 2")
-
-let p=posts.find(x=>x.id==id)
-
-p.poll={
-question:q,
-options:[
-{text:a,votes:0},
-{text:b,votes:0}
-]
-}
-
-render()
-
-}
-
-function votePoll(id,i){
-
-let p=posts.find(x=>x.id==id)
-
-p.poll.options[i].votes++
-
-render()
-
-}
-
-function saveDraft(){
-
-let text=document.getElementById("postText").value
-
-drafts.push(text)
-
-alert("Draft saved")
-
-}
-
-function filterTag(tag){
-
-currentTag=tag
-
-render()
-
-}
-
-function theme(mode){
-
-document.body.classList.remove("dark")
-
-document.body.style.background=""
-
-if(mode=="dark")
-document.body.classList.add("dark")
-
-if(mode=="neon"){
-
-document.body.style.background="#0f0f0f"
-document.body.style.color="#00ff9c"
-
-}
-
-}
-
-function renderPoll(p){
-
-if(!p.poll) return ""
-
-return `
-
-<div>
-
-<b>${p.poll.question}</b>
-
-${p.poll.options.map((o,i)=>`
-
-<div>
-
-<button onclick="votePoll(${p.id},${i})">${o.text}</button>
-${o.votes}
-
-</div>
-
-`).join("")}
-
-</div>
-
-`
-
-}
-
-function leaderboard(){
-
-let top=[...posts]
-
-.sort((a,b)=>calcTrending(b)-calcTrending(a))
-
-.slice(0,3)
-
-return `
-
-<div class="post">
-
-<h4>Top Posts</h4>
-
-${top.map(p=>`<div>${p.text.slice(0,40)}</div>`).join("")}
-
-</div>
-
-`
-
-}
-
-function popularTags(){
-
-let tags={}
-
-posts.forEach(p=>{
-
-p.tags.forEach(t=>{
-
-tags[t]=(tags[t]||0)+1
-
-})
-
-})
-
-let sorted=Object.entries(tags)
-
-.sort((a,b)=>b[1]-a[1])
-
-.slice(0,5)
-
-return `
-
-<div class="post">
-
-<b>Popular Tags</b><br>
-
-${sorted.map(t=>`<span class="tag" onclick="filterTag('${t[0]}')">${t[0]}</span>`).join("")}
-
-</div>
-
-`
-
-}
-
+// Profile
+function changePhoto(e){let file=e.target.files[0]; if(file){let reader=new FileReader(); reader.onload=function(){document.getElementById("profilePhoto").src=reader.result; user.photo=reader.result;} reader.readAsDataURL(file);}}
+function saveNote(){user.note=document.getElementById("personalNote").value; alert("Catatan tersimpan!");}
+function toggleFollow(){user.followed=!user.followed; document.getElementById("followBtn").innerText=user.followed?"Unfollow":"Follow";}
+
+// Post & Interaction
+function createPost(){let text=document.getElementById("postText").value; posts.unshift({id:Date.now(),text,rating:0,votes:0,reactions:{like:0,fire:0,love:0},comments:[],tags:text.match(/#\w+/g)||[]}); render();}
+function vote(id,val){let p=posts.find(x=>x.id==id);p.votes+=val;render();}
+function rate(id,val){let p=posts.find(x=>x.id==id);p.rating=val;render();}
+function react(id,type){let p=posts.find(x=>x.id==id);p.reactions[type]++; notifications.push("Reaction added");render();}
+function comment(id){let input=document.getElementById("c"+id); let p=posts.find(x=>x.id==id); p.comments.push({text:input.value,replies:[]}); input.value=""; notifications.push("New comment"); render();}
+function reply(id,i){let txt=prompt("Reply"); let p=posts.find(x=>x.id==id); p.comments[i].replies.push(txt); render();}
+function bookmark(id){if(!bookmarks.includes(id))bookmarks.push(id);render();}
+function saveDraft(){drafts.push(document.getElementById("postText").value); render();}
+
+// Render
 function render(){
+  // Profile
+  document.getElementById("profileName").innerText=user.name;
+  document.getElementById("profileEmail").innerText=user.email;
+  document.getElementById("profileBio").innerText=user.bio;
+  document.getElementById("profilePhoto").src=user.photo;
+  document.getElementById("personalNote").value=user.note;
+  // Stats
+  document.getElementById("statPosts").innerText=posts.length;
+  let totalComments=posts.reduce((sum,p)=>sum+p.comments.length,0);
+  document.getElementById("statComments").innerText=totalComments;
+  let totalReactions=posts.reduce((sum,p)=>sum+p.reactions.like+p.reactions.fire+p.reactions.love,0);
+  document.getElementById("statReactions").innerText=totalReactions;
 
-let feed=document.getElementById("feed")
-
-feed.innerHTML=""
-
-feed.innerHTML+=leaderboard()
-
-feed.innerHTML+=popularTags()
-
-let search=document.getElementById("search").value.toLowerCase()
-
-posts
-.filter(p=>p.text.toLowerCase().includes(search))
-.filter(p=>!currentTag || p.tags.includes(currentTag))
-.sort((a,b)=>{
-
-if(a.pinned) return -1
-if(b.pinned) return 1
-
-return calcTrending(b)-calcTrending(a)
-
-})
-
-.forEach(p=>{
-
-let stars=""
-
-for(let i=1;i<=5;i++){
-
-stars+=`<span onclick="rate(${p.id},${i})">${i<=p.rating?"⭐":"☆"}</span>`
-
+  // Feed
+  let search=document.getElementById("search")?.value?.toLowerCase()||"";
+  let feed="";
+  posts.filter(p=>p.text.toLowerCase().includes(search)).forEach(p=>{
+    let stars=""; for(let i=1;i<=5;i++){stars+=`<span onclick="rate(${p.id},${i})">${i<=p.rating?"⭐":"☆"}</span>`;}
+    let comments=p.comments.map((c,i)=>`<div class="comment">💬 ${c.text} <button onclick="reply(${p.id},${i})">reply</button> ${c.replies.map(r=>`<div class="reply">↳ ${r}</div>`).join("")}</div>`).join("");
+    feed+=`<div class="card">
+      <div>${p.text}</div>
+      <div style="font-size:12px;color:#aaa">Reading time: ${Math.ceil(p.text.split(" ").length/200)} min</div>
+      <div>
+        <button onclick="vote(${p.id},1)">⬆ ${p.votes}</button>
+        <button onclick="vote(${p.id},-1)">⬇</button>
+        <button onclick="bookmark(${p.id})">🔖</button>
+      </div>
+      <div class="rating">${stars}</div>
+      <div class="reaction">
+        <span onclick="react(${p.id},'like')">👍 ${p.reactions.like}</span>
+        <span onclick="react(${p.id},'fire')">🔥 ${p.reactions.fire}</span>
+        <span onclick="react(${p.id},'love')">❤️ ${p.reactions.love}</span>
+      </div>
+      <div><input id="c${p.id}" placeholder="comment"><button onclick="comment(${p.id})">send</button>${comments}</div>
+    </div>`;
+  });
+  document.getElementById("feed").innerHTML=feed;
 }
 
-let comments=p.comments.map((c,i)=>`
-
-<div class="comment">
-
-💬 ${c.text}
-
-<button onclick="reply(${p.id},${i})">reply</button>
-
-${c.replies.map(r=>`<div class="reply">↳ ${r}</div>`).join("")}
-
-</div>
-
-`).join("")
-
-feed.innerHTML+=`
-
-<div class="post">
-
-<div>${markdown(p.text)}</div>
-
-<div style="font-size:12px;color:gray">
-
-${p.time} • ${readingTime(p.text)}
-
-</div>
-
-<div>${summarize(p.text)}</div>
-
-<div>
-
-<button onclick="vote(${p.id},1)">⬆ ${p.votes}</button>
-<button onclick="vote(${p.id},-1)">⬇</button>
-
-<button onclick="editPost(${p.id})">✏</button>
-<button onclick="deletePost(${p.id})">🗑</button>
-
-<button onclick="pinPost(${p.id})">📌</button>
-<button onclick="bookmark(${p.id})">🔖</button>
-
-<button onclick="createPoll(${p.id})">📊</button>
-
-</div>
-
-<div class="rating">${stars}</div>
-
-<div>
-
-<span onclick="react(${p.id},'like')">👍 ${p.reactions.like}</span>
-<span onclick="react(${p.id},'fire')">🔥 ${p.reactions.fire}</span>
-<span onclick="react(${p.id},'love')">❤️ ${p.reactions.love}</span>
-
-</div>
-
-${renderPoll(p)}
-
-<div>
-
-<input id="c${p.id}" placeholder="comment">
-
-<button onclick="comment(${p.id})">send</button>
-
-${comments}
-
-</div>
-
-</div>
-
-`
-
-})
-
-}
-
+render();
 </script>
-
 </body>
 </html>
