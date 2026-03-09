@@ -1,359 +1,568 @@
 <!DOCTYPE html>
 <html>
 <head>
-
 <meta charset="UTF-8">
-<title>Daniel Galaxy Notes</title>
+<title>Social Knowledge Platform</title>
 
 <style>
 
 body{
+font-family:system-ui;
 margin:0;
-font-family:sans-serif;
-background:black;
+background:#f4f4f4;
+}
+
+header{
+background:#111;
 color:white;
-overflow-x:hidden;
-}
-
-#space{
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
-z-index:-1;
-}
-
-#login{
-height:100vh;
+padding:12px;
 display:flex;
-flex-direction:column;
+justify-content:space-between;
 align-items:center;
-justify-content:center;
 }
 
-#home{
-display:none;
+.container{
+max-width:900px;
+margin:auto;
 padding:20px;
 }
 
-.card{
-background:rgba(255,255,255,0.1);
-backdrop-filter:blur(10px);
-border-radius:15px;
+.editor,.post{
+background:white;
 padding:20px;
+border-radius:10px;
 margin-bottom:20px;
 }
 
-input,button{
-padding:10px;
-margin:5px;
-border:none;
-border-radius:10px;
+textarea{
+width:100%;
+height:120px;
 }
 
 button{
-background:cyan;
+cursor:pointer;
+padding:6px 10px;
+margin:3px;
+}
+
+.rating span{
+font-size:20px;
 cursor:pointer;
 }
 
-#notes li{
-margin:10px 0;
+.dark{
+background:#121212;
+color:white;
 }
 
-.dark{
-background:#020617;
+.dark .post,.dark .editor{
+background:#1e1e1e;
+}
+
+.tag{
+color:#3498db;
+cursor:pointer;
+margin-right:5px;
+}
+
+.comment{
+margin-top:10px;
+font-size:14px;
+}
+
+.reply{
+margin-left:20px;
+font-size:13px;
 }
 
 </style>
 
 </head>
-
 <body>
 
-<canvas id="space"></canvas>
+<header>
 
-<div id="login">
+<b>Social Knowledge</b>
 
-<h1>Daniel Galaxy Notes</h1>
+<div>
 
-<button onclick="googleLogin()">Login with Google</button>
+<input id="search" placeholder="search..." oninput="render()">
 
-</div>
-
-<div id="home">
-
-<div class="card">
-
-<h2>Tambah Catatan</h2>
-
-<input id="noteInput" placeholder="Tulis catatan">
-
-<button onclick="voiceNote()">🎤</button>
-
-<button onclick="addNote()">Simpan</button>
+<button onclick="theme('dark')">🌙</button>
+<button onclick="theme('neon')">🌈</button>
 
 </div>
 
-<div class="card">
+</header>
 
-<input id="search" placeholder="Cari catatan">
+<div class="container">
 
-<ul id="notes"></ul>
+<div class="editor">
+
+<h3>Create Post</h3>
+
+<textarea id="postText"></textarea>
+
+<br>
+
+<button onclick="createPost()">Publish</button>
+<button onclick="saveDraft()">Save Draft</button>
 
 </div>
 
-<div class="card">
-
-Visitor: <span id="visitor">0</span>
-
-<button onclick="toggleMode()">Dark Mode</button>
+<div id="feed"></div>
 
 </div>
-
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/three@0.158.0/build/three.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/gsap@3"></script>
-
-<script type="module">
-
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-
-import { getFirestore,
-collection,
-addDoc,
-onSnapshot,
-doc,
-deleteDoc,
-updateDoc
-}
-
-from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-import {
-getAuth,
-GoogleAuthProvider,
-signInWithPopup
-}
-
-from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-
-/* FIREBASE CONFIG */
-
-const firebaseConfig = {
-apiKey: "AIzaSyBj1j2odizaiO91XtdFaQVo6_k2G8ter7M",
-authDomain: "daniel-website-f1f3b.firebaseapp.com",
-projectId: "daniel-website-f1f3b",
-storageBucket: "daniel-website-f1f3b.firebasestorage.app",
-messagingSenderId: "113198911345",
-appId: "1:113198911345:web:f9ecb06524b7e27bf470d0",
-measurementId: "G-5KTV80PG1J"
-};
-
-const app = initializeApp(firebaseConfig);
-
-const db = getFirestore(app);
-
-const auth = getAuth();
-
-const provider = new GoogleAuthProvider();
-
-/* LOGIN GOOGLE */
-
-window.googleLogin = async function(){
-
-let result = await signInWithPopup(auth,provider);
-
-let user = result.user;
-
-document.getElementById("login").style.display="none";
-
-document.getElementById("home").style.display="block";
-
-}
-
-/* ADD NOTE */
-
-window.addNote = async function(){
-
-let text = document.getElementById("noteInput").value;
-
-if(!text) return;
-
-await addDoc(collection(db,"notes"),{
-
-text:text,
-time:Date.now()
-
-});
-
-}
-
-/* REALTIME NOTES */
-
-onSnapshot(collection(db,"notes"),snap=>{
-
-let list=document.getElementById("notes");
-
-list.innerHTML="";
-
-snap.forEach(d=>{
-
-let li=document.createElement("li");
-
-li.innerHTML=`
-${d.data().text}
-
-<button onclick="editNote('${d.id}')">Edit</button>
-<button onclick="deleteNote('${d.id}')">Delete</button>
-`;
-
-list.appendChild(li);
-
-});
-
-});
-
-/* EDIT */
-
-window.editNote=async function(id){
-
-let text=prompt("Edit catatan");
-
-if(!text)return;
-
-await updateDoc(doc(db,"notes",id),{
-
-text:text
-
-});
-
-}
-
-/* DELETE */
-
-window.deleteNote=async function(id){
-
-await deleteDoc(doc(db,"notes",id));
-
-}
-
-/* VISITOR */
-
-addDoc(collection(db,"visitors"),{
-time:Date.now()
-})
-
-onSnapshot(collection(db,"visitors"),snap=>{
-document.getElementById("visitor").innerText=snap.size
-})
-
-</script>
 
 <script>
 
-/* THREE JS PLANET */
+let posts=[]
+let drafts=[]
+let bookmarks=[]
+let notifications=[]
+let currentTag=null
 
-const scene = new THREE.Scene();
+let user={
+name:"Guest",
+avatar:"😀"
+}
 
-const camera = new THREE.PerspectiveCamera(
-75,
-window.innerWidth/window.innerHeight,
-0.1,
-1000
-);
+function markdown(text){
 
-const renderer = new THREE.WebGLRenderer({
-canvas:document.getElementById("space"),
-alpha:true
-});
+text=text.replace(/\*\*(.*?)\*\*/g,"<b>$1</b>")
+text=text.replace(/\*(.*?)\*/g,"<i>$1</i>")
+text=text.replace(/`(.*?)`/g,"<code>$1</code>")
 
-renderer.setSize(window.innerWidth,window.innerHeight);
-
-const geometry = new THREE.SphereGeometry(3,64,64);
-
-const material = new THREE.MeshStandardMaterial({
-color:0x00ffff,
-wireframe:true
-});
-
-const planet = new THREE.Mesh(geometry,material);
-
-scene.add(planet);
-
-const light = new THREE.PointLight(0xffffff,2);
-light.position.set(10,10,10);
-
-scene.add(light);
-
-camera.position.z=8;
-
-function animate(){
-
-requestAnimationFrame(animate);
-
-planet.rotation.y+=0.01;
-
-renderer.render(scene,camera);
+return text
 
 }
 
-animate();
+function addTags(text){
 
-/* VOICE NOTE */
+let tags=text.match(/#\w+/g)
 
-const recognition = new webkitSpeechRecognition();
-
-recognition.lang="id-ID";
-
-function voiceNote(){
-
-recognition.start();
+return tags||[]
 
 }
 
-recognition.onresult=(event)=>{
+function readingTime(text){
 
-let text=event.results[0][0].transcript;
+let words=text.split(" ").length
 
-document.getElementById("noteInput").value=text;
+return Math.ceil(words/200)+" min read"
 
 }
 
-/* SEARCH */
+function summarize(text){
 
-document.addEventListener("input",e=>{
+let w=text.split(" ")
 
-if(e.target.id==="search"){
+if(w.length<40) return ""
 
-let v=e.target.value.toLowerCase();
+return w.slice(0,25).join(" ")+"..."
 
-document.querySelectorAll("#notes li").forEach(li=>{
+}
 
-li.style.display=
-li.innerText.toLowerCase().includes(v)
-?"block":"none";
+function calcTrending(p){
+
+return p.votes*2 +
+p.reactions.like +
+p.reactions.fire*2 +
+p.reactions.love +
+p.comments.length*2
+
+}
+
+function createPost(){
+
+let text=document.getElementById("postText").value
+
+posts.unshift({
+
+id:Date.now(),
+text:text,
+votes:0,
+rating:0,
+tags:addTags(text),
+time:new Date().toLocaleString(),
+
+reactions:{
+like:0,
+fire:0,
+love:0
+},
+
+comments:[],
+pinned:false,
+poll:null
+
+})
+
+render()
+
+}
+
+function vote(id,val){
+
+let p=posts.find(x=>x.id==id)
+p.votes+=val
+
+render()
+
+}
+
+function rate(id,val){
+
+let p=posts.find(x=>x.id==id)
+p.rating=val
+
+render()
+
+}
+
+function react(id,type){
+
+let p=posts.find(x=>x.id==id)
+p.reactions[type]++
+
+notifications.push("Reaction added")
+
+render()
+
+}
+
+function comment(id){
+
+let input=document.getElementById("c"+id)
+
+let p=posts.find(x=>x.id==id)
+
+p.comments.push({
+text:input.value,
+replies:[]
+})
+
+input.value=""
+
+notifications.push("New comment")
+
+render()
+
+}
+
+function reply(postId,index){
+
+let txt=prompt("Reply")
+
+let p=posts.find(x=>x.id==postId)
+
+p.comments[index].replies.push(txt)
+
+render()
+
+}
+
+function editPost(id){
+
+let p=posts.find(x=>x.id==id)
+
+let txt=prompt("Edit",p.text)
+
+if(txt){
+
+p.text=txt
+p.tags=addTags(txt)
+
+}
+
+render()
+
+}
+
+function deletePost(id){
+
+posts=posts.filter(p=>p.id!=id)
+
+render()
+
+}
+
+function pinPost(id){
+
+let p=posts.find(x=>x.id==id)
+
+p.pinned=!p.pinned
+
+render()
+
+}
+
+function bookmark(id){
+
+if(bookmarks.includes(id))
+bookmarks=bookmarks.filter(x=>x!=id)
+else
+bookmarks.push(id)
+
+render()
+
+}
+
+function createPoll(id){
+
+let q=prompt("Poll question")
+let a=prompt("Option 1")
+let b=prompt("Option 2")
+
+let p=posts.find(x=>x.id==id)
+
+p.poll={
+question:q,
+options:[
+{text:a,votes:0},
+{text:b,votes:0}
+]
+}
+
+render()
+
+}
+
+function votePoll(id,i){
+
+let p=posts.find(x=>x.id==id)
+
+p.poll.options[i].votes++
+
+render()
+
+}
+
+function saveDraft(){
+
+let text=document.getElementById("postText").value
+
+drafts.push(text)
+
+alert("Draft saved")
+
+}
+
+function filterTag(tag){
+
+currentTag=tag
+
+render()
+
+}
+
+function theme(mode){
+
+document.body.classList.remove("dark")
+
+document.body.style.background=""
+
+if(mode=="dark")
+document.body.classList.add("dark")
+
+if(mode=="neon"){
+
+document.body.style.background="#0f0f0f"
+document.body.style.color="#00ff9c"
+
+}
+
+}
+
+function renderPoll(p){
+
+if(!p.poll) return ""
+
+return `
+
+<div>
+
+<b>${p.poll.question}</b>
+
+${p.poll.options.map((o,i)=>`
+
+<div>
+
+<button onclick="votePoll(${p.id},${i})">${o.text}</button>
+${o.votes}
+
+</div>
+
+`).join("")}
+
+</div>
+
+`
+
+}
+
+function leaderboard(){
+
+let top=[...posts]
+
+.sort((a,b)=>calcTrending(b)-calcTrending(a))
+
+.slice(0,3)
+
+return `
+
+<div class="post">
+
+<h4>Top Posts</h4>
+
+${top.map(p=>`<div>${p.text.slice(0,40)}</div>`).join("")}
+
+</div>
+
+`
+
+}
+
+function popularTags(){
+
+let tags={}
+
+posts.forEach(p=>{
+
+p.tags.forEach(t=>{
+
+tags[t]=(tags[t]||0)+1
+
+})
+
+})
+
+let sorted=Object.entries(tags)
+
+.sort((a,b)=>b[1]-a[1])
+
+.slice(0,5)
+
+return `
+
+<div class="post">
+
+<b>Popular Tags</b><br>
+
+${sorted.map(t=>`<span class="tag" onclick="filterTag('${t[0]}')">${t[0]}</span>`).join("")}
+
+</div>
+
+`
+
+}
+
+function render(){
+
+let feed=document.getElementById("feed")
+
+feed.innerHTML=""
+
+feed.innerHTML+=leaderboard()
+
+feed.innerHTML+=popularTags()
+
+let search=document.getElementById("search").value.toLowerCase()
+
+posts
+.filter(p=>p.text.toLowerCase().includes(search))
+.filter(p=>!currentTag || p.tags.includes(currentTag))
+.sort((a,b)=>{
+
+if(a.pinned) return -1
+if(b.pinned) return 1
+
+return calcTrending(b)-calcTrending(a)
+
+})
+
+.forEach(p=>{
+
+let stars=""
+
+for(let i=1;i<=5;i++){
+
+stars+=`<span onclick="rate(${p.id},${i})">${i<=p.rating?"⭐":"☆"}</span>`
+
+}
+
+let comments=p.comments.map((c,i)=>`
+
+<div class="comment">
+
+💬 ${c.text}
+
+<button onclick="reply(${p.id},${i})">reply</button>
+
+${c.replies.map(r=>`<div class="reply">↳ ${r}</div>`).join("")}
+
+</div>
+
+`).join("")
+
+feed.innerHTML+=`
+
+<div class="post">
+
+<div>${markdown(p.text)}</div>
+
+<div style="font-size:12px;color:gray">
+
+${p.time} • ${readingTime(p.text)}
+
+</div>
+
+<div>${summarize(p.text)}</div>
+
+<div>
+
+<button onclick="vote(${p.id},1)">⬆ ${p.votes}</button>
+<button onclick="vote(${p.id},-1)">⬇</button>
+
+<button onclick="editPost(${p.id})">✏</button>
+<button onclick="deletePost(${p.id})">🗑</button>
+
+<button onclick="pinPost(${p.id})">📌</button>
+<button onclick="bookmark(${p.id})">🔖</button>
+
+<button onclick="createPoll(${p.id})">📊</button>
+
+</div>
+
+<div class="rating">${stars}</div>
+
+<div>
+
+<span onclick="react(${p.id},'like')">👍 ${p.reactions.like}</span>
+<span onclick="react(${p.id},'fire')">🔥 ${p.reactions.fire}</span>
+<span onclick="react(${p.id},'love')">❤️ ${p.reactions.love}</span>
+
+</div>
+
+${renderPoll(p)}
+
+<div>
+
+<input id="c${p.id}" placeholder="comment">
+
+<button onclick="comment(${p.id})">send</button>
+
+${comments}
+
+</div>
+
+</div>
+
+`
 
 })
 
 }
-
-});
-
-/* DARK MODE */
-
-function toggleMode(){
-document.body.classList.toggle("dark")
-}
-
-/* PAGE ANIMATION */
-
-gsap.from("body",{
-opacity:0,
-y:30,
-duration:1
-});
 
 </script>
 
