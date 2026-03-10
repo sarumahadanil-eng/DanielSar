@@ -1,162 +1,510 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
+
 <head>
 <meta charset="UTF-8">
-<title>Daniel Dolar Sarumaha - Ultra Cinematic SPA</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Daniel Sarumaha Web</title>
+
 <style>
-body, html{margin:0;padding:0;height:100%;font-family:'Segoe UI',sans-serif;background:#0e0e20;color:white;overflow:hidden;}
-*{box-sizing:border-box;}
-.container{display:flex;height:100vh;transition:0.5s;}
-.sidebar{width:220px;background:#11112a;padding:20px;display:flex;flex-direction:column;transition:width 0.4s;}
-.sidebar h3{margin-top:0;margin-bottom:20px;color:#fffb;}
-.sidebar div{margin:12px 0;cursor:pointer;padding:6px 8px;border-radius:6px;transition:0.2s;}
-.sidebar div:hover{background:#3a3a5c;color:#fff;font-weight:600;}
-.main{flex:1;overflow-y:auto;padding:20px;background:linear-gradient(135deg,#1b1b2f,#0e0e20);transition:0.5s;}
-.page{opacity:0;transform:translateY(20px);transition:0.4s;display:none;}
-.page.active{display:block;opacity:1;transform:translateY(0);}
-.card{background:rgba(255,255,255,0.05);backdrop-filter:blur(6px);padding:18px;margin-bottom:20px;border-radius:14px;box-shadow:0 4px 20px rgba(0,0,0,0.4);transition:0.3s transform;}
-.card:hover{transform: translateY(-4px) scale(1.01);box-shadow:0 8px 30px rgba(0,0,0,0.5);}
-textarea,input[type="text"]{width:100%;padding:10px;border-radius:8px;border:none;background:rgba(255,255,255,0.1);color:white;margin-bottom:10px;}
-button{padding:6px 12px;border:none;border-radius:6px;background:#4f46e5;color:white;cursor:pointer;margin-right:6px;transition:0.2s;}
-button:hover{background:#3b36c1;transform:scale(1.05);}
-.rating span,.reaction span{cursor:pointer;font-size:18px;margin-right:6px;transition:0.2s;}
-.rating span:hover,.reaction span:hover{transform:scale(1.3);}
-.comment{margin-top:10px;font-size:14px;}
-.reply{margin-left:20px;font-size:13px;color:#aaa;}
-.tag{color:#3498db;cursor:pointer;margin-right:6px;font-size:13px;}
-#profilePhoto{border-radius:50%;width:80px;height:80px;margin-right:16px;box-shadow:0 4px 12px rgba(0,0,0,0.3);}
-.social a{margin-right:10px;color:#4f46e5;text-decoration:none;font-weight:bold;}
-.social a:hover{text-decoration:underline;}
+
+body{
+margin:0;
+font-family:Segoe UI;
+background:linear-gradient(135deg,#020617,#0f172a,#1e293b);
+color:white;
+}
+
+/* HEADER */
+
+header{
+padding:20px;
+background:rgba(0,0,0,0.4);
+backdrop-filter:blur(10px);
+border-bottom:1px solid rgba(255,255,255,0.1);
+}
+
+header h1{
+margin:0;
+font-size:26px;
+}
+
+/* LAYOUT */
+
+.container{
+display:flex;
+min-height:100vh;
+}
+
+.sidebar{
+width:230px;
+padding:20px;
+}
+
+.sidebar button{
+width:100%;
+padding:12px;
+margin-bottom:12px;
+border:none;
+border-radius:10px;
+background:rgba(255,255,255,0.08);
+color:white;
+font-size:16px;
+cursor:pointer;
+transition:0.3s;
+}
+
+.sidebar button:hover{
+transform:translateY(-3px);
+background:rgba(255,255,255,0.2);
+}
+
+.main{
+flex:1;
+padding:30px;
+}
+
+.page{
+display:none;
+}
+
+.page.active{
+display:block;
+}
+
+/* 3D CARD */
+
+.card{
+background:rgba(255,255,255,0.06);
+backdrop-filter:blur(20px);
+border-radius:20px;
+padding:25px;
+box-shadow:0 10px 40px rgba(0,0,0,0.4);
+margin-bottom:25px;
+transition:0.3s;
+}
+
+.card:hover{
+transform:translateY(-6px);
+}
+
+/* PROFILE */
+
+.profile{
+text-align:center;
+}
+
+.profile img{
+width:130px;
+height:130px;
+border-radius:50%;
+border:3px solid white;
+margin-bottom:10px;
+}
+
+/* SOCIAL */
+
+.social{
+display:flex;
+justify-content:center;
+gap:15px;
+margin-top:15px;
+}
+
+.social a{
+padding:10px 18px;
+border-radius:10px;
+background:#1e293b;
+text-decoration:none;
+color:white;
+font-size:14px;
+}
+
+/* POST */
+
+textarea,input{
+width:100%;
+padding:10px;
+border:none;
+border-radius:8px;
+margin-top:10px;
+}
+
+button.primary{
+margin-top:10px;
+background:#3b82f6;
+color:white;
+padding:10px;
+border:none;
+border-radius:8px;
+cursor:pointer;
+}
+
+.post{
+background:#020617;
+padding:15px;
+border-radius:12px;
+margin-top:15px;
+}
+
+.comment{
+background:#0f172a;
+padding:7px;
+border-radius:8px;
+margin-top:5px;
+}
+
+.like{
+cursor:pointer;
+color:#38bdf8;
+}
+
+/* FOLLOW */
+
+.follow{
+margin-top:15px;
+padding:10px 15px;
+background:#22c55e;
+border:none;
+border-radius:10px;
+cursor:pointer;
+}
+
+.star{
+font-size:30px;
+cursor:pointer;
+color:gray;
+}
+
+.star.active{
+color:gold;
+}
+
 </style>
 </head>
+
 <body>
+
+<header>
+
+<h1>Daniel Sarumaha  
+<br><small>@Danieldolars</small></h1>
+
+</header>
+
 <div class="container">
-  <div class="sidebar">
-    <h3>Platform</h3>
-    <div onclick="showPage('home')">🏠 Home</div>
-    <div onclick="showPage('trending')">🔥 Trending</div>
-    <div onclick="showPage('bookmarks')">🔖 Bookmarks</div>
-    <div onclick="showPage('drafts')">📝 Drafts</div>
-    <div onclick="showPage('notifications')">🔔 Notifications</div>
-    <div onclick="showPage('leaderboard')">🏆 Leaderboard</div>
-    <div onclick="showPage('profile')">👤 Profile</div>
-  </div>
-  <div class="main">
 
-    <!-- HOME PAGE -->
-    <div id="home" class="page active">
-      <h2>Home</h2>
-      <input id="search" placeholder="Search..." oninput="render()">
-      <div class="card">
-        <textarea id="postText" placeholder="Write something..."></textarea><br>
-        <button onclick="createPost()">Post</button>
-        <button onclick="saveDraft()">Save Draft</button>
-      </div>
-      <div id="feed"></div>
-    </div>
+<!-- SIDEBAR -->
 
-    <!-- PROFILE PAGE -->
-    <div id="profile" class="page">
-      <h2>Profile</h2>
-      <div style="display:flex;align-items:center;margin-bottom:20px;">
-        <img id="profilePhoto" src="https://via.placeholder.com/80" alt="Profile Photo">
-        <div>
-          <h3 id="profileName">Daniel Dolar Sarumaha</h3>
-          <p id="profileEmail" style="margin:4px 0;color:#ccc;">albumxiimia@gmail.com</p>
-          <p id="profileBio" style="margin:4px 0;font-size:14px;color:#aaa;">Portfolio ultra cinematic, multi-functional SPA</p>
-          <div class="social">
-            <a href="https://wa.me/6281388149795" target="_blank">WhatsApp</a>
-            <a href="https://instagram.com/Danieldolars" target="_blank">Instagram</a>
-            <a href="https://facebook.com/Daniel Sarumaha" target="_blank">Facebook</a>
-          </div>
-        </div>
-      </div>
-      <div>
-        <input type="file" id="uploadPhoto" onchange="changePhoto(event)">
-        <p style="margin:8px 0;">Catatan Pribadi:</p>
-        <textarea id="personalNote" placeholder="Tulis catatan pribadimu di sini..."></textarea><br>
-        <button onclick="saveNote()">Simpan Catatan</button>
-      </div>
-      <div style="display:flex;gap:16px;margin-top:20px;">
-        <div class="card" style="flex:1;text-align:center;">Posts<br><span id="statPosts">0</span></div>
-        <div class="card" style="flex:1;text-align:center;">Comments<br><span id="statComments">0</span></div>
-        <div class="card" style="flex:1;text-align:center;">Reactions<br><span id="statReactions">0</span></div>
-        <div class="card" style="flex:1;text-align:center;"><span id="followBtn" onclick="toggleFollow()" style="cursor:pointer;background:#4f46e5;padding:4px 10px;border-radius:6px;">Follow</span></div>
-      </div>
-    </div>
+<div class="sidebar">
 
-  </div>
+<button onclick="showPage('home')">Home</button>
+<button onclick="showPage('profil')">Profil</button>
+<button onclick="showPage('catatan')">Catatan</button>
+<button onclick="showPage('rating')">Rating</button>
+<button onclick="showPage('leaderboard')">Leaderboard</button>
+
+</div>
+
+<!-- MAIN -->
+
+<div class="main">
+
+<!-- HOME -->
+
+<div id="home" class="page active">
+
+<div class="card profile">
+
+<img src="https://i.imgur.com/4AiXzf8.jpeg">
+
+<h2>Daniel Sarumaha</h2>
+
+<p>
+Seorang kreator digital yang tertarik pada teknologi, website development,
+dan eksplorasi ide baru. Saya suka membuat proyek web sederhana,
+bereksperimen dengan coding, serta membangun platform digital sendiri.
+</p>
+
+<p>
+📍 Indonesia  
+🎓 Pelajar MIA  
+💻 Web Enthusiast
+</p>
+
+<div class="social">
+
+<a href="https://wa.me/6281388149795">WhatsApp</a>
+<a href="https://instagram.com/Danieldolars">Instagram</a>
+<a href="#">Facebook</a>
+
+</div>
+
+<button class="follow" onclick="follow()">Follow Website</button>
+
+<p id="followers"></p>
+
+</div>
+
+<div class="card">
+
+<h3>Posting Publik</h3>
+
+<div id="posts"></div>
+
+</div>
+
+</div>
+
+<!-- PROFIL -->
+
+<div id="profil" class="page">
+
+<div class="card">
+
+<h2>Tentang Saya</h2>
+
+<p>
+Nama: Daniel Sarumaha  
+</p>
+
+<p>
+Hobi: Coding, belajar teknologi, membuat website.
+</p>
+
+<p>
+Tujuan: Membangun platform digital dan terus mengembangkan skill teknologi.
+</p>
+
+</div>
+
+</div>
+
+<!-- CATATAN -->
+
+<div id="catatan" class="page">
+
+<div class="card">
+
+<h2>Buat Catatan</h2>
+
+<input id="username" placeholder="Nama kamu">
+
+<textarea id="postInput" placeholder="Tulis sesuatu..."></textarea>
+
+<button class="primary" onclick="createPost()">Posting</button>
+
+</div>
+
+</div>
+
+<!-- RATING -->
+
+<div id="rating" class="page">
+
+<div class="card">
+
+<h2>Rating Website</h2>
+
+<div>
+
+<span class="star" onclick="rate(1)">★</span>
+<span class="star" onclick="rate(2)">★</span>
+<span class="star" onclick="rate(3)">★</span>
+<span class="star" onclick="rate(4)">★</span>
+<span class="star" onclick="rate(5)">★</span>
+
+</div>
+
+<p id="ratingText"></p>
+
+</div>
+
+</div>
+
+<!-- LEADERBOARD -->
+
+<div id="leaderboard" class="page">
+
+<div class="card">
+
+<h2>User Terpopuler</h2>
+
+<ol id="leaderboardList"></ol>
+
+</div>
+
+</div>
+
+</div>
 </div>
 
 <script>
-// Data
-let posts=[], bookmarks=[], drafts=[], notifications=[], currentTag=null;
-let user={name:"Daniel Dolar Sarumaha",email:"albumxiimia@gmail.com",bio:"Portfolio ultra cinematic, multi-functional SPA",photo:"https://via.placeholder.com/80",followed:false,note:""};
 
-// SPA
 function showPage(id){
-  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
-  document.getElementById(id).classList.add("active");
-  render();
+
+document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"))
+document.getElementById(id).classList.add("active")
+
 }
 
-// Profile
-function changePhoto(e){let file=e.target.files[0]; if(file){let reader=new FileReader(); reader.onload=function(){document.getElementById("profilePhoto").src=reader.result; user.photo=reader.result;} reader.readAsDataURL(file);}}
-function saveNote(){user.note=document.getElementById("personalNote").value; alert("Catatan tersimpan!");}
-function toggleFollow(){user.followed=!user.followed; document.getElementById("followBtn").innerText=user.followed?"Unfollow":"Follow";}
+function createPost(){
 
-// Post & Interaction
-function createPost(){let text=document.getElementById("postText").value; posts.unshift({id:Date.now(),text,rating:0,votes:0,reactions:{like:0,fire:0,love:0},comments:[],tags:text.match(/#\w+/g)||[]}); render();}
-function vote(id,val){let p=posts.find(x=>x.id==id);p.votes+=val;render();}
-function rate(id,val){let p=posts.find(x=>x.id==id);p.rating=val;render();}
-function react(id,type){let p=posts.find(x=>x.id==id);p.reactions[type]++; notifications.push("Reaction added");render();}
-function comment(id){let input=document.getElementById("c"+id); let p=posts.find(x=>x.id==id); p.comments.push({text:input.value,replies:[]}); input.value=""; notifications.push("New comment"); render();}
-function reply(id,i){let txt=prompt("Reply"); let p=posts.find(x=>x.id==id); p.comments[i].replies.push(txt); render();}
-function bookmark(id){if(!bookmarks.includes(id))bookmarks.push(id);render();}
-function saveDraft(){drafts.push(document.getElementById("postText").value); render();}
+let text=document.getElementById("postInput").value
+let user=document.getElementById("username").value
 
-// Render
-function render(){
-  // Profile
-  document.getElementById("profileName").innerText=user.name;
-  document.getElementById("profileEmail").innerText=user.email;
-  document.getElementById("profileBio").innerText=user.bio;
-  document.getElementById("profilePhoto").src=user.photo;
-  document.getElementById("personalNote").value=user.note;
-  // Stats
-  document.getElementById("statPosts").innerText=posts.length;
-  let totalComments=posts.reduce((sum,p)=>sum+p.comments.length,0);
-  document.getElementById("statComments").innerText=totalComments;
-  let totalReactions=posts.reduce((sum,p)=>sum+p.reactions.like+p.reactions.fire+p.reactions.love,0);
-  document.getElementById("statReactions").innerText=totalReactions;
+if(!text || !user)return
 
-  // Feed
-  let search=document.getElementById("search")?.value?.toLowerCase()||"";
-  let feed="";
-  posts.filter(p=>p.text.toLowerCase().includes(search)).forEach(p=>{
-    let stars=""; for(let i=1;i<=5;i++){stars+=`<span onclick="rate(${p.id},${i})">${i<=p.rating?"⭐":"☆"}</span>`;}
-    let comments=p.comments.map((c,i)=>`<div class="comment">💬 ${c.text} <button onclick="reply(${p.id},${i})">reply</button> ${c.replies.map(r=>`<div class="reply">↳ ${r}</div>`).join("")}</div>`).join("");
-    feed+=`<div class="card">
-      <div>${p.text}</div>
-      <div style="font-size:12px;color:#aaa">Reading time: ${Math.ceil(p.text.split(" ").length/200)} min</div>
-      <div>
-        <button onclick="vote(${p.id},1)">⬆ ${p.votes}</button>
-        <button onclick="vote(${p.id},-1)">⬇</button>
-        <button onclick="bookmark(${p.id})">🔖</button>
-      </div>
-      <div class="rating">${stars}</div>
-      <div class="reaction">
-        <span onclick="react(${p.id},'like')">👍 ${p.reactions.like}</span>
-        <span onclick="react(${p.id},'fire')">🔥 ${p.reactions.fire}</span>
-        <span onclick="react(${p.id},'love')">❤️ ${p.reactions.love}</span>
-      </div>
-      <div><input id="c${p.id}" placeholder="comment"><button onclick="comment(${p.id})">send</button>${comments}</div>
-    </div>`;
-  });
-  document.getElementById("feed").innerHTML=feed;
+let posts=JSON.parse(localStorage.getItem("posts")||"[]")
+
+posts.push({
+user:user,
+text:text,
+likes:0,
+comments:[]
+})
+
+localStorage.setItem("posts",JSON.stringify(posts))
+
+document.getElementById("postInput").value=""
+
+loadPosts()
+
 }
 
-render();
+function loadPosts(){
+
+let posts=JSON.parse(localStorage.getItem("posts")||"[]")
+let area=document.getElementById("posts")
+
+area.innerHTML=""
+
+posts.forEach((p,i)=>{
+
+let commentsHTML=""
+
+p.comments.forEach(c=>{
+commentsHTML+=`<div class="comment">${c}</div>`
+})
+
+let div=document.createElement("div")
+
+div.className="post"
+
+div.innerHTML=`
+
+<b>${p.user}</b>
+
+<p>${p.text}</p>
+
+<span class="like" onclick="likePost(${i})">👍 ${p.likes}</span>
+
+<br><br>
+
+<input id="c${i}" placeholder="Komentar">
+
+<button onclick="addComment(${i})">Kirim</button>
+
+${commentsHTML}
+
+`
+
+area.appendChild(div)
+
+})
+
+updateLeaderboard()
+
+}
+
+function likePost(i){
+
+let posts=JSON.parse(localStorage.getItem("posts"))
+
+posts[i].likes++
+
+localStorage.setItem("posts",JSON.stringify(posts))
+
+loadPosts()
+
+}
+
+function addComment(i){
+
+let text=document.getElementById("c"+i).value
+
+if(!text)return
+
+let posts=JSON.parse(localStorage.getItem("posts"))
+
+posts[i].comments.push(text)
+
+localStorage.setItem("posts",JSON.stringify(posts))
+
+loadPosts()
+
+}
+
+function rate(n){
+
+localStorage.setItem("rating",n)
+
+let stars=document.querySelectorAll(".star")
+
+stars.forEach(s=>s.classList.remove("active"))
+
+for(let i=0;i<n;i++){
+stars[i].classList.add("active")
+}
+
+document.getElementById("ratingText").innerText="Rating kamu: "+n
+
+}
+
+function updateLeaderboard(){
+
+let posts=JSON.parse(localStorage.getItem("posts")||"[]")
+
+let score={}
+
+posts.forEach(p=>{
+if(!score[p.user])score[p.user]=0
+score[p.user]+=p.likes
+})
+
+let sorted=Object.entries(score).sort((a,b)=>b[1]-a[1])
+
+let list=document.getElementById("leaderboardList")
+
+list.innerHTML=""
+
+sorted.forEach(s=>{
+
+let li=document.createElement("li")
+
+li.innerText=s[0]+" ("+s[1]+" likes)"
+
+list.appendChild(li)
+
+})
+
+}
+
+function follow(){
+
+let f=localStorage.getItem("followers")||0
+f++
+localStorage.setItem("followers",f)
+
+document.getElementById("followers").innerText="Followers: "+f
+
+}
+
+loadPosts()
+
+document.getElementById("followers").innerText="Followers: "+(localStorage.getItem("followers")||0)
+
 </script>
+
 </body>
 </html>
