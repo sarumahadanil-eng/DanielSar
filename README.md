@@ -1,248 +1,183 @@
 <!DOCTYPE html>
-<html lang="id">
-
+<html>
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Daniel Sarumaha Web</title>
+<title>Daniel Sarumaha</title>
 
 <style>
 
 body{
 margin:0;
-font-family:Segoe UI;
-background:linear-gradient(135deg,#020617,#0f172a,#1e293b);
+font-family:Arial;
+background:linear-gradient(135deg,#020617,#0f172a);
 color:white;
 }
-
-/* HEADER */
 
 header{
 padding:20px;
-background:rgba(0,0,0,0.4);
-backdrop-filter:blur(10px);
-border-bottom:1px solid rgba(255,255,255,0.1);
-}
-
-header h1{
-margin:0;
-font-size:26px;
-}
-
-/* LAYOUT */
-
-.container{
+background:#020617;
 display:flex;
-min-height:100vh;
+justify-content:space-between;
+align-items:center;
 }
 
-.sidebar{
-width:230px;
+.menu{
+position:fixed;
+top:70px;
+left:0;
+width:200px;
+height:100%;
+background:#020617;
 padding:20px;
 }
 
-.sidebar button{
+.menu button{
 width:100%;
 padding:12px;
-margin-bottom:12px;
+margin-bottom:10px;
+background:#1e293b;
 border:none;
-border-radius:10px;
-background:rgba(255,255,255,0.08);
 color:white;
-font-size:16px;
+border-radius:8px;
 cursor:pointer;
-transition:0.3s;
 }
 
-.sidebar button:hover{
-transform:translateY(-3px);
-background:rgba(255,255,255,0.2);
-}
-
-.main{
-flex:1;
+.content{
+margin-left:220px;
 padding:30px;
 }
 
-.page{
-display:none;
-}
-
-.page.active{
-display:block;
-}
-
-/* 3D CARD */
-
 .card{
-background:rgba(255,255,255,0.06);
-backdrop-filter:blur(20px);
-border-radius:20px;
-padding:25px;
-box-shadow:0 10px 40px rgba(0,0,0,0.4);
-margin-bottom:25px;
-transition:0.3s;
-}
-
-.card:hover{
-transform:translateY(-6px);
-}
-
-/* PROFILE */
-
-.profile{
-text-align:center;
-}
-
-.profile img{
-width:130px;
-height:130px;
-border-radius:50%;
-border:3px solid white;
-margin-bottom:10px;
-}
-
-/* SOCIAL */
-
-.social{
-display:flex;
-justify-content:center;
-gap:15px;
-margin-top:15px;
-}
-
-.social a{
-padding:10px 18px;
-border-radius:10px;
 background:#1e293b;
-text-decoration:none;
-color:white;
-font-size:14px;
+padding:20px;
+border-radius:12px;
+margin-bottom:20px;
 }
 
-/* POST */
-
-textarea,input{
+textarea{
 width:100%;
-padding:10px;
-border:none;
+height:80px;
 border-radius:8px;
-margin-top:10px;
-}
-
-button.primary{
-margin-top:10px;
-background:#3b82f6;
-color:white;
 padding:10px;
-border:none;
-border-radius:8px;
-cursor:pointer;
 }
 
 .post{
 background:#020617;
 padding:15px;
-border-radius:12px;
 margin-top:15px;
+border-radius:10px;
 }
 
 .comment{
-background:#0f172a;
-padding:7px;
-border-radius:8px;
-margin-top:5px;
-}
-
-.like{
-cursor:pointer;
-color:#38bdf8;
-}
-
-/* FOLLOW */
-
-.follow{
-margin-top:15px;
-padding:10px 15px;
-background:#22c55e;
-border:none;
-border-radius:10px;
-cursor:pointer;
+margin-left:20px;
+font-size:14px;
+color:#cbd5f5;
 }
 
 .star{
-font-size:30px;
+font-size:20px;
 cursor:pointer;
 color:gray;
 }
 
-.star.active{
+.active{
 color:gold;
 }
 
 </style>
+
 </head>
 
 <body>
 
 <header>
 
-<h1>Daniel Sarumaha  
-<br><small>@Danieldolars</small></h1>
+<h2>Daniel Sarumaha</h2>
+
+<button onclick="login()">Login Google</button>
 
 </header>
 
-<div class="container">
+<div class="menu">
 
-<!-- SIDEBAR -->
-
-<div class="sidebar">
-
-<button onclick="showPage('home')">Home</button>
-<button onclick="showPage('profil')">Profil</button>
-<button onclick="showPage('catatan')">Catatan</button>
-<button onclick="showPage('rating')">Rating</button>
-<button onclick="showPage('leaderboard')">Leaderboard</button>
+<button onclick="home()">Home</button>
+<button onclick="profile()">Profil</button>
+<button onclick="notes()">Catatan</button>
+<button onclick="leaderboard()">Leaderboard</button>
+<button onclick="ratingPage()">Rating</button>
 
 </div>
 
-<!-- MAIN -->
+<div class="content" id="content"></div>
 
-<div class="main">
+<script type="module">
 
-<!-- HOME -->
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 
-<div id="home" class="page active">
+import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
-<div class="card profile">
+import { getFirestore,
+collection,
+addDoc,
+onSnapshot,
+updateDoc,
+doc,
+increment,
+getDocs
 
-<img src="https://i.imgur.com/4AiXzf8.jpeg">
+}
+
+from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig = {
+
+apiKey:"APIKEY",
+authDomain:"DOMAIN",
+projectId:"PROJECTID",
+storageBucket:"BUCKET",
+messagingSenderId:"MSGID",
+appId:"APPID"
+
+};
+
+const app=initializeApp(firebaseConfig);
+
+const auth=getAuth();
+
+const db=getFirestore();
+
+window.login=async function(){
+
+const provider=new GoogleAuthProvider();
+
+await signInWithPopup(auth,provider);
+
+alert("Login berhasil")
+
+}
+
+window.home=function(){
+
+document.getElementById("content").innerHTML=`
+
+<div class="card">
+
+<img src="profile.jpg" width="120">
 
 <h2>Daniel Sarumaha</h2>
 
 <p>
-Seorang kreator digital yang tertarik pada teknologi, website development,
-dan eksplorasi ide baru. Saya suka membuat proyek web sederhana,
-bereksperimen dengan coding, serta membangun platform digital sendiri.
+
+Creator website ini.<br>
+IG: Danieldolars<br>
+FB: Daniel Sarumaha<br>
+
 </p>
 
-<p>
-📍 Indonesia  
-🎓 Pelajar MIA  
-💻 Web Enthusiast
-</p>
-
-<div class="social">
-
-<a href="https://wa.me/6281388149795">WhatsApp</a>
-<a href="https://instagram.com/Danieldolars">Instagram</a>
+<a href="https://wa.me/6281388149795">WhatsApp</a><br>
+<a href="https://instagram.com/Danieldolars">Instagram</a><br>
 <a href="#">Facebook</a>
-
-</div>
-
-<button class="follow" onclick="follow()">Follow Website</button>
-
-<p id="followers"></p>
 
 </div>
 
@@ -254,257 +189,208 @@ bereksperimen dengan coding, serta membangun platform digital sendiri.
 
 </div>
 
-</div>
+`
 
-<!-- PROFIL -->
-
-<div id="profil" class="page">
-
-<div class="card">
-
-<h2>Tentang Saya</h2>
-
-<p>
-Nama: Daniel Sarumaha  
-</p>
-
-<p>
-Hobi: Coding, belajar teknologi, membuat website.
-</p>
-
-<p>
-Tujuan: Membangun platform digital dan terus mengembangkan skill teknologi.
-</p>
-
-</div>
-
-</div>
-
-<!-- CATATAN -->
-
-<div id="catatan" class="page">
-
-<div class="card">
-
-<h2>Buat Catatan</h2>
-
-<input id="username" placeholder="Nama kamu">
-
-<textarea id="postInput" placeholder="Tulis sesuatu..."></textarea>
-
-<button class="primary" onclick="createPost()">Posting</button>
-
-</div>
-
-</div>
-
-<!-- RATING -->
-
-<div id="rating" class="page">
-
-<div class="card">
-
-<h2>Rating Website</h2>
-
-<div>
-
-<span class="star" onclick="rate(1)">★</span>
-<span class="star" onclick="rate(2)">★</span>
-<span class="star" onclick="rate(3)">★</span>
-<span class="star" onclick="rate(4)">★</span>
-<span class="star" onclick="rate(5)">★</span>
-
-</div>
-
-<p id="ratingText"></p>
-
-</div>
-
-</div>
-
-<!-- LEADERBOARD -->
-
-<div id="leaderboard" class="page">
-
-<div class="card">
-
-<h2>User Terpopuler</h2>
-
-<ol id="leaderboardList"></ol>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-<script>
-
-function showPage(id){
-
-document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"))
-document.getElementById(id).classList.add("active")
+loadPosts()
 
 }
 
-function createPost(){
+window.profile=function(){
 
-let text=document.getElementById("postInput").value
-let user=document.getElementById("username").value
+if(!auth.currentUser){
 
-if(!text || !user)return
+alert("Login dulu")
 
-let posts=JSON.parse(localStorage.getItem("posts")||"[]")
+return
 
-posts.push({
-user:user,
+}
+
+let u=auth.currentUser
+
+document.getElementById("content").innerHTML=`
+
+<div class="card">
+
+<img src="${u.photoURL}" width="100">
+
+<h3>${u.displayName}</h3>
+
+<p>${u.email}</p>
+
+</div>
+
+`
+
+}
+
+window.notes=function(){
+
+document.getElementById("content").innerHTML=`
+
+<div class="card">
+
+<h3>Buat Catatan</h3>
+
+<textarea id="text"></textarea>
+
+<br><br>
+
+<button onclick="post()">Posting</button>
+
+</div>
+
+`
+
+}
+
+window.post=async function(){
+
+let text=document.getElementById("text").value
+
+await addDoc(collection(db,"posts"),{
+
+user:auth.currentUser.displayName,
+
 text:text,
-likes:0,
-comments:[]
+
+likes:0
+
 })
 
-localStorage.setItem("posts",JSON.stringify(posts))
-
-document.getElementById("postInput").value=""
-
-loadPosts()
+alert("Posting dibuat")
 
 }
 
 function loadPosts(){
 
-let posts=JSON.parse(localStorage.getItem("posts")||"[]")
-let area=document.getElementById("posts")
+onSnapshot(collection(db,"posts"),(snap)=>{
 
-area.innerHTML=""
+let html=""
 
-posts.forEach((p,i)=>{
+snap.forEach(docu=>{
 
-let commentsHTML=""
+let p=docu.data()
 
-p.comments.forEach(c=>{
-commentsHTML+=`<div class="comment">${c}</div>`
-})
+html+=`
 
-let div=document.createElement("div")
-
-div.className="post"
-
-div.innerHTML=`
+<div class="post">
 
 <b>${p.user}</b>
 
 <p>${p.text}</p>
 
-<span class="like" onclick="likePost(${i})">👍 ${p.likes}</span>
+<button onclick="like('${docu.id}')">
 
-<br><br>
+👍 ${p.likes}
 
-<input id="c${i}" placeholder="Komentar">
+</button>
 
-<button onclick="addComment(${i})">Kirim</button>
+<input id="c${docu.id}" placeholder="komentar">
 
-${commentsHTML}
+<button onclick="comment('${docu.id}')">Kirim</button>
+
+<div id="cm${docu.id}"></div>
+
+</div>
 
 `
 
-area.appendChild(div)
-
 })
 
-updateLeaderboard()
-
-}
-
-function likePost(i){
-
-let posts=JSON.parse(localStorage.getItem("posts"))
-
-posts[i].likes++
-
-localStorage.setItem("posts",JSON.stringify(posts))
-
-loadPosts()
-
-}
-
-function addComment(i){
-
-let text=document.getElementById("c"+i).value
-
-if(!text)return
-
-let posts=JSON.parse(localStorage.getItem("posts"))
-
-posts[i].comments.push(text)
-
-localStorage.setItem("posts",JSON.stringify(posts))
-
-loadPosts()
-
-}
-
-function rate(n){
-
-localStorage.setItem("rating",n)
-
-let stars=document.querySelectorAll(".star")
-
-stars.forEach(s=>s.classList.remove("active"))
-
-for(let i=0;i<n;i++){
-stars[i].classList.add("active")
-}
-
-document.getElementById("ratingText").innerText="Rating kamu: "+n
-
-}
-
-function updateLeaderboard(){
-
-let posts=JSON.parse(localStorage.getItem("posts")||"[]")
-
-let score={}
-
-posts.forEach(p=>{
-if(!score[p.user])score[p.user]=0
-score[p.user]+=p.likes
-})
-
-let sorted=Object.entries(score).sort((a,b)=>b[1]-a[1])
-
-let list=document.getElementById("leaderboardList")
-
-list.innerHTML=""
-
-sorted.forEach(s=>{
-
-let li=document.createElement("li")
-
-li.innerText=s[0]+" ("+s[1]+" likes)"
-
-list.appendChild(li)
+document.getElementById("posts").innerHTML=html
 
 })
 
 }
 
-function follow(){
+window.like=async function(id){
 
-let f=localStorage.getItem("followers")||0
-f++
-localStorage.setItem("followers",f)
+let ref=doc(db,"posts",id)
 
-document.getElementById("followers").innerText="Followers: "+f
+await updateDoc(ref,{likes:increment(1)})
 
 }
 
-loadPosts()
+window.comment=async function(id){
 
-document.getElementById("followers").innerText="Followers: "+(localStorage.getItem("followers")||0)
+let text=document.getElementById("c"+id).value
+
+await addDoc(collection(db,"comments"),{
+
+post:id,
+
+user:auth.currentUser.displayName,
+
+text:text
+
+})
+
+}
+
+window.leaderboard=async function(){
+
+const snap=await getDocs(collection(db,"posts"))
+
+let users={}
+
+snap.forEach(d=>{
+
+let p=d.data()
+
+if(!users[p.user])users[p.user]=0
+
+users[p.user]+=p.likes
+
+})
+
+let arr=Object.entries(users).sort((a,b)=>b[1]-a[1])
+
+let html="<div class='card'><h2>Leaderboard</h2>"
+
+arr.forEach((u,i)=>{
+
+html+=`${i+1}. ${u[0]} (${u[1]} likes)<br>`
+
+})
+
+html+="</div>"
+
+document.getElementById("content").innerHTML=html
+
+}
+
+window.ratingPage=function(){
+
+let html=`<div class="card"><h2>Rating Website</h2>`
+
+for(let i=1;i<=5;i++){
+
+html+=`<span class="star" onclick="rate(${i})">★</span>`
+
+}
+
+html+="</div>"
+
+document.getElementById("content").innerHTML=html
+
+}
+
+window.rate=async function(n){
+
+await addDoc(collection(db,"rating"),{
+
+value:n
+
+})
+
+alert("Terima kasih atas ratingnya")
+
+}
+
+home()
 
 </script>
 
 </body>
+
 </html>
