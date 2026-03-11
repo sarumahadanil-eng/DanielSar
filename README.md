@@ -2,128 +2,61 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Daniel Dolar Sarumaha</title>
+<title>Daniel Website</title>
 
 <style>
+
 body{
-margin:0;
 font-family:Arial;
-background:linear-gradient(135deg,#020617,#0f172a,#1e293b);
+background:#0f172a;
 color:white;
+text-align:center;
+padding:50px;
 }
 
-header{
-background:#020617;
-padding:15px;
-display:flex;
-justify-content:space-between;
-align-items:center;
-}
-
-main{
-max-width:700px;
-margin:auto;
-padding:20px;
-}
-
-.card{
+.box{
 background:#1e293b;
-padding:15px;
-border-radius:12px;
-margin-top:15px;
-}
-
-.post{
-background:#020617;
-padding:12px;
+padding:30px;
 border-radius:10px;
-margin-top:10px;
+width:300px;
+margin:auto;
 }
 
-input,textarea{
+input{
 width:100%;
 padding:10px;
-margin-top:8px;
+margin:10px 0;
 border:none;
-border-radius:6px;
+border-radius:5px;
 }
 
 button{
-margin-top:10px;
-padding:8px 14px;
+padding:10px;
+width:100%;
+background:#38bdf8;
 border:none;
-border-radius:6px;
-background:#0ea5e9;
 color:white;
+border-radius:5px;
 cursor:pointer;
 }
 
-.comment{
-font-size:13px;
-margin-left:10px;
-color:#cbd5f5;
-}
 </style>
+
 </head>
 
 <body>
 
-<header>
-<span>Daniel Dolar Sarumaha</span>
-<div id="userArea"></div>
-</header>
+<div id="app"></div>
 
-<main id="app"></main>
+<script>
 
-<script type="module">
+function loginPage(){
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+document.getElementById("app").innerHTML=`
 
-import {
-getFirestore,
-collection,
-addDoc,
-getDocs,
-query,
-where,
-onSnapshot,
-doc,
-updateDoc,
-increment
-} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+<div class="box">
 
-const firebaseConfig = {
-apiKey: "AIzaSyAaW8jwL5yT-uZZglS2gA_HWRJvdUG-nZA",
-authDomain: "danieldolar-9bca1.firebaseapp.com",
-projectId: "danieldolar-9bca1",
-storageBucket: "danieldolar-9bca1.firebasestorage.app",
-messagingSenderId: "4879222744",
-appId: "1:4879222744:web:e441fe6b15b34fb42314ad"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
-
-/* HASH PASSWORD */
-
-async function hash(text){
-const msg = new TextEncoder().encode(text);
-const buf = await crypto.subtle.digest("SHA-256", msg);
-return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,"0")).join("");
-}
-
-
-
-/* LOGIN PAGE */
-
-window.loginPage = function(){
-
-document.getElementById("app").innerHTML = `
-
-<div class="card">
-
-<h3>Login</h3>
+<h2>Login</h2>
 
 <input id="user" placeholder="Username">
 
@@ -143,15 +76,13 @@ document.getElementById("app").innerHTML = `
 
 
 
-/* REGISTER PAGE */
+function registerPage(){
 
-window.registerPage = function(){
+document.getElementById("app").innerHTML=`
 
-document.getElementById("app").innerHTML = `
+<div class="box">
 
-<div class="card">
-
-<h3>Register</h3>
+<h2>Register</h2>
 
 <input id="ruser" placeholder="Username">
 
@@ -169,27 +100,12 @@ document.getElementById("app").innerHTML = `
 
 
 
-/* REGISTER */
+function register(){
 
-window.register = async function(){
+let user=document.getElementById("ruser").value;
+let pass=document.getElementById("rpass").value;
 
-let user = document.getElementById("ruser").value;
-let pass = document.getElementById("rpass").value;
-
-const q = query(collection(db,"users"),where("username","==",user));
-const snap = await getDocs(q);
-
-if(!snap.empty){
-alert("Username sudah dipakai");
-return;
-}
-
-let hashed = await hash(pass);
-
-await addDoc(collection(db,"users"),{
-username:user,
-password:hashed
-});
+localStorage.setItem("user_"+user,pass);
 
 alert("Akun berhasil dibuat");
 
@@ -199,228 +115,62 @@ loginPage();
 
 
 
-/* LOGIN */
+function login(){
 
-window.login = async function(){
+let user=document.getElementById("user").value;
+let pass=document.getElementById("pass").value;
 
-let user = document.getElementById("user").value;
-let pass = document.getElementById("pass").value;
+let saved=localStorage.getItem("user_"+user);
 
-let hashed = await hash(pass);
+if(saved==pass){
 
-const q = query(
-collection(db,"users"),
-where("username","==",user),
-where("password","==",hashed)
-);
-
-const snap = await getDocs(q);
-
-if(snap.empty){
-
-alert("Login gagal");
-
-}else{
-
-localStorage.setItem("user",user);
+localStorage.setItem("login",user);
 
 home();
 
-}
+}else{
+
+alert("Username atau password salah");
 
 }
 
+}
 
 
-/* HOME */
 
 function home(){
 
-let user = localStorage.getItem("user");
+let user=localStorage.getItem("login");
 
-document.getElementById("userArea").innerHTML =
-user + " <button onclick='logout()'>Logout</button>";
+document.getElementById("app").innerHTML=`
 
-document.getElementById("app").innerHTML = `
+<div class="box">
 
-<div class="card">
+<h2>Halo ${user}</h2>
 
-<textarea id="text" placeholder="Tulis sesuatu..."></textarea>
+<p>Login berhasil</p>
 
-<button onclick="post()">Posting</button>
-
-</div>
-
-<div class="card">
-
-<h3>Postingan</h3>
-
-<div id="posts"></div>
+<button onclick="logout()">Logout</button>
 
 </div>
 
 `;
 
-loadPosts();
+}
+
+
+
+function logout(){
+
+localStorage.removeItem("login");
+
+loginPage();
 
 }
 
 
 
-/* POST */
-
-window.post = async function(){
-
-let text = document.getElementById("text").value;
-let user = localStorage.getItem("user");
-
-if(text.trim()==""){
-alert("Tulis sesuatu dulu");
-return;
-}
-
-await addDoc(collection(db,"posts"),{
-user:user,
-text:text,
-likes:0,
-time:Date.now()
-});
-
-document.getElementById("text").value="";
-
-}
-
-
-
-/* LOAD POSTS */
-
-function loadPosts(){
-
-onSnapshot(collection(db,"posts"),snap=>{
-
-let html="";
-
-snap.forEach(docu=>{
-
-let p = docu.data();
-
-html += `
-
-<div class="post">
-
-<b>${p.user}</b>
-
-<p>${p.text}</p>
-
-<button onclick="like('${docu.id}')">
-👍 ${p.likes}
-</button>
-
-<br>
-
-<input id="c${docu.id}" placeholder="Komentar">
-
-<button onclick="comment('${docu.id}')">Kirim</button>
-
-<div id="cm${docu.id}"></div>
-
-</div>
-
-`;
-
-loadComments(docu.id);
-
-});
-
-document.getElementById("posts").innerHTML = html;
-
-});
-
-}
-
-
-
-/* LIKE */
-
-window.like = async function(id){
-
-const ref = doc(db,"posts",id);
-
-await updateDoc(ref,{
-likes:increment(1)
-});
-
-}
-
-
-
-/* COMMENT */
-
-window.comment = async function(id){
-
-let text = document.getElementById("c"+id).value;
-let user = localStorage.getItem("user");
-
-await addDoc(collection(db,"comments"),{
-post:id,
-user:user,
-text:text
-});
-
-}
-
-
-
-/* LOAD COMMENTS */
-
-function loadComments(postId){
-
-const q = query(
-collection(db,"comments"),
-where("post","==",postId)
-);
-
-onSnapshot(q,snap=>{
-
-let html="";
-
-snap.forEach(d=>{
-
-let c=d.data();
-
-html+=`<div class="comment"><b>${c.user}</b>: ${c.text}</div>`;
-
-});
-
-setTimeout(()=>{
-
-let el=document.getElementById("cm"+postId);
-
-if(el) el.innerHTML=html;
-
-},200);
-
-});
-
-}
-
-
-
-/* LOGOUT */
-
-window.logout=function(){
-
-localStorage.removeItem("user");
-
-location.reload();
-
-}
-
-
-
-/* AUTO LOGIN */
-
-if(localStorage.getItem("user")){
+if(localStorage.getItem("login")){
 
 home();
 
