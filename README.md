@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Daniel Social</title>
+<title>Daniel Dolar Sarumaha</title>
 
 <style>
 body{
@@ -69,7 +69,7 @@ color:#cbd5f5;
 <body>
 
 <header>
-<span>Daniel Social</span>
+<span>Daniel Dolar Sarumaha</span>
 <div id="userArea"></div>
 </header>
 
