@@ -3,70 +3,67 @@
 <head>
 
 <meta charset="UTF-8">
-<title>Daniel Sarumaha</title>
+<title>Daniel Sarumaha Social</title>
 
 <style>
 
 body{
 margin:0;
 font-family:Arial;
-background:linear-gradient(135deg,#020617,#0f172a);
+background:linear-gradient(135deg,#020617,#0f172a,#1e293b);
 color:white;
+transition:0.3s;
+}
+
+.light{
+background:white;
+color:black;
 }
 
 header{
-padding:20px;
-background:#020617;
 display:flex;
 justify-content:space-between;
 align-items:center;
-}
-
-.menu{
-position:fixed;
-top:70px;
-left:0;
-width:200px;
-height:100%;
-background:#020617;
 padding:20px;
+background:#020617;
 }
 
-.menu button{
-width:100%;
-padding:12px;
-margin-bottom:10px;
+nav{
+display:flex;
+gap:10px;
+padding:10px;
+background:#020617;
+flex-wrap:wrap;
+}
+
+nav button{
+padding:10px 16px;
 background:#1e293b;
 border:none;
+border-radius:10px;
 color:white;
-border-radius:8px;
 cursor:pointer;
 }
 
-.content{
-margin-left:220px;
-padding:30px;
+main{
+padding:20px;
+max-width:900px;
+margin:auto;
 }
 
 .card{
-background:#1e293b;
+background:rgba(30,41,59,0.9);
 padding:20px;
-border-radius:12px;
+border-radius:16px;
 margin-bottom:20px;
-}
-
-textarea{
-width:100%;
-height:80px;
-border-radius:8px;
-padding:10px;
+box-shadow:0 10px 30px rgba(0,0,0,0.5);
 }
 
 .post{
 background:#020617;
 padding:15px;
+border-radius:12px;
 margin-top:15px;
-border-radius:10px;
 }
 
 .comment{
@@ -75,14 +72,18 @@ font-size:14px;
 color:#cbd5f5;
 }
 
-.star{
-font-size:20px;
-cursor:pointer;
-color:gray;
+textarea,input{
+width:100%;
+padding:10px;
+border-radius:8px;
+border:none;
+margin-top:5px;
 }
 
-.active{
-color:gold;
+.star{
+font-size:30px;
+cursor:pointer;
+color:gray;
 }
 
 </style>
@@ -95,89 +96,100 @@ color:gold;
 
 <h2>Daniel Sarumaha</h2>
 
-<button onclick="login()">Login Google</button>
+<div>
+<button onclick="mode()">Mode</button>
+<button onclick="login()">Login</button>
+</div>
 
 </header>
 
-<div class="menu">
+<nav>
 
 <button onclick="home()">Home</button>
 <button onclick="profile()">Profil</button>
-<button onclick="notes()">Catatan</button>
+<button onclick="notes()">Posting</button>
 <button onclick="leaderboard()">Leaderboard</button>
 <button onclick="ratingPage()">Rating</button>
 
-</div>
+</nav>
 
-<div class="content" id="content"></div>
+<main id="app"></main>
 
 <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 
-import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import {
+getAuth,
+GoogleAuthProvider,
+signInWithPopup,
+onAuthStateChanged
+}
+from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
-import { getFirestore,
+import {
+getFirestore,
 collection,
 addDoc,
 onSnapshot,
 updateDoc,
 doc,
 increment,
-getDocs
-
+getDocs,
+query,
+where,
+orderBy
 }
-
 from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-const firebaseConfig = {
+import {
+getStorage,
+ref,
+uploadBytes,
+getDownloadURL
+}
+from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
 
-apiKey:"APIKEY",
-authDomain:"DOMAIN",
-projectId:"PROJECTID",
-storageBucket:"BUCKET",
-messagingSenderId:"MSGID",
-appId:"APPID"
 
+const firebaseConfig={
+apiKey:"AIzaSyBj1j2odizaiO91XtdFaQVo6_k2G8ter7M",
+authDomain:"daniel-website-f1f3b.firebaseapp.com",
+projectId:"daniel-website-f1f3b",
+storageBucket:"daniel-website-f1f3b.firebasestorage.app",
+messagingSenderId:"113198911345",
+appId:"1:113198911345:web:f9ecb06524b7e27bf470d0"
 };
 
 const app=initializeApp(firebaseConfig);
-
-const auth=getAuth();
-
-const db=getFirestore();
-
-window.login=async function(){
-
+const auth=getAuth(app);
+const db=getFirestore(app);
+const storage=getStorage(app);
 const provider=new GoogleAuthProvider();
 
+
+window.login=async function(){
 await signInWithPopup(auth,provider);
+alert("Login berhasil");
+}
 
-alert("Login berhasil")
+onAuthStateChanged(auth,user=>{
+if(user){
+console.log("Login:",user.displayName);
+}
+})
 
+window.mode=function(){
+document.body.classList.toggle("light");
 }
 
 window.home=function(){
 
-document.getElementById("content").innerHTML=`
+document.getElementById("app").innerHTML=`
 
 <div class="card">
 
-<img src="profile.jpg" width="120">
-
-<h2>Daniel Sarumaha</h2>
-
-<p>
-
-Creator website ini.<br>
-IG: Danieldolars<br>
-FB: Daniel Sarumaha<br>
-
-</p>
-
-<a href="https://wa.me/6281388149795">WhatsApp</a><br>
-<a href="https://instagram.com/Danieldolars">Instagram</a><br>
-<a href="#">Facebook</a>
+<input id="search" placeholder="Cari posting...">
+<button onclick="searchPost()">Cari</button>
 
 </div>
 
@@ -189,25 +201,22 @@ FB: Daniel Sarumaha<br>
 
 </div>
 
-`
+`;
 
-loadPosts()
+loadPosts();
 
 }
 
 window.profile=function(){
 
 if(!auth.currentUser){
-
-alert("Login dulu")
-
-return
-
+alert("Login dulu");
+return;
 }
 
-let u=auth.currentUser
+let u=auth.currentUser;
 
-document.getElementById("content").innerHTML=`
+document.getElementById("app").innerHTML=`
 
 <div class="card">
 
@@ -219,19 +228,21 @@ document.getElementById("content").innerHTML=`
 
 </div>
 
-`
+`;
 
 }
 
 window.notes=function(){
 
-document.getElementById("content").innerHTML=`
+document.getElementById("app").innerHTML=`
 
 <div class="card">
 
-<h3>Buat Catatan</h3>
+<h3>Buat Post</h3>
 
 <textarea id="text"></textarea>
+
+<input type="file" id="img">
 
 <br><br>
 
@@ -239,37 +250,55 @@ document.getElementById("content").innerHTML=`
 
 </div>
 
-`
+`;
 
 }
 
 window.post=async function(){
 
-let text=document.getElementById("text").value
+if(!auth.currentUser){
+alert("Login dulu");
+return;
+}
+
+let text=document.getElementById("text").value;
+let file=document.getElementById("img").files[0];
+
+let url="";
+
+if(file){
+
+const storageRef=ref(storage,"posts/"+Date.now());
+
+await uploadBytes(storageRef,file);
+
+url=await getDownloadURL(storageRef);
+
+}
 
 await addDoc(collection(db,"posts"),{
-
 user:auth.currentUser.displayName,
-
 text:text,
+image:url,
+likes:0,
+time:Date.now()
+});
 
-likes:0
-
-})
-
-alert("Posting dibuat")
+alert("Posting berhasil");
 
 }
 
 function loadPosts(){
 
-onSnapshot(collection(db,"posts"),(snap)=>{
+const q=query(collection(db,"posts"),orderBy("time","desc"));
 
-let html=""
+onSnapshot(q,snap=>{
+
+let html="";
 
 snap.forEach(docu=>{
 
-let p=docu.data()
+let p=docu.data();
 
 html+=`
 
@@ -279,118 +308,183 @@ html+=`
 
 <p>${p.text}</p>
 
+${p.image?`<img src="${p.image}" width="100%">`:""}
+
 <button onclick="like('${docu.id}')">
-
 👍 ${p.likes}
-
 </button>
 
-<input id="c${docu.id}" placeholder="komentar">
+<br><br>
 
-<button onclick="comment('${docu.id}')">Kirim</button>
+<input id="c${docu.id}" placeholder="Komentar">
+
+<button onclick="comment('${docu.id}')">
+Kirim
+</button>
 
 <div id="cm${docu.id}"></div>
 
 </div>
 
-`
+`;
 
-})
+loadComments(docu.id);
 
-document.getElementById("posts").innerHTML=html
+});
 
-})
+document.getElementById("posts").innerHTML=html;
+
+});
+
+}
+
+function loadComments(postId){
+
+const q=query(
+collection(db,"comments"),
+where("post","==",postId)
+);
+
+onSnapshot(q,snap=>{
+
+let html="";
+
+snap.forEach(d=>{
+
+let c=d.data();
+
+html+=`<div class="comment"><b>${c.user}</b>: ${c.text}</div>`;
+
+});
+
+setTimeout(()=>{
+let el=document.getElementById("cm"+postId);
+if(el) el.innerHTML=html;
+},200);
+
+});
 
 }
 
 window.like=async function(id){
 
-let ref=doc(db,"posts",id)
+const ref=doc(db,"posts",id);
 
-await updateDoc(ref,{likes:increment(1)})
+await updateDoc(ref,{likes:increment(1)});
 
 }
 
 window.comment=async function(id){
 
-let text=document.getElementById("c"+id).value
+if(!auth.currentUser){
+alert("Login dulu");
+return;
+}
+
+let text=document.getElementById("c"+id).value;
 
 await addDoc(collection(db,"comments"),{
-
 post:id,
-
 user:auth.currentUser.displayName,
-
 text:text
+});
 
-})
+}
+
+window.searchPost=async function(){
+
+let key=document.getElementById("search").value.toLowerCase();
+
+const snap=await getDocs(collection(db,"posts"));
+
+let html="";
+
+snap.forEach(d=>{
+
+let p=d.data();
+
+if(p.text.toLowerCase().includes(key)){
+
+html+=`<div class="post">${p.text}</div>`;
+
+}
+
+});
+
+document.getElementById("posts").innerHTML=html;
 
 }
 
 window.leaderboard=async function(){
 
-const snap=await getDocs(collection(db,"posts"))
+const snap=await getDocs(collection(db,"posts"));
 
-let users={}
+let users={};
 
 snap.forEach(d=>{
+let p=d.data();
+if(!users[p.user])users[p.user]=0;
+users[p.user]+=p.likes;
+});
 
-let p=d.data()
+let arr=Object.entries(users).sort((a,b)=>b[1]-a[1]);
 
-if(!users[p.user])users[p.user]=0
-
-users[p.user]+=p.likes
-
-})
-
-let arr=Object.entries(users).sort((a,b)=>b[1]-a[1])
-
-let html="<div class='card'><h2>Leaderboard</h2>"
+let html="<div class='card'><h2>Leaderboard</h2>";
 
 arr.forEach((u,i)=>{
 
-html+=`${i+1}. ${u[0]} (${u[1]} likes)<br>`
+let badge="🙂";
 
-})
+if(u[1]>50) badge="🔥";
+else if(u[1]>20) badge="⭐";
 
-html+="</div>"
+html+=`${i+1}. ${u[0]} (${u[1]} likes) ${badge}<br>`;
+});
 
-document.getElementById("content").innerHTML=html
+html+="</div>";
+
+document.getElementById("app").innerHTML=html;
 
 }
 
-window.ratingPage=function(){
+window.ratingPage=async function(){
 
-let html=`<div class="card"><h2>Rating Website</h2>`
+const snap=await getDocs(collection(db,"rating"));
+
+let total=0;
+
+snap.forEach(d=>{
+total+=d.data().value;
+});
+
+let avg=(snap.size?total/snap.size:0).toFixed(1);
+
+let html=`<div class="card">
+<h2>Rating Website</h2>
+<p>Rating rata-rata: ${avg} ⭐</p>
+`;
 
 for(let i=1;i<=5;i++){
-
-html+=`<span class="star" onclick="rate(${i})">★</span>`
-
+html+=`<span class="star" onclick="rate(${i})">★</span>`;
 }
 
-html+="</div>"
+html+="</div>";
 
-document.getElementById("content").innerHTML=html
+document.getElementById("app").innerHTML=html;
 
 }
 
 window.rate=async function(n){
 
-await addDoc(collection(db,"rating"),{
+await addDoc(collection(db,"rating"),{value:n});
 
-value:n
-
-})
-
-alert("Terima kasih atas ratingnya")
+alert("Terima kasih ratingnya");
 
 }
 
-home()
+home();
 
 </script>
 
 </body>
-
 </html>
