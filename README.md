@@ -7,49 +7,59 @@
 <style>
 
 body{
+margin:0;
 font-family:Arial;
 background:#0f172a;
 color:white;
-margin:0;
-text-align:center;
 }
 
-h1{margin-top:20px}
+header{
+background:#020617;
+padding:15px;
+text-align:center;
+font-size:22px;
+}
 
-input,textarea{
+.container{
+max-width:900px;
+margin:auto;
+padding:20px;
+}
+
+.card{
+background:#1e293b;
+padding:20px;
+border-radius:10px;
+margin-bottom:20px;
+}
+
+textarea{
+width:100%;
 padding:10px;
-margin:5px;
-border-radius:6px;
+border-radius:8px;
 border:none;
 }
 
 button{
-padding:10px;
+padding:10px 15px;
 border:none;
-border-radius:6px;
+border-radius:8px;
 background:#38bdf8;
 color:white;
 cursor:pointer;
 }
 
-.box{
-background:#1e293b;
-padding:20px;
-margin:20px;
-border-radius:10px;
-}
-
 .post{
 background:#334155;
-margin:10px;
-padding:10px;
+padding:15px;
 border-radius:8px;
+margin-top:10px;
 }
 
 .menu{
 position:fixed;
-bottom:60px;
-right:60px;
+bottom:40px;
+right:40px;
 width:200px;
 height:200px;
 }
@@ -66,8 +76,8 @@ border-radius:50%;
 display:flex;
 align-items:center;
 justify-content:center;
-cursor:pointer;
 font-size:25px;
+cursor:pointer;
 }
 
 .item{
@@ -99,7 +109,11 @@ transition:0.4s;
 
 <body>
 
-<div id="app"></div>
+<header>
+Daniel Social Website
+</header>
+
+<div class="container" id="app"></div>
 
 <div class="menu" id="menu">
 
@@ -114,85 +128,89 @@ transition:0.4s;
 
 </div>
 
-<script>
+<script type="module">
 
-function toggleMenu(){
-document.getElementById("menu").classList.toggle("active");
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+
+import {
+getFirestore,
+collection,
+addDoc,
+getDocs,
+updateDoc,
+doc,
+increment
+}
+from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig = {
+
+apiKey: "AIzaSyAaW8jwL5yT-uZZglS2gA_HWRJvdUG-nZA",
+authDomain: "danieldolar-9bca1.firebaseapp.com",
+projectId: "danieldolar-9bca1",
+storageBucket: "danieldolar-9bca1.firebasestorage.app",
+messagingSenderId: "4879222744",
+appId: "1:4879222744:web:e441fe6b15b34fb42314ad"
+
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+let user = localStorage.getItem("user");
+
+window.toggleMenu=function(){
+document.getElementById("menu").classList.toggle("active")
 }
 
 function loginPage(){
 
 document.getElementById("app").innerHTML=`
 
-<h1>Daniel Social Web</h1>
+<div class="card">
 
-<div class="box">
+<h2>Login</h2>
 
-<input id="user" placeholder="username">
+<input id="name" placeholder="Username">
 
-<input id="pass" type="password" placeholder="password">
+<br><br>
 
-<button onclick="login()">Login</button>
-
-<button onclick="register()">Register</button>
+<button onclick="login()">Masuk</button>
 
 </div>
 
-`;
+`
 
 }
 
-function register(){
+window.login=function(){
 
-let u=document.getElementById("user").value
-let p=document.getElementById("pass").value
+let name=document.getElementById("name").value
 
-localStorage.setItem("user_"+u,p)
+localStorage.setItem("user",name)
 
-alert("akun dibuat")
-
-}
-
-function login(){
-
-let u=document.getElementById("user").value
-let p=document.getElementById("pass").value
-
-let saved=localStorage.getItem("user_"+u)
-
-if(saved==p){
-
-localStorage.setItem("login",u)
-home()
-
-}else{
-
-alert("salah")
+location.reload()
 
 }
 
+window.logout=function(){
+
+localStorage.removeItem("user")
+
+location.reload()
+
 }
 
-function logout(){
-
-localStorage.removeItem("login")
-loginPage()
-
-}
-
-function home(){
-
-let u=localStorage.getItem("login")
+window.home=function(){
 
 document.getElementById("app").innerHTML=`
 
-<h1>Halo ${u}</h1>
+<div class="card">
 
-<div class="box">
+<h2>Halo ${user}</h2>
 
 Selamat datang di website sosial sederhana.
-
-Gunakan menu bulat di kanan bawah.
 
 </div>
 
@@ -200,30 +218,41 @@ Gunakan menu bulat di kanan bawah.
 
 }
 
-function notes(){
+window.notes=async function(){
 
-let posts=JSON.parse(localStorage.getItem("posts")||"[]")
+let snap=await getDocs(collection(db,"posts"))
 
-let html=`<h1>Catatan</h1>
+let html=`
 
-<textarea id="note"></textarea><br>
+<div class="card">
 
-<button onclick="addNote()">Post</button>
+<h3>Buat Catatan</h3>
+
+<textarea id="note"></textarea>
+
+<br><br>
+
+<button onclick="postNote()">Posting</button>
+
+</div>
+
 `
 
-posts.forEach((p,i)=>{
+snap.forEach(d=>{
+
+let p=d.data()
 
 html+=`
 
 <div class="post">
 
-<b>${p.user}</b><br>
+<b>${p.user}</b>
 
-${p.text}<br><br>
+<p>${p.text}</p>
 
-❤️ ${p.like}
+❤️ ${p.likes}
 
-<button onclick="like(${i})">Like</button>
+<button onclick="like('${d.id}')">Like</button>
 
 </div>
 
@@ -235,52 +264,40 @@ document.getElementById("app").innerHTML=html
 
 }
 
-function addNote(){
+window.postNote=async function(){
 
 let text=document.getElementById("note").value
-let user=localStorage.getItem("login")
 
-let posts=JSON.parse(localStorage.getItem("posts")||"[]")
-
-posts.push({
+await addDoc(collection(db,"posts"),{
 
 user:user,
 text:text,
-like:0
+likes:0,
+time:Date.now()
 
 })
 
-localStorage.setItem("posts",JSON.stringify(posts))
+notes()
+
+}
+
+window.like=async function(id){
+
+let ref=doc(db,"posts",id)
+
+await updateDoc(ref,{likes:increment(1)})
 
 notes()
 
 }
 
-function like(i){
-
-let posts=JSON.parse(localStorage.getItem("posts"))
-
-posts[i].like++
-
-localStorage.setItem("posts",JSON.stringify(posts))
-
-notes()
-
-}
-
-function rating(){
-
-let r=localStorage.getItem("rating")||0
+window.rating=function(){
 
 document.getElementById("app").innerHTML=`
 
-<h1>Rating Website</h1>
+<div class="card">
 
-<div class="box">
-
-Rating sekarang : ${r}
-
-<br><br>
+<h2>Rating Website</h2>
 
 <button onclick="rate(1)">⭐</button>
 <button onclick="rate(2)">⭐⭐</button>
@@ -294,73 +311,45 @@ Rating sekarang : ${r}
 
 }
 
-function rate(v){
+window.rate=async function(v){
 
-localStorage.setItem("rating",v)
+await addDoc(collection(db,"ratings"),{
 
-rating()
+user:user,
+value:v
+
+})
+
+alert("Terima kasih ratingnya")
 
 }
 
-function follow(){
+window.follow=async function(){
 
-let f=localStorage.getItem("follow")||"no"
+await addDoc(collection(db,"followers"),{
+
+user:user
+
+})
+
+alert("Sekarang kamu follow Daniel")
+
+}
+
+window.about=function(){
 
 document.getElementById("app").innerHTML=`
 
-<h1>Follow Daniel</h1>
+<div class="card">
 
-<div class="box">
-
-Status : ${f}
-
-<br><br>
-
-<button onclick="toggleFollow()">Follow / Unfollow</button>
-
-</div>
-
-`
-
-}
-
-function toggleFollow(){
-
-let f=localStorage.getItem("follow")
-
-if(f=="yes"){
-
-localStorage.setItem("follow","no")
-
-}else{
-
-localStorage.setItem("follow","yes")
-
-}
-
-follow()
-
-}
-
-function about(){
-
-document.getElementById("app").innerHTML=`
-
-<h1>Tentang Saya</h1>
-
-<div class="box">
+<h2>Tentang Saya</h2>
 
 Nama : Daniel
 
 <br><br>
 
-Saya tertarik dengan dunia teknologi dan coding.
-Saya sedang belajar membuat website dan sistem digital sendiri.
-
-Saya juga tertarik dengan AI dan pengembangan web modern.
-
-Website ini adalah proyek eksperimen saya untuk membuat
-mini sosial media sederhana.
+Saya tertarik dengan teknologi, coding, dan pengembangan website.
+Website ini adalah proyek sosial media sederhana yang saya buat sendiri.
 
 </div>
 
@@ -368,13 +357,13 @@ mini sosial media sederhana.
 
 }
 
-if(localStorage.getItem("login")){
+if(!user){
 
-home()
+loginPage()
 
 }else{
 
-loginPage()
+home()
 
 }
 
