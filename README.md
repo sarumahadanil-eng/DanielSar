@@ -2,42 +2,72 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Daniel Website</title>
+<title>Radial Menu</title>
 
 <style>
 
 body{
-font-family:Arial;
-background:#0f172a;
+background:#111;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+font-family:sans-serif;
+}
+
+.menu{
+position:relative;
+width:200px;
+height:200px;
+}
+
+.center{
+position:absolute;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+width:60px;
+height:60px;
+background:#222;
 color:white;
-text-align:center;
-padding:50px;
-}
-
-.box{
-background:#1e293b;
-padding:30px;
-border-radius:10px;
-width:300px;
-margin:auto;
-}
-
-input{
-width:100%;
-padding:10px;
-margin:10px 0;
-border:none;
-border-radius:5px;
-}
-
-button{
-padding:10px;
-width:100%;
-background:#38bdf8;
-border:none;
-color:white;
-border-radius:5px;
+display:flex;
+justify-content:center;
+align-items:center;
+border-radius:50%;
 cursor:pointer;
+font-size:24px;
+}
+
+.item{
+position:absolute;
+width:60px;
+height:60px;
+background:#222;
+border-radius:15px;
+display:flex;
+justify-content:center;
+align-items:center;
+color:white;
+font-size:20px;
+box-shadow:0 0 15px cyan;
+transition:0.4s;
+opacity:0;
+}
+
+.menu.active .item{
+opacity:1;
+}
+
+.item:nth-child(2){top:-20px;left:70px;}
+.item:nth-child(3){top:30px;left:150px;}
+.item:nth-child(4){top:120px;left:150px;}
+.item:nth-child(5){top:170px;left:70px;}
+.item:nth-child(6){top:120px;left:-10px;}
+.item:nth-child(7){top:30px;left:-10px;}
+
+.item:hover{
+transform:scale(1.2);
+box-shadow:0 0 20px #00ffff;
 }
 
 </style>
@@ -46,138 +76,23 @@ cursor:pointer;
 
 <body>
 
-<div id="app"></div>
+<div class="menu" id="menu">
+
+<div class="center" onclick="toggleMenu()">+</div>
+
+<div class="item">🏠</div>
+<div class="item">⚙️</div>
+<div class="item">📷</div>
+<div class="item">🎮</div>
+<div class="item">🎥</div>
+<div class="item">💬</div>
+
+</div>
 
 <script>
 
-function loginPage(){
-
-document.getElementById("app").innerHTML=`
-
-<div class="box">
-
-<h2>Login</h2>
-
-<input id="user" placeholder="Username">
-
-<input id="pass" type="password" placeholder="Password">
-
-<button onclick="login()">Login</button>
-
-<p>Belum punya akun?</p>
-
-<button onclick="registerPage()">Register</button>
-
-</div>
-
-`;
-
-}
-
-
-
-function registerPage(){
-
-document.getElementById("app").innerHTML=`
-
-<div class="box">
-
-<h2>Register</h2>
-
-<input id="ruser" placeholder="Username">
-
-<input id="rpass" type="password" placeholder="Password">
-
-<button onclick="register()">Daftar</button>
-
-<button onclick="loginPage()">Kembali</button>
-
-</div>
-
-`;
-
-}
-
-
-
-function register(){
-
-let user=document.getElementById("ruser").value;
-let pass=document.getElementById("rpass").value;
-
-localStorage.setItem("user_"+user,pass);
-
-alert("Akun berhasil dibuat");
-
-loginPage();
-
-}
-
-
-
-function login(){
-
-let user=document.getElementById("user").value;
-let pass=document.getElementById("pass").value;
-
-let saved=localStorage.getItem("user_"+user);
-
-if(saved==pass){
-
-localStorage.setItem("login",user);
-
-home();
-
-}else{
-
-alert("Username atau password salah");
-
-}
-
-}
-
-
-
-function home(){
-
-let user=localStorage.getItem("login");
-
-document.getElementById("app").innerHTML=`
-
-<div class="box">
-
-<h2>Halo ${user}</h2>
-
-<p>Login berhasil</p>
-
-<button onclick="logout()">Logout</button>
-
-</div>
-
-`;
-
-}
-
-
-
-function logout(){
-
-localStorage.removeItem("login");
-
-loginPage();
-
-}
-
-
-
-if(localStorage.getItem("login")){
-
-home();
-
-}else{
-
-loginPage();
-
+function toggleMenu(){
+document.getElementById("menu").classList.toggle("active");
 }
 
 </script>
