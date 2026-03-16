@@ -33,7 +33,7 @@ border-radius:10px;
 margin-bottom:20px;
 }
 
-textarea{
+textarea,input{
 width:100%;
 padding:10px;
 border-radius:8px;
@@ -54,6 +54,28 @@ background:#334155;
 padding:15px;
 border-radius:8px;
 margin-top:10px;
+}
+
+.commentBox{
+background:#0f172a;
+padding:10px;
+border-radius:6px;
+margin-top:10px;
+}
+
+.comment{
+font-size:14px;
+margin-bottom:5px;
+}
+
+.star{
+font-size:30px;
+cursor:pointer;
+color:white;
+}
+
+.star.active{
+color:gold;
 }
 
 .menu{
@@ -158,7 +180,7 @@ appId: "1:4879222744:web:e441fe6b15b34fb42314ad"
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-let user = localStorage.getItem("user");
+let user = localStorage.getItem("user")
 
 window.toggleMenu=function(){
 document.getElementById("menu").classList.toggle("active")
@@ -220,7 +242,16 @@ Selamat datang di website sosial sederhana.
 
 window.notes=async function(){
 
-let snap=await getDocs(collection(db,"posts"))
+let posts=await getDocs(collection(db,"posts"))
+let comments=await getDocs(collection(db,"comments"))
+
+let comData={}
+
+comments.forEach(d=>{
+let c=d.data()
+if(!comData[c.post]) comData[c.post]=[]
+comData[c.post].push(c)
+})
 
 let html=`
 
@@ -238,7 +269,7 @@ let html=`
 
 `
 
-snap.forEach(d=>{
+posts.forEach(d=>{
 
 let p=d.data()
 
@@ -253,6 +284,28 @@ html+=`
 ❤️ ${p.likes}
 
 <button onclick="like('${d.id}')">Like</button>
+
+<div class="commentBox">
+
+<b>Komentar</b><br>
+
+`
+
+if(comData[d.id]){
+
+comData[d.id].forEach(c=>{
+html+=`<div class="comment"><b>${c.user}</b>: ${c.text}</div>`
+})
+
+}
+
+html+=`
+
+<input id="c-${d.id}" placeholder="Komentar">
+
+<button onclick="sendComment('${d.id}')">Kirim</button>
+
+</div>
 
 </div>
 
@@ -283,9 +336,37 @@ notes()
 
 window.like=async function(id){
 
+let liked=localStorage.getItem("like-"+id)
+
 let ref=doc(db,"posts",id)
 
+if(!liked){
+
 await updateDoc(ref,{likes:increment(1)})
+localStorage.setItem("like-"+id,true)
+
+}else{
+
+await updateDoc(ref,{likes:increment(-1)})
+localStorage.removeItem("like-"+id)
+
+}
+
+notes()
+
+}
+
+window.sendComment=async function(id){
+
+let text=document.getElementById("c-"+id).value
+
+await addDoc(collection(db,"comments"),{
+
+post:id,
+user:user,
+text:text
+
+})
 
 notes()
 
@@ -299,11 +380,15 @@ document.getElementById("app").innerHTML=`
 
 <h2>Rating Website</h2>
 
-<button onclick="rate(1)">⭐</button>
-<button onclick="rate(2)">⭐⭐</button>
-<button onclick="rate(3)">⭐⭐⭐</button>
-<button onclick="rate(4)">⭐⭐⭐⭐</button>
-<button onclick="rate(5)">⭐⭐⭐⭐⭐</button>
+<div>
+
+<span class="star" onclick="rate(1)">★</span>
+<span class="star" onclick="rate(2)">★</span>
+<span class="star" onclick="rate(3)">★</span>
+<span class="star" onclick="rate(4)">★</span>
+<span class="star" onclick="rate(5)">★</span>
+
+</div>
 
 </div>
 
@@ -313,14 +398,28 @@ document.getElementById("app").innerHTML=`
 
 window.rate=async function(v){
 
+let stars=document.querySelectorAll(".star")
+
+stars.forEach((s,i)=>{
+
+if(i<v){
+
+s.classList.add("active")
+
+}else{
+
+s.classList.remove("active")
+
+}
+
+})
+
 await addDoc(collection(db,"ratings"),{
 
 user:user,
 value:v
 
 })
-
-alert("Terima kasih ratingnya")
 
 }
 
@@ -349,6 +448,7 @@ Nama : Daniel
 <br><br>
 
 Saya tertarik dengan teknologi, coding, dan pengembangan website.
+
 Website ini adalah proyek sosial media sederhana yang saya buat sendiri.
 
 </div>
