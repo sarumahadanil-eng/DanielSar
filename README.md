@@ -133,7 +133,7 @@ color:black;
 
 <body>
 
-<header>Daniel Social Website</header>
+<header>Daniel Website</header>
 
 <div class="container" id="app"></div>
 
