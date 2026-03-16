@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Instagram Daniel</title>
+<title>Daniel Dolar Sarumaha</title>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
@@ -126,7 +126,7 @@ color:black;
 
 <body>
 
-<header>Instagram</header>
+<header>Instagram mini Daniel</header>
 
 <div class="container" id="app"></div>
 
@@ -137,7 +137,6 @@ color:black;
 <div class="item" onclick="home()">🏠</div>
 <div class="item" onclick="feed()">📷</div>
 <div class="item" onclick="rating()">⭐</div>
-<div class="item" onclick="users()">👥</div>
 <div class="item" onclick="leaderboard()">🏆</div>
 <div class="item" onclick="theme()">🌓</div>
 <div class="item" onclick="logout()">🚪</div>
@@ -219,17 +218,22 @@ location.reload()
 
 window.home=async function(){
 
-let data=await getDocs(collection(db,"follows"))
+let data=await getDocs(collection(db,"followers"))
 
-let followers=0
-let following=0
+let total=0
+let followed=false
+let id=""
 
 data.forEach(d=>{
 
 let f=d.data()
 
-if(f.target==user()) followers++
-if(f.user==user()) following++
+if(f.user==user()){
+followed=true
+id=d.id
+}
+
+total++
 
 })
 
@@ -239,8 +243,15 @@ app.innerHTML=`
 
 <h2>Halo ${user()}</h2>
 
-<p>Followers : ${followers}</p>
-<p>Following : ${following}</p>
+<h3>Followers Platform : ${total}</h3>
+
+<button onclick="toggleFollowPlatform('${id}')">
+
+${followed?"Unfollow Platform":"Follow Platform"}
+
+</button>
+
+<br><br>
 
 <canvas id="followChart"></canvas>
 
@@ -248,15 +259,15 @@ app.innerHTML=`
 
 <div class="card">
 
-<h3>Platform Digital</h3>
+<h3>Platform Kami</h3>
 
-<a href="https://wa.me/6281234567890" target="_blank">
+<a href="https://wa.me/+6281388149795" target="_blank">
 <button>WhatsApp</button>
 </a>
 
 <br><br>
 
-<a href="https://instagram.com/usernamekamu" target="_blank">
+<a href="https://instagram.com/Danieldolars" target="_blank">
 <button>Instagram</button>
 </a>
 
@@ -269,14 +280,34 @@ setTimeout(()=>{
 new Chart(followChart,{
 type:"bar",
 data:{
-labels:["Followers","Following"],
+labels:["Followers Platform"],
 datasets:[{
-data:[followers,following]
+data:[total]
 }]
 }
 })
 
 },200)
+
+}
+
+window.toggleFollowPlatform=async function(id){
+
+if(id){
+
+await updateDoc(doc(db,"followers",id),{
+user:"deleted"
+})
+
+}else{
+
+await addDoc(collection(db,"followers"),{
+user:user()
+})
+
+}
+
+home()
 
 }
 
@@ -366,62 +397,86 @@ localStorage.removeItem("like-"+id)
 
 }
 
-window.users=async function(){
+window.rating=async function(){
 
-let users=await getDocs(collection(db,"users"))
-let follows=await getDocs(collection(db,"follows"))
+let data=await getDocs(collection(db,"ratings"))
 
-let html=`<div class="card"><h2>Users</h2>`
+let count=[0,0,0,0,0]
+let total=0
+let sum=0
+let my=0
+let myId=""
 
-users.forEach(u=>{
+data.forEach(d=>{
 
-let name=u.data().name
+let r=d.data()
 
-if(name!=user()){
+count[r.value-1]++
+total++
+sum+=r.value
 
-let followed=false
-
-follows.forEach(f=>{
-if(f.data().user==user() && f.data().target==name){
-followed=true
+if(r.user==user()){
+my=r.value
+myId=d.id
 }
+
 })
 
-html+=`
+let avg=(sum/total||0).toFixed(1)
 
-<p>
+let html=`
 
-${name}
+<div class="card">
 
-<button onclick="toggleFollow('${name}')">
+<h2>Rating Website</h2>
 
-${followed?"Unfollow":"Follow"}
+<h3>${avg}/5 ⭐</h3>
 
-</button>
+<p>Rating kamu : ${my||"Belum ada"}</p>
 
-</p>
+<div>
+
+<span onclick="rate(1)">⭐</span>
+<span onclick="rate(2)">⭐</span>
+<span onclick="rate(3)">⭐</span>
+<span onclick="rate(4)">⭐</span>
+<span onclick="rate(5)">⭐</span>
+
+</div>
+
+<br>
+
+<canvas id="ratingChart"></canvas>
+
+</div>
 
 `
 
-}
-
-})
-
-html+=`</div>`
-
 app.innerHTML=html
 
+setTimeout(()=>{
+
+new Chart(ratingChart,{
+type:"pie",
+data:{
+labels:["1⭐","2⭐","3⭐","4⭐","5⭐"],
+datasets:[{data:count}]
+}
+})
+
+},200)
+
 }
 
-window.toggleFollow=async function(target){
+window.rate=async function(v){
 
-let data=await getDocs(collection(db,"follows"))
+let data=await getDocs(collection(db,"ratings"))
 
 let found=false
 let id=""
 
 data.forEach(d=>{
-if(d.data().user==user() && d.data().target==target){
+if(d.data().user==user()){
 found=true
 id=d.id
 }
@@ -429,20 +484,20 @@ id=d.id
 
 if(found){
 
-await updateDoc(doc(db,"follows",id),{
-user:"deleted"
+await updateDoc(doc(db,"ratings",id),{
+value:Number(v)
 })
 
 }else{
 
-await addDoc(collection(db,"follows"),{
+await addDoc(collection(db,"ratings"),{
 user:user(),
-target:target
+value:Number(v)
 })
 
 }
 
-users()
+rating()
 
 }
 
