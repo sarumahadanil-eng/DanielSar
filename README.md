@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Mini Social Platform</title>
+<title>Mini Social Platform Daniel</title>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
@@ -12,7 +12,7 @@ header{background:#38bdf8;padding:15px;text-align:center;font-size:22px;}
 .container{max-width:900px;margin:auto;padding:20px;}
 .card{background:#1e293b;padding:20px;border-radius:10px;margin-bottom:20px;}
 textarea,input{width:100%;padding:8px;border-radius:6px;border:none;}
-button{padding:8px 14px;border:none;border-radius:6px;background:#38bdf8;color:white;cursor:pointer;margin-top:6px;}
+button{padding:8px 14px;border:none;border-radius:6px;background:#38bdf8;color:white;cursor:pointer;margin-top:6px;display:block;}
 .post{background:#334155;padding:10px;border-radius:10px;margin-top:10px;}
 .post img{width:100%;border-radius:8px;}
 .menu{position:fixed;bottom:40px;right:40px;width:220px;height:220px;}
@@ -30,7 +30,7 @@ button{padding:8px 14px;border:none;border-radius:6px;background:#38bdf8;color:w
 </style>
 </head>
 <body>
-<header>Mini Social Platform</header>
+<header>Mini Social Platform Daniel</header>
 <div class="container" id="app"></div>
 <div class="menu" id="menu">
 <div class="center" onclick="toggleMenu()">+</div>
@@ -79,7 +79,7 @@ let myId=""
 followersData.forEach(d=>{ let f=d.data(); if(f.user==user()){ followed=true; myId=d.id } })
 let unfollow=totalUsers-totalFollowers
 
-let userList="<h3>Users Terdaftar</h3><ul>"
+let userList="<ul>"
 usersData.forEach(d=>{ userList+=`<li>${d.data().name}</li>` })
 userList+="</ul>"
 
@@ -90,14 +90,20 @@ app.innerHTML=`
 <button onclick="toggleFollowPlatform('${myId}')">${followed?"Unfollow Platform":"Follow Platform"}</button>
 <br><br>
 <canvas id="followChart"></canvas>
+</div>
+
+<div class="card">
+<h3>Users Terdaftar</h3>
 ${userList}
 </div>
+
 <div class="card">
-<h3>Platform Kami</h3>
-<a href="https://wa.me/6281234567890" target="_blank"><button>WhatsApp</button></a>
+<h3>Platform Daniel</h3>
+<a href="https://wa.me/6281388149795" target="_blank"><button>WhatsApp</button></a>
 <br><br>
-<a href="https://instagram.com/usernamekamu" target="_blank"><button>Instagram</button></a>
-</div>`
+<a href="https://instagram.com/Danieldolars" target="_blank"><button>Instagram</button></a>
+</div>
+`
 
 setTimeout(()=>{
 new Chart(followChart,{type:"pie",data:{labels:["Follow Platform","Belum Follow"],datasets:[{data:[totalFollowers,unfollow]}]}})
@@ -148,13 +154,12 @@ app.innerHTML=html
 }
 
 window.platformLinks=function(){
-app.innerHTML=`<div class="card"><h2>Platform Kami</h2>
-<a href="https://wa.me/6281234567890" target="_blank"><button>WhatsApp</button></a><br><br>
-<a href="https://instagram.com/usernamekamu" target="_blank"><button>Instagram</button></a></div>`
+app.innerHTML=`<div class="card"><h2>Platform Daniel</h2>
+<a href="https://wa.me/6281388149795" target="_blank"><button>WhatsApp</button></a><br><br>
+<a href="https://instagram.com/Danieldolars" target="_blank"><button>Instagram</button></a></div>`
 }
 
 if(user()){ home() } else{ loginPage() }
-
 </script>
 </body>
 </html>
