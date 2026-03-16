@@ -3,18 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <title>Mini Social Platform Daniel</title>
-
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
 <style>
 body{margin:0;font-family:Arial;background:#0f172a;color:white;}
 header{background:#38bdf8;padding:15px;text-align:center;font-size:22px;}
 .container{max-width:900px;margin:auto;padding:20px;}
-.card{background:#1e293b;padding:20px;border-radius:10px;margin-bottom:20px;}
-textarea,input{width:100%;padding:8px;border-radius:6px;border:none;}
+.card{background:#1e293b;padding:20px;border-radius:10px;margin-bottom:25px;}
+textarea,input{width:100%;padding:8px;border-radius:6px;border:none;margin-bottom:10px;}
 button{padding:8px 14px;border:none;border-radius:6px;background:#38bdf8;color:white;cursor:pointer;margin-top:6px;display:block;}
 .post{background:#334155;padding:10px;border-radius:10px;margin-top:10px;}
-.post img{width:100%;border-radius:8px;}
+.post img{width:100%;border-radius:8px;margin-top:8px;}
+ul{padding-left:20px;margin:10px 0;}
 .menu{position:fixed;bottom:40px;right:40px;width:220px;height:220px;}
 .center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:#38bdf8;width:60px;height:60px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;cursor:pointer;}
 .item{position:absolute;width:45px;height:45px;background:#1e293b;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;opacity:0;transform:scale(0);transition:0.3s;}
