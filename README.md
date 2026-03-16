@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Daniel Social Website</title>
+<title>Daniel Dolar Sarumaha</title>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
@@ -237,7 +237,7 @@ document.getElementById("app").innerHTML=`
 
 <h2>Halo ${user}</h2>
 
-Selamat datang di website sosial sederhana.
+Selamat datang di website Daniel Dolar Sarumaha, Senang berjumpa dengan anda.
 
 <br><br>
 
@@ -468,7 +468,7 @@ window.users=async function(){
 
 let data=await getDocs(collection(db,"users"))
 
-let html=`<div class="card"><h2>Pengguna Website</h2>`
+let html=`<div class="card"><h2>Daniel Web</h2>`
 
 data.forEach(d=>{
 html+=`<p>${d.data().name}</p>`
@@ -533,11 +533,11 @@ document.getElementById("app").innerHTML=`
 
 <h2>Profil Daniel</h2>
 
-Nama : Daniel
+Nama : Daniel website
 
 <br><br>
 
-Saya tertarik dengan teknologi dan coding.
+let me introduce my self first, mah name is Daniel dolar sarumaha,can you call me Daniel or Dolar, i am nineteen years old, i am from south Nias,i live in Hiliamaetaniha village, my hobbies a badminton and swimming, my dreams a teacher🧑‍🏫 and officer👨‍💼. nice to meet you🤝
 
 </div>
 
