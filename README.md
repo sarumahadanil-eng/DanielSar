@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Mini Social App Daniel</title>
+<title>Instagram Daniel</title>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
@@ -62,16 +62,6 @@ margin-top:10px;
 .post img{
 width:100%;
 border-radius:8px;
-}
-
-.star{
-font-size:30px;
-cursor:pointer;
-color:#475569;
-}
-
-.star.active{
-color:#facc15;
 }
 
 .menu{
@@ -136,7 +126,7 @@ color:black;
 
 <body>
 
-<header>Mini Social App Daniel</header>
+<header>Instagram</header>
 
 <div class="container" id="app"></div>
 
@@ -179,8 +169,8 @@ authDomain:"danieldolar-9bca1.firebaseapp.com",
 projectId:"danieldolar-9bca1"
 };
 
-const appFirebase=initializeApp(firebaseConfig);
-const db=getFirestore(appFirebase);
+const firebaseApp=initializeApp(firebaseConfig);
+const db=getFirestore(firebaseApp);
 
 function user(){
 return localStorage.getItem("user")
@@ -191,13 +181,21 @@ menu.classList.toggle("active")
 }
 
 function loginPage(){
+
 app.innerHTML=`
+
 <div class="card">
+
 <h2>Login</h2>
+
 <input id="name" placeholder="Username">
+
 <button onclick="login()">Masuk</button>
+
 </div>
+
 `
+
 }
 
 window.login=async function(){
@@ -219,14 +217,66 @@ localStorage.removeItem("user")
 location.reload()
 }
 
-window.home=function(){
+window.home=async function(){
+
+let data=await getDocs(collection(db,"follows"))
+
+let followers=0
+let following=0
+
+data.forEach(d=>{
+
+let f=d.data()
+
+if(f.target==user()) followers++
+if(f.user==user()) following++
+
+})
 
 app.innerHTML=`
+
 <div class="card">
+
 <h2>Halo ${user()}</h2>
-Selamat datang di Mini Social App
+
+<p>Followers : ${followers}</p>
+<p>Following : ${following}</p>
+
+<canvas id="followChart"></canvas>
+
 </div>
+
+<div class="card">
+
+<h3>Platform Digital</h3>
+
+<a href="https://wa.me/6281234567890" target="_blank">
+<button>WhatsApp</button>
+</a>
+
+<br><br>
+
+<a href="https://instagram.com/usernamekamu" target="_blank">
+<button>Instagram</button>
+</a>
+
+</div>
+
 `
+
+setTimeout(()=>{
+
+new Chart(followChart,{
+type:"bar",
+data:{
+labels:["Followers","Following"],
+datasets:[{
+data:[followers,following]
+}]
+}
+})
+
+},200)
 
 }
 
@@ -316,139 +366,83 @@ localStorage.removeItem("like-"+id)
 
 }
 
-window.rating=async function(){
-
-let data=await getDocs(collection(db,"ratings"))
-
-let count=[0,0,0,0,0]
-let total=0
-let sum=0
-let my=0
-
-data.forEach(d=>{
-
-let r=d.data()
-
-count[r.value-1]++
-total++
-sum+=r.value
-
-if(r.user==user()){
-my=r.value
-}
-
-})
-
-let avg=(sum/total||0).toFixed(1)
-
-let html=`
-
-<div class="card">
-
-<h2>Rating Website</h2>
-
-<h3>${avg} / 5 ⭐</h3>
-
-<p>Rating kamu : ${my || "Belum ada"}</p>
-
-<div id="stars">
-
-<span class="star" data="1">★</span>
-<span class="star" data="2">★</span>
-<span class="star" data="3">★</span>
-<span class="star" data="4">★</span>
-<span class="star" data="5">★</span>
-
-</div>
-
-<br>
-
-<canvas id="barChart"></canvas>
-
-<br>
-
-<canvas id="pieChart"></canvas>
-
-</div>
-
-`
-
-app.innerHTML=html
-
-document.querySelectorAll(".star").forEach(s=>{
-s.onclick=()=>rate(s.getAttribute("data"))
-})
-
-setTimeout(()=>{
-
-new Chart(barChart,{
-type:"bar",
-data:{
-labels:["1⭐","2⭐","3⭐","4⭐","5⭐"],
-datasets:[{data:count}]
-}
-})
-
-new Chart(pieChart,{
-type:"pie",
-data:{
-labels:["1⭐","2⭐","3⭐","4⭐","5⭐"],
-datasets:[{data:count}]
-}
-})
-
-},200)
-
-}
-
-window.rate=async function(v){
-
-let data=await getDocs(collection(db,"ratings"))
-
-let found=false
-let id=""
-
-data.forEach(d=>{
-
-if(d.data().user==user()){
-found=true
-id=d.id
-}
-
-})
-
-if(found){
-
-await updateDoc(doc(db,"ratings",id),{
-value:Number(v)
-})
-
-}else{
-
-await addDoc(collection(db,"ratings"),{
-user:user(),
-value:Number(v)
-})
-
-}
-
-rating()
-
-}
-
 window.users=async function(){
 
-let data=await getDocs(collection(db,"users"))
+let users=await getDocs(collection(db,"users"))
+let follows=await getDocs(collection(db,"follows"))
 
 let html=`<div class="card"><h2>Users</h2>`
 
-data.forEach(d=>{
-html+=`<p>${d.data().name}</p>`
+users.forEach(u=>{
+
+let name=u.data().name
+
+if(name!=user()){
+
+let followed=false
+
+follows.forEach(f=>{
+if(f.data().user==user() && f.data().target==name){
+followed=true
+}
+})
+
+html+=`
+
+<p>
+
+${name}
+
+<button onclick="toggleFollow('${name}')">
+
+${followed?"Unfollow":"Follow"}
+
+</button>
+
+</p>
+
+`
+
+}
+
 })
 
 html+=`</div>`
 
 app.innerHTML=html
+
+}
+
+window.toggleFollow=async function(target){
+
+let data=await getDocs(collection(db,"follows"))
+
+let found=false
+let id=""
+
+data.forEach(d=>{
+if(d.data().user==user() && d.data().target==target){
+found=true
+id=d.id
+}
+})
+
+if(found){
+
+await updateDoc(doc(db,"follows",id),{
+user:"deleted"
+})
+
+}else{
+
+await addDoc(collection(db,"follows"),{
+user:user(),
+target:target
+})
+
+}
+
+users()
 
 }
 
