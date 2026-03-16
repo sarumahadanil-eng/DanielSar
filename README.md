@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Daniel Dolar Sarumaha</title>
+<title>Instagram Daniel</title>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
@@ -65,22 +65,6 @@ border-radius:10px;
 margin-top:10px;
 }
 
-.commentBox{
-background:#0f172a;
-padding:10px;
-border-radius:6px;
-margin-top:10px;
-}
-
-.star{
-font-size:28px;
-cursor:pointer;
-}
-
-.star.active{
-color:gold;
-}
-
 .menu{
 position:fixed;
 bottom:40px;
@@ -133,6 +117,11 @@ transform:scale(1);
 .item:nth-child(7){top:30px;left:-10px;}
 .item:nth-child(8){top:70px;left:70px;}
 
+.star{
+font-size:28px;
+cursor:pointer;
+}
+
 .light{
 background:white;
 color:black;
@@ -143,7 +132,7 @@ color:black;
 
 <body>
 
-<header>Daniel Mini Social</header>
+<header>Mini Instagram Daniel</header>
 
 <div class="container" id="app"></div>
 
@@ -155,8 +144,8 @@ color:black;
 <div class="item" onclick="feed()">📷</div>
 <div class="item" onclick="rating()">⭐</div>
 <div class="item" onclick="users()">👥</div>
+<div class="item" onclick="topUser()">🔥</div>
 <div class="item" onclick="leaderboard()">🏆</div>
-<div class="item" onclick="about()">👤</div>
 <div class="item" onclick="logout()">🚪</div>
 
 </div>
@@ -194,21 +183,8 @@ function getUser(){
 return localStorage.getItem("user")
 }
 
-function checkLogin(){
-let u=getUser()
-if(!u){
-loginPage()
-return false
-}
-return true
-}
-
 window.toggleMenu=function(){
-
-if(!checkLogin()) return
-
 document.getElementById("menu").classList.toggle("active")
-
 }
 
 function loginPage(){
@@ -260,13 +236,11 @@ location.reload()
 
 window.home=function(){
 
-let user=getUser()
-
 document.getElementById("app").innerHTML=`
 
 <div class="card">
 
-<h2>Halo ${user}</h2>
+<h2>Halo ${getUser()}</h2>
 
 Selamat datang di Mini Instagram.
 
@@ -283,15 +257,6 @@ Selamat datang di Mini Instagram.
 window.feed=async function(){
 
 let posts=await getDocs(collection(db,"posts"))
-let comments=await getDocs(collection(db,"comments"))
-
-let comData={}
-
-comments.forEach(d=>{
-let c=d.data()
-if(!comData[c.post]) comData[c.post]=[]
-comData[c.post].push(c)
-})
 
 let html=`
 
@@ -321,7 +286,7 @@ html+=`
 
 <div class="post">
 
-<b onclick="profile('${p.user}')" style="cursor:pointer">${p.user}</b>
+<b onclick="profile('${p.user}')">${p.user}</b>
 
 <p>${p.text}</p>
 
@@ -334,28 +299,6 @@ ${p.img?`<img src="${p.img}">`:""}
 <button onclick="like('${d.id}')">Like</button>
 
 ${p.user==getUser()?`<button onclick="hapus('${d.id}')">Hapus</button>`:""}
-
-<div class="commentBox">
-
-<b>Komentar</b><br>
-
-`
-
-if(comData[d.id]){
-
-comData[d.id].forEach(c=>{
-html+=`<div>${c.user}: ${c.text}</div>`
-})
-
-}
-
-html+=`
-
-<input id="c-${d.id}" placeholder="Komentar">
-
-<button onclick="sendComment('${d.id}')">Kirim</button>
-
-</div>
 
 </div>
 
@@ -416,33 +359,13 @@ feed()
 
 }
 
-window.sendComment=async function(id){
-
-let text=document.getElementById("c-"+id).value
-
-await addDoc(collection(db,"comments"),{
-
-post:id,
-user:getUser(),
-text:text
-
-})
-
-feed()
-
-}
-
 window.rating=async function(){
 
 let data=await getDocs(collection(db,"ratings"))
 
 let count=[0,0,0,0,0]
 
-data.forEach(d=>{
-count[d.data().value-1]++
-})
-
-document.getElementById("app").innerHTML=`
+let html=`
 
 <div class="card">
 
@@ -460,24 +383,40 @@ document.getElementById("app").innerHTML=`
 
 <br>
 
-<canvas id="chart"></canvas>
+<canvas id="barChart"></canvas>
 
-</div>
+<br>
+
+<canvas id="pieChart"></canvas>
+
+<h3>Daftar Rating</h3>
 
 `
 
-new Chart(document.getElementById("chart"),{
+data.forEach(d=>{
+let r=d.data()
+count[r.value-1]++
+html+=`<p>${r.user} memberi ${r.value}⭐</p>`
+})
 
+html+=`</div>`
+
+document.getElementById("app").innerHTML=html
+
+new Chart(document.getElementById("barChart"),{
 type:"bar",
-
 data:{
 labels:["1⭐","2⭐","3⭐","4⭐","5⭐"],
-datasets:[{
-label:"Jumlah Rating",
-data:count
-}]
+datasets:[{data:count}]
 }
+})
 
+new Chart(document.getElementById("pieChart"),{
+type:"pie",
+data:{
+labels:["1⭐","2⭐","3⭐","4⭐","5⭐"],
+datasets:[{data:count}]
+}
 })
 
 }
@@ -537,11 +476,57 @@ document.getElementById("app").innerHTML=html
 
 }
 
+window.topUser=async function(){
+
+let data=await getDocs(collection(db,"followers"))
+
+let count={}
+
+data.forEach(d=>{
+let f=d.data()
+if(!count[f.target]) count[f.target]=0
+count[f.target]++
+})
+
+let arr=Object.entries(count).sort((a,b)=>b[1]-a[1])
+
+let html=`<div class="card"><h2>User Populer</h2>`
+
+arr.forEach(a=>{
+html+=`<p>${a[0]} : ${a[1]} followers</p>`
+})
+
+html+=`</div>`
+
+document.getElementById("app").innerHTML=html
+
+}
+
 window.profile=async function(name){
 
 let posts=await getDocs(collection(db,"posts"))
+let followers=await getDocs(collection(db,"followers"))
 
-let html=`<div class="card"><h2>Profil ${name}</h2>`
+let followerCount=0
+let followingCount=0
+
+followers.forEach(d=>{
+let f=d.data()
+if(f.target==name) followerCount++
+if(f.user==name) followingCount++
+})
+
+let html=`<div class="card">
+
+<h2>${name}</h2>
+
+<p>Followers : ${followerCount}</p>
+<p>Following : ${followingCount}</p>
+
+<button onclick="followUser('${name}')">Follow / Unfollow</button>
+
+<h3>Posting</h3>
+`
 
 posts.forEach(d=>{
 let p=d.data()
@@ -556,26 +541,21 @@ document.getElementById("app").innerHTML=html
 
 }
 
-window.about=function(){
+window.followUser=async function(target){
 
-document.getElementById("app").innerHTML=`
+let user=getUser()
 
-<div class="card">
+await addDoc(collection(db,"followers"),{
+user:user,
+target:target
+})
 
-<h2>Tentang Daniel</h2>
-
-Website ini adalah mini sosial media berbasis Firebase.
-
-</div>
-
-`
+alert("Sekarang kamu follow "+target)
 
 }
 
 window.theme=function(){
-
 document.body.classList.toggle("light")
-
 }
 
 if(getUser()){
