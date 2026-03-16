@@ -31,7 +31,7 @@ padding:20px;
 .card{
 background:#1e293b;
 padding:20px;
-border-radius:10px;
+border-radius:12px;
 margin-bottom:20px;
 }
 
@@ -45,7 +45,7 @@ border:none;
 button{
 padding:8px 12px;
 border:none;
-border-radius:6px;
+border-radius:8px;
 background:#38bdf8;
 color:white;
 cursor:pointer;
@@ -55,7 +55,13 @@ margin-top:5px;
 .post{
 background:#334155;
 padding:15px;
-border-radius:8px;
+border-radius:10px;
+margin-top:10px;
+}
+
+.post img{
+width:100%;
+border-radius:10px;
 margin-top:10px;
 }
 
@@ -67,7 +73,7 @@ margin-top:10px;
 }
 
 .star{
-font-size:30px;
+font-size:28px;
 cursor:pointer;
 }
 
@@ -95,7 +101,7 @@ border-radius:50%;
 display:flex;
 align-items:center;
 justify-content:center;
-font-size:25px;
+font-size:28px;
 cursor:pointer;
 }
 
@@ -110,10 +116,14 @@ align-items:center;
 justify-content:center;
 cursor:pointer;
 opacity:0;
-transition:0.4s;
+transform:scale(0);
+transition:0.3s;
 }
 
-.menu.active .item{opacity:1}
+.menu.active .item{
+opacity:1;
+transform:scale(1);
+}
 
 .item:nth-child(2){top:-20px;left:70px;}
 .item:nth-child(3){top:30px;left:150px;}
@@ -133,7 +143,7 @@ color:black;
 
 <body>
 
-<header>Daniel Website</header>
+<header>Daniel Mini Social</header>
 
 <div class="container" id="app"></div>
 
@@ -142,7 +152,7 @@ color:black;
 <div class="center" onclick="toggleMenu()">+</div>
 
 <div class="item" onclick="home()">🏠</div>
-<div class="item" onclick="notes()">📝</div>
+<div class="item" onclick="feed()">📷</div>
 <div class="item" onclick="rating()">⭐</div>
 <div class="item" onclick="users()">👥</div>
 <div class="item" onclick="leaderboard()">🏆</div>
@@ -180,10 +190,25 @@ appId:"1:4879222744:web:e441fe6b15b34fb42314ad"
 const app=initializeApp(firebaseConfig);
 const db=getFirestore(app);
 
-let user=localStorage.getItem("user")
+function getUser(){
+return localStorage.getItem("user")
+}
+
+function checkLogin(){
+let u=getUser()
+if(!u){
+loginPage()
+return false
+}
+return true
+}
 
 window.toggleMenu=function(){
+
+if(!checkLogin()) return
+
 document.getElementById("menu").classList.toggle("active")
+
 }
 
 function loginPage(){
@@ -210,6 +235,11 @@ window.login=async function(){
 
 let name=document.getElementById("name").value
 
+if(name.trim()==""){
+alert("Masukkan username")
+return
+}
+
 localStorage.setItem("user",name)
 
 await addDoc(collection(db,"users"),{
@@ -224,12 +254,13 @@ location.reload()
 window.logout=function(){
 
 localStorage.removeItem("user")
-
 location.reload()
 
 }
 
 window.home=function(){
+
+let user=getUser()
 
 document.getElementById("app").innerHTML=`
 
@@ -237,7 +268,7 @@ document.getElementById("app").innerHTML=`
 
 <h2>Halo ${user}</h2>
 
-Selamat datang di website Daniel Dolar Sarumaha, Senang berjumpa dengan anda.
+Selamat datang di Mini Instagram.
 
 <br><br>
 
@@ -249,7 +280,7 @@ Selamat datang di website Daniel Dolar Sarumaha, Senang berjumpa dengan anda.
 
 }
 
-window.notes=async function(){
+window.feed=async function(){
 
 let posts=await getDocs(collection(db,"posts"))
 let comments=await getDocs(collection(db,"comments"))
@@ -272,7 +303,7 @@ let html=`
 
 <br><br>
 
-<input id="img" placeholder="Link gambar (opsional)">
+<input id="img" placeholder="Link gambar">
 
 <br><br>
 
@@ -294,15 +325,15 @@ html+=`
 
 <p>${p.text}</p>
 
-${p.img?`<img src="${p.img}" style="width:100%;border-radius:10px">`:""}
+${p.img?`<img src="${p.img}">`:""}
 
-<br><br>
+<br>
 
 ❤️ ${p.likes}
 
 <button onclick="like('${d.id}')">Like</button>
 
-${p.user==user?`<button onclick="hapus('${d.id}')">Hapus</button>`:""}
+${p.user==getUser()?`<button onclick="hapus('${d.id}')">Hapus</button>`:""}
 
 <div class="commentBox">
 
@@ -343,7 +374,7 @@ let img=document.getElementById("img").value
 
 await addDoc(collection(db,"posts"),{
 
-user:user,
+user:getUser(),
 text:text,
 img:img,
 likes:0,
@@ -351,7 +382,7 @@ time:Date.now()
 
 })
 
-notes()
+feed()
 
 }
 
@@ -373,7 +404,7 @@ localStorage.removeItem("like-"+id)
 
 }
 
-notes()
+feed()
 
 }
 
@@ -381,7 +412,7 @@ window.hapus=async function(id){
 
 await deleteDoc(doc(db,"posts",id))
 
-notes()
+feed()
 
 }
 
@@ -392,12 +423,12 @@ let text=document.getElementById("c-"+id).value
 await addDoc(collection(db,"comments"),{
 
 post:id,
-user:user,
+user:getUser(),
 text:text
 
 })
 
-notes()
+feed()
 
 }
 
@@ -455,7 +486,7 @@ window.rate=async function(v){
 
 await addDoc(collection(db,"ratings"),{
 
-user:user,
+user:getUser(),
 value:v
 
 })
@@ -468,7 +499,7 @@ window.users=async function(){
 
 let data=await getDocs(collection(db,"users"))
 
-let html=`<div class="card"><h2>Daniel Web</h2>`
+let html=`<div class="card"><h2>Pengguna</h2>`
 
 data.forEach(d=>{
 html+=`<p>${d.data().name}</p>`
@@ -531,13 +562,9 @@ document.getElementById("app").innerHTML=`
 
 <div class="card">
 
-<h2>Profil Daniel</h2>
+<h2>Tentang Daniel</h2>
 
-Nama : Daniel website
-
-<br><br>
-
-let me introduce my self first, mah name is Daniel dolar sarumaha,can you call me Daniel or Dolar, i am nineteen years old, i am from south Nias,i live in Hiliamaetaniha village, my hobbies a badminton and swimming, my dreams a teacher🧑‍🏫 and officer👨‍💼. nice to meet you🤝
+Website ini adalah mini sosial media berbasis Firebase.
 
 </div>
 
@@ -551,14 +578,10 @@ document.body.classList.toggle("light")
 
 }
 
-if(!user){
-
-loginPage()
-
-}else{
-
+if(getUser()){
 home()
-
+}else{
+loginPage()
 }
 
 </script>
