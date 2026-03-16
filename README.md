@@ -2,15 +2,15 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Daniel Dolar Sarumaha</title>
+<title>Mini Social App Daniel</title>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style>
 
 body{
-font-family:Arial;
 margin:0;
+font-family:Arial;
 background:#0f172a;
 color:white;
 }
@@ -35,7 +35,7 @@ border-radius:10px;
 margin-bottom:20px;
 }
 
-input,textarea{
+textarea,input{
 width:100%;
 padding:8px;
 border-radius:6px;
@@ -202,7 +202,7 @@ app.innerHTML=`
 
 window.login=async function(){
 
-let name=nameInput()
+let name=document.getElementById("name").value
 
 localStorage.setItem("user",name)
 
@@ -212,10 +212,6 @@ name:name
 
 location.reload()
 
-}
-
-function nameInput(){
-return document.getElementById("name").value
 }
 
 window.logout=function(){
@@ -346,35 +342,62 @@ my=r.value
 let avg=(sum/total||0).toFixed(1)
 
 let html=`
+
 <div class="card">
+
 <h2>Rating Website</h2>
-<h3>${avg}/5 ⭐</h3>
+
+<h3>${avg} / 5 ⭐</h3>
+
+<p>Rating kamu : ${my || "Belum ada"}</p>
+
 <div id="stars">
+
 <span class="star" data="1">★</span>
 <span class="star" data="2">★</span>
 <span class="star" data="3">★</span>
 <span class="star" data="4">★</span>
 <span class="star" data="5">★</span>
+
 </div>
-<canvas id="chart"></canvas>
+
+<br>
+
+<canvas id="barChart"></canvas>
+
+<br>
+
+<canvas id="pieChart"></canvas>
+
 </div>
+
 `
 
 app.innerHTML=html
 
 document.querySelectorAll(".star").forEach(s=>{
-
 s.onclick=()=>rate(s.getAttribute("data"))
-
 })
 
-new Chart(chart,{
+setTimeout(()=>{
+
+new Chart(barChart,{
 type:"bar",
 data:{
-labels:["1","2","3","4","5"],
+labels:["1⭐","2⭐","3⭐","4⭐","5⭐"],
 datasets:[{data:count}]
 }
 })
+
+new Chart(pieChart,{
+type:"pie",
+data:{
+labels:["1⭐","2⭐","3⭐","4⭐","5⭐"],
+datasets:[{data:count}]
+}
+})
+
+},200)
 
 }
 
@@ -396,7 +419,9 @@ id=d.id
 
 if(found){
 
-await updateDoc(doc(db,"ratings",id),{value:Number(v)})
+await updateDoc(doc(db,"ratings",id),{
+value:Number(v)
+})
 
 }else{
 
