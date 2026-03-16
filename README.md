@@ -2,19 +2,21 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Daniel Social Web</title>
+<title>Daniel Social Website</title>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style>
 
 body{
 margin:0;
 font-family:Arial;
-background:#0f172a;
+background:linear-gradient(135deg,#020617,#0f172a,#1e293b);
 color:white;
 }
 
 header{
-background:#020617;
+background:linear-gradient(90deg,#38bdf8,#0284c7);
 padding:15px;
 text-align:center;
 font-size:22px;
@@ -41,12 +43,13 @@ border:none;
 }
 
 button{
-padding:10px 15px;
+padding:8px 12px;
 border:none;
-border-radius:8px;
+border-radius:6px;
 background:#38bdf8;
 color:white;
 cursor:pointer;
+margin-top:5px;
 }
 
 .post{
@@ -63,15 +66,9 @@ border-radius:6px;
 margin-top:10px;
 }
 
-.comment{
-font-size:14px;
-margin-bottom:5px;
-}
-
 .star{
 font-size:30px;
 cursor:pointer;
-color:white;
 }
 
 .star.active{
@@ -124,16 +121,19 @@ transition:0.4s;
 .item:nth-child(5){top:170px;left:70px;}
 .item:nth-child(6){top:120px;left:-10px;}
 .item:nth-child(7){top:30px;left:-10px;}
+.item:nth-child(8){top:70px;left:70px;}
+
+.light{
+background:white;
+color:black;
+}
 
 </style>
-
 </head>
 
 <body>
 
-<header>
-Daniel Social Website
-</header>
+<header>Daniel Social Website</header>
 
 <div class="container" id="app"></div>
 
@@ -144,7 +144,8 @@ Daniel Social Website
 <div class="item" onclick="home()">🏠</div>
 <div class="item" onclick="notes()">📝</div>
 <div class="item" onclick="rating()">⭐</div>
-<div class="item" onclick="follow()">👥</div>
+<div class="item" onclick="users()">👥</div>
+<div class="item" onclick="leaderboard()">🏆</div>
 <div class="item" onclick="about()">👤</div>
 <div class="item" onclick="logout()">🚪</div>
 
@@ -161,26 +162,25 @@ collection,
 addDoc,
 getDocs,
 updateDoc,
+deleteDoc,
 doc,
 increment
 }
 from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-const firebaseConfig = {
-
-apiKey: "AIzaSyAaW8jwL5yT-uZZglS2gA_HWRJvdUG-nZA",
-authDomain: "danieldolar-9bca1.firebaseapp.com",
-projectId: "danieldolar-9bca1",
-storageBucket: "danieldolar-9bca1.firebasestorage.app",
-messagingSenderId: "4879222744",
-appId: "1:4879222744:web:e441fe6b15b34fb42314ad"
-
+const firebaseConfig={
+apiKey:"AIzaSyAaW8jwL5yT-uZZglS2gA_HWRJvdUG-nZA",
+authDomain:"danieldolar-9bca1.firebaseapp.com",
+projectId:"danieldolar-9bca1",
+storageBucket:"danieldolar-9bca1.firebasestorage.app",
+messagingSenderId:"4879222744",
+appId:"1:4879222744:web:e441fe6b15b34fb42314ad"
 };
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+const app=initializeApp(firebaseConfig);
+const db=getFirestore(app);
 
-let user = localStorage.getItem("user")
+let user=localStorage.getItem("user")
 
 window.toggleMenu=function(){
 document.getElementById("menu").classList.toggle("active")
@@ -206,11 +206,16 @@ document.getElementById("app").innerHTML=`
 
 }
 
-window.login=function(){
+window.login=async function(){
 
 let name=document.getElementById("name").value
 
 localStorage.setItem("user",name)
+
+await addDoc(collection(db,"users"),{
+name:name,
+time:Date.now()
+})
 
 location.reload()
 
@@ -233,6 +238,10 @@ document.getElementById("app").innerHTML=`
 <h2>Halo ${user}</h2>
 
 Selamat datang di website sosial sederhana.
+
+<br><br>
+
+<button onclick="theme()">Toggle Mode</button>
 
 </div>
 
@@ -257,9 +266,13 @@ let html=`
 
 <div class="card">
 
-<h3>Buat Catatan</h3>
+<h3>Buat Post</h3>
 
 <textarea id="note"></textarea>
+
+<br><br>
+
+<input id="img" placeholder="Link gambar (opsional)">
 
 <br><br>
 
@@ -277,13 +290,19 @@ html+=`
 
 <div class="post">
 
-<b>${p.user}</b>
+<b onclick="profile('${p.user}')" style="cursor:pointer">${p.user}</b>
 
 <p>${p.text}</p>
+
+${p.img?`<img src="${p.img}" style="width:100%;border-radius:10px">`:""}
+
+<br><br>
 
 ❤️ ${p.likes}
 
 <button onclick="like('${d.id}')">Like</button>
+
+${p.user==user?`<button onclick="hapus('${d.id}')">Hapus</button>`:""}
 
 <div class="commentBox">
 
@@ -294,7 +313,7 @@ html+=`
 if(comData[d.id]){
 
 comData[d.id].forEach(c=>{
-html+=`<div class="comment"><b>${c.user}</b>: ${c.text}</div>`
+html+=`<div>${c.user}: ${c.text}</div>`
 })
 
 }
@@ -320,11 +339,13 @@ document.getElementById("app").innerHTML=html
 window.postNote=async function(){
 
 let text=document.getElementById("note").value
+let img=document.getElementById("img").value
 
 await addDoc(collection(db,"posts"),{
 
 user:user,
 text:text,
+img:img,
 likes:0,
 time:Date.now()
 
@@ -356,6 +377,14 @@ notes()
 
 }
 
+window.hapus=async function(id){
+
+await deleteDoc(doc(db,"posts",id))
+
+notes()
+
+}
+
 window.sendComment=async function(id){
 
 let text=document.getElementById("c-"+id).value
@@ -372,7 +401,15 @@ notes()
 
 }
 
-window.rating=function(){
+window.rating=async function(){
+
+let data=await getDocs(collection(db,"ratings"))
+
+let count=[0,0,0,0,0]
+
+data.forEach(d=>{
+count[d.data().value-1]++
+})
 
 document.getElementById("app").innerHTML=`
 
@@ -390,29 +427,31 @@ document.getElementById("app").innerHTML=`
 
 </div>
 
+<br>
+
+<canvas id="chart"></canvas>
+
 </div>
 
 `
 
-}
+new Chart(document.getElementById("chart"),{
 
-window.rate=async function(v){
+type:"bar",
 
-let stars=document.querySelectorAll(".star")
-
-stars.forEach((s,i)=>{
-
-if(i<v){
-
-s.classList.add("active")
-
-}else{
-
-s.classList.remove("active")
-
+data:{
+labels:["1⭐","2⭐","3⭐","4⭐","5⭐"],
+datasets:[{
+label:"Jumlah Rating",
+data:count
+}]
 }
 
 })
+
+}
+
+window.rate=async function(v){
 
 await addDoc(collection(db,"ratings"),{
 
@@ -421,17 +460,68 @@ value:v
 
 })
 
+rating()
+
 }
 
-window.follow=async function(){
+window.users=async function(){
 
-await addDoc(collection(db,"followers"),{
+let data=await getDocs(collection(db,"users"))
 
-user:user
+let html=`<div class="card"><h2>Pengguna Website</h2>`
 
+data.forEach(d=>{
+html+=`<p>${d.data().name}</p>`
 })
 
-alert("Sekarang kamu follow Daniel")
+html+=`</div>`
+
+document.getElementById("app").innerHTML=html
+
+}
+
+window.leaderboard=async function(){
+
+let posts=await getDocs(collection(db,"posts"))
+
+let count={}
+
+posts.forEach(d=>{
+let u=d.data().user
+if(!count[u]) count[u]=0
+count[u]++
+})
+
+let arr=Object.entries(count).sort((a,b)=>b[1]-a[1])
+
+let html=`<div class="card"><h2>User Teraktif</h2>`
+
+arr.forEach(a=>{
+html+=`<p>${a[0]} : ${a[1]} post</p>`
+})
+
+html+=`</div>`
+
+document.getElementById("app").innerHTML=html
+
+}
+
+window.profile=async function(name){
+
+let posts=await getDocs(collection(db,"posts"))
+
+let html=`<div class="card"><h2>Profil ${name}</h2>`
+
+posts.forEach(d=>{
+let p=d.data()
+if(p.user==name){
+html+=`<div class="post">${p.text}</div>`
+}
+})
+
+html+=`</div>`
+
+document.getElementById("app").innerHTML=html
 
 }
 
@@ -441,19 +531,23 @@ document.getElementById("app").innerHTML=`
 
 <div class="card">
 
-<h2>Tentang Saya</h2>
+<h2>Profil Daniel</h2>
 
 Nama : Daniel
 
 <br><br>
 
-Saya tertarik dengan teknologi, coding, dan pengembangan website.
-
-Website ini adalah proyek sosial media sederhana yang saya buat sendiri.
+Saya tertarik dengan teknologi dan coding.
 
 </div>
 
 `
+
+}
+
+window.theme=function(){
+
+document.body.classList.toggle("light")
 
 }
 
