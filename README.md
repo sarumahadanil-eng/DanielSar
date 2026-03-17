@@ -1,164 +1,265 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
 <meta charset="UTF-8">
-<title>Mini Social Platform Daniel</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Daniel Dolars</title>
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <style>
-body{margin:0;font-family:Arial;background:#0f172a;color:white;}
-header{background:#38bdf8;padding:15px;text-align:center;font-size:22px;}
-.container{max-width:900px;margin:auto;padding:20px;}
-.card{background:#1e293b;padding:20px;border-radius:10px;margin-bottom:25px;}
-textarea,input{width:100%;padding:8px;border-radius:6px;border:none;margin-bottom:10px;}
-button{padding:8px 14px;border:none;border-radius:6px;background:#38bdf8;color:white;cursor:pointer;margin-top:6px;display:block;}
-.post{background:#334155;padding:10px;border-radius:10px;margin-top:10px;}
-.post img{width:100%;border-radius:8px;margin-top:8px;}
-ul{padding-left:20px;margin:10px 0;}
-.menu{position:fixed;bottom:40px;right:40px;width:220px;height:220px;}
-.center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:#38bdf8;width:60px;height:60px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;cursor:pointer;}
-.item{position:absolute;width:45px;height:45px;background:#1e293b;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;opacity:0;transform:scale(0);transition:0.3s;}
-.menu.active .item{opacity:1;transform:scale(1);}
-.item:nth-child(2){top:-10px;left:90px;}
-.item:nth-child(3){top:20px;left:170px;}
-.item:nth-child(4){top:90px;left:200px;}
-.item:nth-child(5){top:160px;left:140px;}
-.item:nth-child(6){top:160px;left:40px;}
-.item:nth-child(7){top:90px;left:-20px;}
-.item:nth-child(8){top:20px;left:0px;}
-.light{background:white;color:black;}
+body{
+margin:0;
+font-family:Arial;
+background:linear-gradient(135deg,#020617,#0f172a,#1e293b);
+color:white;
+}
+
+.container{
+max-width:400px;
+margin:auto;
+padding:20px;
+}
+
+.profile{text-align:center;}
+.profile img{
+width:120px;height:120px;border-radius:50%;
+border:4px solid #38bdf8;
+box-shadow:0 0 20px #38bdf8;
+object-fit:cover;
+}
+
+.card{
+background:#1e293b;
+padding:15px;
+border-radius:15px;
+margin-top:15px;
+}
+
+a{color:#38bdf8;text-decoration:none;display:block;margin:5px 0;}
+
+button{
+padding:10px 20px;
+border:none;
+border-radius:20px;
+background:#38bdf8;
+color:black;
+font-weight:bold;
+cursor:pointer;
+margin:5px;
+}
+
+.star{font-size:25px;cursor:pointer;color:gray;}
+.star.active{color:gold;}
+
+canvas{background:white;border-radius:10px;margin-top:10px;}
 </style>
 </head>
+
 <body>
-<header>Mini Social Platform Daniel</header>
+
 <div class="container" id="app"></div>
-<div class="menu" id="menu">
-<div class="center" onclick="toggleMenu()">+</div>
-<div class="item" onclick="home()">🏠</div>
-<div class="item" onclick="feed()">📷</div>
-<div class="item" onclick="rating()">⭐</div>
-<div class="item" onclick="leaderboard()">🏆</div>
-<div class="item" onclick="theme()">🌓</div>
-<div class="item" onclick="logout()">🚪</div>
-<div class="item" onclick="profileList()">👤</div>
-<div class="item" onclick="platformLinks()">🌐</div>
-</div>
 
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, collection, addDoc, getDocs, updateDoc, doc, increment, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-const firebaseConfig={apiKey:"AIzaSyAaW8jwL5yT-uZZglS2gA_HWRJvdUG-nZA",authDomain:"danieldolar-9bca1.firebaseapp.com",projectId:"danieldolar-9bca1"};
-const appFire=initializeApp(firebaseConfig);
-const db=getFirestore(appFire);
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 
-function user(){ return localStorage.getItem("user") }
-window.toggleMenu=function(){ menu.classList.toggle("active") }
+import {
+getFirestore,collection,addDoc,getDocs,
+updateDoc,doc,increment,deleteDoc,
+query,where
+}
+from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-function loginPage(){
-app.innerHTML=`<div class="card"><h2>Login</h2><input id="name" placeholder="Username"><button onclick="login()">Masuk</button></div>`;
+/* 🔥 CONFIG KAMU */
+const firebaseConfig = {
+  apiKey: "AIzaSyAaW8jwL5yT-uZZglS2gA_HWRJvdUG-nZA",
+  authDomain: "danieldolar-9bca1.firebaseapp.com",
+  projectId: "danieldolar-9bca1",
+  storageBucket: "danieldolar-9bca1.firebasestorage.app",
+  messagingSenderId: "4879222744",
+  appId: "1:4879222744:web:e441fe6b15b34fb42314ad"
+};
+
+const appFirebase = initializeApp(firebaseConfig);
+const db = getFirestore(appFirebase);
+
+/* USER */
+function user(){
+let u=localStorage.getItem("user")
+if(!u){
+u="user_"+Math.random().toString(36).substr(2,5)
+localStorage.setItem("user",u)
+}
+return u
 }
 
-window.login=async function(){
-let name=document.getElementById("name").value
-if(!name.trim()){ alert("Masukkan username"); return; }
-localStorage.setItem("user",name)
-await addDoc(collection(db,"users"),{name:name})
-location.reload()
-}
+/* HOME */
+async function home(){
 
-window.logout=function(){ localStorage.removeItem("user"); location.reload() }
-
-window.home=async function(){
-let usersData=await getDocs(collection(db,"users"))
-let followersData=await getDocs(collection(db,"followers"))
-let totalUsers=usersData.size
-let totalFollowers=followersData.size
-let followed=false
-let myId=""
-followersData.forEach(d=>{ let f=d.data(); if(f.user==user()){ followed=true; myId=d.id } })
-let unfollow=totalUsers-totalFollowers
-
-let userList="<ul>"
-usersData.forEach(d=>{ userList+=`<li>${d.data().name}</li>` })
-userList+="</ul>"
+let followers=await getDocs(collection(db,"followers"))
 
 app.innerHTML=`
-<div class="card">
-<h2>Halo ${user()}</h2>
-<h3>Followers Platform : ${totalFollowers}</h3>
-<button onclick="toggleFollowPlatform('${myId}')">${followed?"Unfollow Platform":"Follow Platform"}</button>
-<br><br>
-<canvas id="followChart"></canvas>
+<div class="profile">
+<img src="https://drive.google.com/uc?export=view&id=1rXGo576CZ5a7pxeNPq2cutKD1HVA5iAi">
+<h2>Daniel Dolars</h2>
 </div>
 
 <div class="card">
-<h3>Users Terdaftar</h3>
-${userList}
+<b>Kontak</b>
+<a href="https://wa.me/6281388149795">WhatsApp</a>
+<a href="https://instagram.com/Danieldolars">Instagram</a>
 </div>
 
 <div class="card">
-<h3>Platform Daniel</h3>
-<a href="https://wa.me/6281388149795" target="_blank"><button>WhatsApp</button></a>
-<br><br>
-<a href="https://instagram.com/Danieldolars" target="_blank"><button>Instagram</button></a>
+Followers: ${followers.size}
+<button onclick="follow()">Follow / Unfollow</button>
+</div>
+
+<div class="card">
+<button onclick="feed()">Feed</button>
+<button onclick="rating()">Rating</button>
+<button onclick="leaderboard()">Leaderboard</button>
+<button onclick="stats()">Statistik</button>
 </div>
 `
-
-setTimeout(()=>{
-new Chart(followChart,{type:"pie",data:{labels:["Follow Platform","Belum Follow"],datasets:[{data:[totalFollowers,unfollow]}]}})
-},200)
 }
 
-window.toggleFollowPlatform=async function(id){
-if(id){ await updateDoc(doc(db,"followers",id),{user:"deleted"}) } 
-else{ await addDoc(collection(db,"followers"),{user:user()}) }
+/* FOLLOW */
+window.follow=async function(){
+
+let q=query(collection(db,"followers"),where("user","==",user()))
+let snap=await getDocs(q)
+
+if(snap.empty){
+await addDoc(collection(db,"followers"),{user:user()})
+}else{
+await deleteDoc(doc(db,"followers",snap.docs[0].id))
+}
 home()
 }
 
-window.feed=function(){
-let q=query(collection(db,"posts"),orderBy("time","desc"))
-onSnapshot(q,(snap)=>{
-let html=`<div class="card"><textarea id="text"></textarea><input id="img" placeholder="Link gambar"><button onclick="post()">Post</button></div>`
-snap.forEach(d=>{
+/* FEED */
+window.feed=async function(){
+
+let data=await getDocs(collection(db,"posts"))
+
+let html=`
+<div class="card">
+<textarea id="txt"></textarea>
+<button onclick="post()">Posting</button>
+</div>
+`
+
+data.forEach(d=>{
 let p=d.data()
-html+=`<div class="post"><b>${p.user}</b><p>${p.text}</p>${p.img?`<img src="${p.img}">`:""}<br>❤️ ${p.likes||0}<button onclick="like('${d.id}')">Like</button></div>`
+html+=`
+<div class="card">
+${p.text}<br>
+❤️ ${p.likes}
+<button onclick="like('${d.id}')">Like</button>
+</div>
+`
 })
+
 app.innerHTML=html
+}
+
+window.post=async function(){
+await addDoc(collection(db,"posts"),{
+user:user(),
+text:txt.value,
+likes:0
+})
+feed()
+}
+
+window.like=async function(id){
+await updateDoc(doc(db,"posts",id),{likes:increment(1)})
+feed()
+}
+
+/* RATING */
+window.rating=async function(){
+
+let data=await getDocs(collection(db,"ratings"))
+let count=[0,0,0,0,0]
+
+data.forEach(d=>{
+count[d.data().rating-1]++
+})
+
+app.innerHTML=`
+<div class="card">
+<h3>Rating</h3>
+${[1,2,3,4,5].map(i=>`<span class="star" onclick="rate(${i})">★</span>`).join("")}
+<canvas id="chart"></canvas>
+</div>
+`
+
+new Chart(chart,{
+type:"pie",
+data:{labels:["1","2","3","4","5"],datasets:[{data:count}]}
 })
 }
 
-window.post=async function(){ await addDoc(collection(db,"posts"),{user:user(),text:text.value,img:img.value,likes:0,time:Date.now()}) }
+window.rate=async function(v){
 
-window.like=async function(id){ let liked=localStorage.getItem("like-"+id); let ref=doc(db,"posts",id); if(!liked){ await updateDoc(ref,{likes:increment(1)}); localStorage.setItem("like-"+id,true) } else{ await updateDoc(ref,{likes:increment(-1)}); localStorage.removeItem("like-"+id) } }
+let q=query(collection(db,"ratings"),where("user","==",user()))
+let snap=await getDocs(q)
 
+if(snap.empty){
+await addDoc(collection(db,"ratings"),{user:user(),rating:v})
+}else{
+await updateDoc(doc(db,"ratings",snap.docs[0].id),{rating:v})
+}
+rating()
+}
+
+/* LEADERBOARD */
 window.leaderboard=async function(){
-let posts=await getDocs(collection(db,"posts"))
-let count={}
-posts.forEach(d=>{ let u=d.data().user; count[u]=(count[u]||0)+1 })
-let arr=Object.entries(count).sort((a,b)=>b[1]-a[1])
-let html=`<div class="card"><h2>Leaderboard</h2>`
-arr.forEach(a=>{ html+=`<p>${a[0]} : ${a[1]} post</p>` })
+
+let data=await getDocs(collection(db,"posts"))
+let map={}
+
+data.forEach(d=>{
+let u=d.data().user
+map[u]=(map[u]||0)+1
+})
+
+let arr=Object.entries(map).sort((a,b)=>b[1]-a[1])
+
+let html=`<div class="card"><h3>Leaderboard</h3>`
+arr.forEach((a,i)=>{
+html+=`<p>${i+1}. ${a[0]} - ${a[1]} post</p>`
+})
 html+=`</div>`
+
 app.innerHTML=html
 }
 
-window.theme=function(){ document.body.classList.toggle("light") }
+/* STATS */
+window.stats=async function(){
 
-window.profileList=async function(){
-let usersData=await getDocs(collection(db,"users"))
-let html=`<div class="card"><h2>Daftar User</h2><ul>`
-usersData.forEach(d=>{ html+=`<li>${d.data().name}</li>` })
-html+="</ul></div>"
-app.innerHTML=html
+let data=await getDocs(collection(db,"followers"))
+let f=data.size
+
+app.innerHTML=`
+<div class="card">
+<canvas id="c"></canvas>
+</div>
+`
+
+new Chart(c,{
+type:"pie",
+data:{labels:["Follow","Belum"],datasets:[{data:[f,10-f]}]}
+})
 }
 
-window.platformLinks=function(){
-app.innerHTML=`<div class="card"><h2>Platform Daniel</h2>
-<a href="https://wa.me/6281388149795" target="_blank"><button>WhatsApp</button></a><br><br>
-<a href="https://instagram.com/Danieldolars" target="_blank"><button>Instagram</button></a></div>`
-}
+home()
 
-if(user()){ home() } else{ loginPage() }
 </script>
+
 </body>
 </html>
