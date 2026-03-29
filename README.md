@@ -1,518 +1,287 @@
-<html>
+<!DOCTYPE html>
+<html lang="id">
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>💎 Daniel Noctra Cyber</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AUREATE - Daniel Dolar Master</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root { --gold: #e5b026; --cyan: #0fe; --bg: #0a0a0c; --glass: rgba(255,255,255,0.05); }
+        body, html { margin: 0; padding: 0; height: 100%; font-family: 'Segoe UI', sans-serif; background: var(--bg); color: #fff; overflow: hidden; }
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        /* 1. ANIMASI BOLA */
+        .ball { position: absolute; border-radius: 50%; filter: blur(70px); opacity: 0.2; z-index: -1; animation: float 20s infinite alternate; }
+        @keyframes float { from { transform: translate(0,0); } to { transform: translate(90vw, 90vh); } }
 
-<style>
-body{
-margin:0;
-font-family:sans-serif;
-color:white;
-display:flex;
-justify-content:center;
-background:linear-gradient(120deg,#0ea5e9,#8b5cf6,#22c55e);
-background-size:300% 300%;
-animation:aurora 10s infinite ease;
-}
-@keyframes aurora{
-0%{background-position:0% 50%;}
-50%{background-position:100% 50%;}
-100%{background-position:0% 50%;}
-}
+        /* LOADING & EXIT */
+        #loader { position: fixed; inset: 0; background: #000; display: none; flex-direction: column; justify-content: center; align-items: center; z-index: 10000; }
+        .welcome-anim { font-size: 2rem; font-weight: bold; color: var(--gold); animation: pulse 2s infinite; letter-spacing: 3px; text-align: center; }
+        @keyframes pulse { 0%, 100% { opacity: 0.3; transform: scale(0.9); } 50% { opacity: 1; transform: scale(1); } }
 
-/* BACKGROUND LOGIN (ANIMASI) */
-body.login-bg{
-  background:linear-gradient(120deg,#0ea5e9,#8b5cf6,#22c55e,#06b6d4);
-  background-size:400% 400%;
-  animation:aurora 8s ease-in-out infinite;
+        /* LOGIN */
+        #login-page { height: 100%; display: flex; justify-content: center; align-items: center; }
+        .login-card { background: var(--glass); padding: 40px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(20px); text-align: center; width: 300px; }
+        input { width: 100%; padding: 12px; margin: 15px 0; border-radius: 8px; border: none; background: rgba(255,255,255,0.1); color: #fff; text-align: center; outline: none; }
+        button.btn-main { width: 100%; padding: 12px; border-radius: 8px; border: none; background: var(--cyan); color: #000; font-weight: bold; cursor: pointer; }
 
-  height:100vh;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-}
+        /* APP LAYOUT */
+        #app { display: flex; height: 100%; }
+        nav { width: 80px; background: rgba(0,0,0,0.9); display: flex; flex-direction: column; align-items: center; padding: 20px 0; border-right: 1px solid var(--glass); }
+        nav button { background: none; border: none; color: #555; font-size: 9px; margin: 12px 0; cursor: pointer; font-weight: bold; transition: 0.3s; }
+        nav button.active { color: var(--gold); transform: scale(1.1); }
 
-/* CONTAINER */
-.container{
-  max-width:420px;
-  width:100%;
-}
+        .view-container { flex: 1; overflow-y: auto; padding: 20px; }
+        .view { display: none; animation: fadeIn 0.4s; }
+        .view.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .card { background: var(--glass); border-radius: 15px; padding: 20px; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.05); position: relative; }
 
-/* HEADER */
-.header{
-  text-align:center;
-  padding:20px;
-  font-size:22px;
-  font-weight:bold;
-  color:#0ff;
-  text-shadow:0 0 10px #0ff;
-}
+        /* HOME & PROFIL */
+        .profile-img { width: 110px; height: 110px; border-radius: 50%; border: 3px solid var(--gold); object-fit: cover; }
+        .plus-btn { background: var(--gold); border: none; width: 25px; height: 25px; border-radius: 50%; cursor: pointer; font-weight: bold; margin-left: -25px; }
 
-/* =========================
-   CARD GLOBAL (HALAMAN)
-========================= */
-.card{
-  margin:10px;
-  padding:15px;
-  border-radius:20px;
-}
+        /* FEED: TITIK TIGA */
+        .post-menu { position: absolute; top: 15px; right: 15px; cursor: pointer; font-size: 20px; color: #888; padding: 5px; }
+        .delete-btn { color: #ff4444; font-size: 12px; cursor: pointer; margin-top: 10px; display: none; background: rgba(255,0,0,0.15); padding: 8px; border-radius: 5px; text-align: center; border: 1px solid #ff4444; }
 
-/* =========================
-   LOGIN CARD (HITAM)
-========================= */
-body.login-bg .card{
-  background:linear-gradient(145deg,#000,#1a1a1a);
-  color:#fff;
-  border:1px solid rgba(255,255,255,0.1);
-  box-shadow:0 0 25px rgba(0,0,0,0.8);
-}
+        /* RATE: POLOS */
+        .rate-btns { display: flex; justify-content: space-between; gap: 8px; margin-top: 20px; }
+        .star-btn { flex: 1; padding: 12px 5px; background: transparent; border: 1px solid rgba(255,255,255,0.2); color: #fff; border-radius: 8px; cursor: pointer; }
+        .star-btn.voted { background: var(--gold); color: #000; border-color: var(--gold); font-weight: bold; }
 
-/* =========================
-   HALAMAN UTAMA (BLUE)
-========================= */
-body:not(.login-bg) .card{
-  background:linear-gradient(135deg,#a1c4fd,#c2e9fb);
-  color:#111;
-  box-shadow:0 10px 30px rgba(0,0,0,0.15);
-}
-
-/* BUTTON */
-button{
-  width:100%;
-  padding:8px;
-  margin:6px 0;
-  border:none;
-  border-radius:20px;
-  background:linear-gradient(90deg,#38bdf8,#a78bfa);
-  color:white;
-  cursor:pointer;
-}
-#touchEffect{
-  position:fixed;
-  top:0;
-  left:0;
-  width:100%;
-  height:100%;
-  pointer-events:none;
-  z-index:9999;
-}
-
-/* INPUT */
-input, textarea{
-  width:100%;
-  padding:8px;
-  margin-top:8px;
-  border-radius:10px;
-  border:1px solid #444;
-
-  background:#111;
-  color:#fff;
-}
-
-input::placeholder{
-  color:#aaa;
-}
-
-/* POST / CHAT / USER */
-.post{
-  background:#eef2ff;
-  border-left:4px solid #6366f1;
-}
-
-.chat{
-  background:#f5f3ff;
-  border-left:4px solid #8b5cf6;
-}
-
-.user{
-  background:#e0f2fe;
-  border-left:4px solid #3b82f6;
-}
-
-/* ANIMASI BACKGROUND */
-@keyframes aurora{
-  0%{background-position:0% 50%}
-  50%{background-position:100% 50%}
-  100%{background-position:0% 50%}
-}
-.login-card{
-  background:#000;
-  color:#fff;
-  border:1px solid rgba(255,255,255,0.1);
-  box-shadow:0 0 25px rgba(0,0,0,0.8);
-}
-.welcome-text{
-  color:#000;
-  font-size:14px;
-  line-height:1.6;
-  text-align:center;
-}
-</style>
-
+        /* USERS LIST */
+        .user-item { display: flex; align-items: center; gap: 15px; background: rgba(255,255,255,0.03); padding: 10px; border-radius: 10px; margin-bottom: 10px; }
+        .user-avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--gold); display: flex; align-items: center; justify-content: center; color: #000; font-weight: bold; }
+    </style>
 </head>
-
 <body>
 
-<div class="container" id="app"></div>
-
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import {
-getFirestore,collection,addDoc,getDocs,
-updateDoc,doc,setDoc,deleteDoc,
-query,orderBy,onSnapshot,arrayUnion
-} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-
-const db = getFirestore(initializeApp({
-apiKey:"AIzaSyAaW8jwL5yT-uZZglS2gA_HWRJvdUG-nZA",
-authDomain:"danieldolar-9bca1.firebaseapp.com",
-projectId:"danieldolar-9bca1"
-}));
-
-const app=document.getElementById("app");
-
-/* USER */
-function getUser(){
-return JSON.parse(localStorage.getItem("user"));
-}
-
-async function setUser(name){
-let user={
-id:"u"+Math.random().toString(36).substr(2,5),
-name:name
-};
-localStorage.setItem("user",JSON.stringify(user));
-await setDoc(doc(db,"users",user.id),user);
-}
-
-/* LOGIN */
-function loginPage(){
-  app.innerHTML = `
-  <div class="card login-card" style="text-align:center">
-
-    <h2 style="color:#0ff">⚡ LOGIN ⚡</h2>
-
-    <!-- VIDEO -->
-    <video id="vid" controls playsinline
-      style="width:180px;border-radius:15px;margin:15px 0;background:black;">
-      <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
-    </video>
-
-    <p style="font-size:13px;color:#000;margin-bottom:10px;">
-      Halo 👋 selamat datang di web saya 🌐, jangan lupa tonton video singkat ini 🎬✨
-    </p>
-
-    <input id="username" placeholder="Masukkan username...">
-    <button onclick="login()">Login</button>
-
-  </div>
-  `;
-
-  const vid = document.getElementById("vid");
-
-  // 🔊 Auto play saat user klik pertama (biar gak diblok)
-  vid.addEventListener("play", ()=>{
-    vid.muted = false;
-  });
-
-  // 🎬 setelah video pertama selesai → pindah ke tontonan naga
-  vid.onended = () => {
-    vid.src = "https://media.w3.org/2010/05/sintel/trailer.mp4";
-    vid.currentTime = 0;
-    vid.play();
-
-    // ⏱️ batasi hanya 20 detik
-    vid.ontimeupdate = () => {
-      if (vid.currentTime >= 20) {
-        vid.pause();
-      }
-    };
-  };
-}
-
-
-/* LOGIN ACTION */
-window.login = async () => {
-  const input = document.getElementById("username");
-  const name = input.value.trim();
-
-  if (!name) {
-    alert("Isi username!");
-    return;
-  }
-
-  await setUser(name);
-  document.body.className = "";
-  home();
-};
-/* NAV */
-function nav(){
-let u=getUser();
-if(!u){loginPage();return "";}
-return `
-<div class="header">⚡ ${u.name} ⚡</div>
-
-<div class="card">
-<button onclick="home()">🏠 Home</button>
-<button onclick="feed()">📰 Feed</button>
-<button onclick="profile()">👤 Profile</button>
-<button onclick="chat()">💬 Messenger</button>
-<button onclick="rating()">⭐ Rating</button>
-<button onclick="users()">👥 Users</button>
-<button onclick="logout()">🚪 Logout</button>
-</div>`;
-}
-
-/* HOME */
-window.home=async()=>{
-let f=0,u=0;
-let snap=await getDocs(collection(db,"followers"));
-snap.forEach(d=>d.data().type==="follow"?f++:u++);
-
-app.innerHTML=nav()+`
-<div class="card">
-<h3>👥 Followers: ${f-u}</h3>
-<button onclick="follow()">➕ Follow</button>
-<button onclick="unfollow()">➖ Unfollow</button>
-<canvas id="chart"></canvas>
-</div>`;
-
-new Chart(chart,{
-type:"doughnut",
-data:{labels:["Follow","Unfollow"],datasets:[{data:[f,u]}]}
-});
-};
-
-window.follow=()=>addDoc(collection(db,"followers"),{type:"follow"}).then(home);
-window.unfollow=()=>addDoc(collection(db,"followers"),{type:"unfollow"}).then(home);
-
-/* FEED */
-window.feed=async()=>{
-let html=nav()+`
-<div class="card">
-<textarea id="txt"></textarea>
-<button onclick="post()">Posting</button>
-</div>`;
-
-let postSnap=await getDocs(collection(db,"posts"));
-let komenSnap=await getDocs(collection(db,"comments"));
-
-postSnap.forEach(d=>{
-let p=d.data();
-let komenHTML="";
-
-komenSnap.forEach(k=>{
-let c=k.data();
-if(c.postId===d.id){
-komenHTML+=`
-<div>💬 <b>${c.user}</b>: ${c.text}
-<button onclick="hapusKomen('${k.id}')">❌</button>
-</div>`;
-}
-});
-
-html+=`
-<div class="post">
-<b>${p.user}</b><br>${p.text}
-<br>❤️ ${p.likes?.length||0}
-
-<button onclick="like('${d.id}')">Like</button>
-<button onclick="hapusPost('${d.id}')">🗑 Hapus</button>
-
-<input id="c${d.id}">
-<button onclick="kirimKomentar('${d.id}')">💬</button>
-
-${komenHTML}
-</div>`;
-});
-
-app.innerHTML=html;
-};
-
-/* PROFILE (FULL) */
-window.profile=()=>{
-app.innerHTML=nav()+`
-<div class="card">
-<h2>👤 Daniel Dolar Sarumaha</h2>
-
-<p>
-<b>Nama:</b><br>
-Daniel Dolar Sarumaha adalah seorang individu muda yang memiliki semangat tinggi dalam belajar dan berkembang, terutama di bidang teknologi digital.<br><br>
-
-<b>Umur:</b><br>
-19 tahun — usia produktif dimana ia sedang membangun masa depan dan mengasah kemampuan untuk menjadi pribadi sukses.<br><br>
-
-<b>Hobby:</b><br>
-Memiliki ketertarikan besar pada dunia coding, desain web, dan teknologi modern.<br><br>
-
-<b>Cita-cita:</b><br>
-Menjadi developer sukses dan membangun platform besar.<br><br>
-
-<b>Motto:</b><br>
-"Terus belajar dan berkembang."
-</p>
-
-</div>`;
-};
-
-/* MESSENGER */
-window.chat = ()=>{
-
-let u = getUser();
-if(!u){alert("Login dulu"); return;}
-
-app.innerHTML = nav() + `
-<div class="card">
-<h2>💬 Messenger</h2>
-
-<div id="chatBox" style="height:250px;overflow:auto;"></div>
-
-<input id="pesan" placeholder="Ketik pesan...">
-<button onclick="kirimChat()">Kirim</button>
-</div>
-`;
-
-let q = query(collection(db,"chat"), orderBy("time"));
-
-onSnapshot(q,(snap)=>{
-let box = document.getElementById("chatBox");
-let isi = "";
-
-snap.forEach(d=>{
-let c = d.data();
-
-if(c.hiddenFor && c.hiddenFor.includes(u.id)) return;
-
-isi += `
-<div>
-<b>${c.user}</b>: ${c.deleted ? "Pesan dihapus" : c.text}
-<br>
-<button onclick="hapusSaya('${d.id}')">❌</button>
-<button onclick="hapusSemua('${d.id}')">🗑</button>
-</div>
-`;
-});
-
-box.innerHTML = isi;
-});
-};
-
-window.kirimChat=async()=>{
-let u=getUser();
-let teks=pesan.value.trim();
-if(!teks)return;
-
-await addDoc(collection(db,"chat"),{
-user:u.name,
-text:teks,
-time:Date.now(),
-hiddenFor:[],
-deleted:false
-});
-
-pesan.value="";
-};
-
-window.hapusSaya=async(id)=>{
-let u=getUser();
-await updateDoc(doc(db,"chat",id),{
-hiddenFor:arrayUnion(u.id)
-});
-};
-
-window.hapusSemua = async(id)=>{
-  if(confirm("Hapus untuk semua?")){
-    await deleteDoc(doc(db,"chat",id));
-  }
-}
-
-/* RATING */
-window.rating=async()=>{
-
-let total=0,count=0;
-let stars=[0,0,0,0,0];
-
-let snap=await getDocs(collection(db,"ratings"));
-
-snap.forEach(d=>{
-let v=d.data().value;
-if(v>=1 && v<=5){
-total+=v;
-count++;
-stars[v-1]++;
-}
-});
-
-let avg = count ? (total/count).toFixed(1) : 0;
-
-let persen = stars.map(s =>
-(count && s) ? Math.round((s/count)*100) : 0
-);
-
-app.innerHTML=nav()+`
-<div class="card">
-<h2>rating</h2>
-
-<h3>${avg} ⭐ (${count} vote)</h3>
-
-<div style="font-size:25px;cursor:pointer">
-<span onclick="kirimRating(1)">☆</span>
-<span onclick="kirimRating(2)">☆</span>
-<span onclick="kirimRating(3)">☆</span>
-<span onclick="kirimRating(4)">☆</span>
-<span onclick="kirimRating(5)">☆</span>
-</div>
-
-<div style="margin-top:10px">
-1⭐: ${persen[0]}%<br>
-2⭐: ${persen[1]}%<br>
-3⭐: ${persen[2]}%<br>
-4⭐: ${persen[3]}%<br>
-5⭐: ${persen[4]}%
-</div>
-
-</div>`;
-};
-window.kirimRating=async(v)=>{
-await addDoc(collection(db,"ratings"),{
-value:v
-});
-rating();
-}
-/* USERS */
-window.users=async()=>{
-let html=nav()+`<div class="card"><h2>Users</h2>`;
-
-let snap=await getDocs(collection(db,"users"));
-
-snap.forEach(d=>{
-html+=`
-<div class="user">
-${d.data().name}
-<button onclick="hapusUser('${d.id}')">🗑 Hapus</button>
-</div>
-`;
-});
-
-html+=`</div>`;
-app.innerHTML=html;
-};
-window.hapusUser=async(id)=>{
-if(confirm("Yakin hapus user?")){
-await deleteDoc(doc(db,"users",id));
-users();
-}
-}
-/* LOGOUT */
-window.logout=()=>{
-localStorage.clear();
-loginPage();
-};
-
-loginPage();
-</script>
-
+    <div class="ball" style="width:300px; height:300px; background:var(--gold); top:-50px; left:-50px;"></div>
+    <div class="ball" style="width:250px; height:250px; background:var(--cyan); bottom:-50px; right:-50px;"></div>
+
+    <div id="loader">
+        <div class="welcome-anim" id="loader-msg">Selamat Datang</div>
+    </div>
+
+    <div id="login-page">
+        <div class="login-card">
+            <h1 style="color:var(--gold)">AUREATE</h1>
+            <input type="text" id="user-in" placeholder="Nama Kamu">
+            <button class="btn-main" onclick="masukApp()">MASUK</button>
+        </div>
+    </div>
+
+    <div id="app" style="display:none">
+        <nav>
+            <button class="active" onclick="navigasi('home')">HOME</button>
+            <button onclick="navigasi('profil')">BIO</button>
+            <button onclick="navigasi('users')">USERS</button>
+            <button onclick="navigasi('feed')">FEED</button>
+            <button onclick="navigasi('chat')">CHAT</button>
+            <button onclick="navigasi('rank')">RANK</button>
+            <button onclick="navigasi('rate')">RATE</button>
+            <button onclick="keluarApp()" style="color:#ff4444; margin-top:auto">EXIT</button>
+        </nav>
+
+        <div class="view-container">
+            <section id="home" class="view active">
+                <div style="text-align:center">
+                    <img src="IMG_20260315_091508.jpg" class="profile-img" onerror="this.src='https://via.placeholder.com/110?text=Daniel'">
+                    <button class="plus-btn" onclick="followAction()">+</button>
+                    <h2 style="margin-top:15px;">@DanielDolar</h2>
+                    <div style="display:flex; justify-content:center; gap:35px; margin:20px 0;">
+                        <div><b id="h-fol">0</b><br><small style="opacity:0.6">Pengikut</small></div>
+                        <div><b id="h-lik">0</b><br><small style="opacity:0.6">Menyukai</small></div>
+                    </div>
+                    <div class="card"><p style="font-size:12px; margin-bottom:10px;">Statistik Follower</p><canvas id="chartHome"></canvas></div>
+                </div>
+            </section>
+
+            <section id="profil" class="view">
+                <div class="card">
+                    <h2 style="color:var(--gold)">Daniel Dolar Sarumaha</h2>
+                    <p><b>Umur:</b> 19 Tahun</p>
+                    <p><b>TTL:</b> 14 Mei 2006</p>
+                    <p><b>Alamat:</b> Desa Hiliamaetaluo, Nias Selatan</p>
+                    <hr style="opacity:0.1; margin:15px 0;">
+                    <p style="line-height:1.7; opacity:0.8;">
+                        Saya adalah seorang pemuda dari Nias Selatan yang bercita-cita besar dalam dunia teknologi. Di usia ke-19 ini, saya membangun <b>AUREATE</b> sebagai wadah kreativitas dan koneksi digital. Bagi saya, tantangan adalah peluang untuk tumbuh lebih kuat. Dari Desa Hiliamaetaniha, saya siap membawa karya ini mendunia.
+                    </p>
+                </div>
+            </section>
+
+            <section id="users" class="view">
+                <h2 style="color:var(--cyan)">Anggota Bergabung</h2>
+                <div id="users-list"></div>
+            </section>
+
+            <section id="feed" class="view">
+                <div class="card">
+                    <input type="text" id="post-msg" placeholder="Bagikan cerita kamu...">
+                    <button class="btn-main" onclick="gasPost()">Kirim Post</button>
+                </div>
+                <div id="feed-list"></div>
+            </section>
+
+            <section id="chat" class="view">
+                <div class="card">
+                    <div id="chat-list" style="height:350px; overflow-y:auto; padding:10px; border-radius:10px; background:rgba(0,0,0,0.2); margin-bottom:10px;"></div>
+                    <div style="display:flex; gap:10px;">
+                        <input type="text" id="chat-msg" placeholder="Ketik pesan..." style="flex:1; margin:0">
+                        <button class="btn-main" onclick="gasChat()" style="width:80px">Gas</button>
+                    </div>
+                </div>
+            </section>
+
+            <section id="rank" class="view">
+                <h2 style="color:var(--gold)">🏆 Juara Postingan Daniel</h2>
+                <div id="rank-list"></div>
+            </section>
+
+            <section id="rate" class="view">
+                <div class="card" id="rate-panel">
+                    <h2>Beri Rating Aureate</h2>
+                    <p style="font-size:12px; opacity:0.6;">Satu user hanya bisa vote sekali.</p>
+                    <div class="rate-btns">
+                        <button class="star-btn" id="s1" onclick="vote(1)">⭐1</button>
+                        <button class="star-btn" id="s2" onclick="vote(2)">⭐2</button>
+                        <button class="star-btn" id="s3" onclick="vote(3)">⭐3</button>
+                        <button class="star-btn" id="s4" onclick="vote(4)">⭐4</button>
+                        <button class="star-btn" id="s5" onclick="vote(5)">⭐5</button>
+                    </div>
+                </div>
+                <div class="card">
+                    <canvas id="rateChart"></canvas>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, doc, setDoc, getDoc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+        const db = getFirestore(initializeApp({
+            apiKey: "AIzaSyAaW8jwL5yT-uZZglS2gA_HWRJvdUG-nZA",
+            authDomain: "danieldolar-9bca1.firebaseapp.com",
+            projectId: "danieldolar-9bca1"
+        }));
+
+        let userSkrg = "";
+
+        // AUTH
+        window.masukApp = async () => {
+            userSkrg = document.getElementById('user-in').value;
+            if(!userSkrg) return alert("Isi namamu!");
+            await setDoc(doc(db, "members", userSkrg.toLowerCase()), { nama: userSkrg, joinAt: serverTimestamp() });
+            document.getElementById('login-page').style.display = 'none';
+            document.getElementById('loader').style.display = 'flex';
+            setTimeout(() => {
+                document.getElementById('loader').style.display = 'none';
+                document.getElementById('app').style.display = 'flex';
+                mulaiRealtime();
+            }, 5000);
+        };
+
+        window.keluarApp = () => {
+            document.getElementById('app').style.display = 'none';
+            document.getElementById('loader').style.display = 'flex';
+            document.getElementById('loader-msg').innerText = "Sampai Jumpa";
+            setTimeout(() => location.reload(), 5000);
+        };
+
+        window.navigasi = (id) => {
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+        };
+
+        // ACTIONS
+        window.followAction = async () => {
+            const ref = doc(db, "meta", "f_" + userSkrg.toLowerCase());
+            if((await getDoc(ref)).exists()) return alert("Sudah follow!");
+            await setDoc(ref, { user: userSkrg });
+            alert("Followed!");
+        };
+
+        window.gasPost = async () => {
+            const m = document.getElementById('post-msg');
+            if(m.value) { await addDoc(collection(db, "posts"), { user: userSkrg, text: m.value, likes: 0, time: serverTimestamp() }); m.value = ""; }
+        };
+
+        window.showMenu = (id) => {
+            const btn = document.getElementById('del-' + id);
+            btn.style.display = (btn.style.display === 'block') ? 'none' : 'block';
+        };
+
+        window.hapusPost = async (id) => {
+            if(confirm("Hapus?")) await deleteDoc(doc(db, "posts", id));
+        };
+
+        window.vote = async (n) => {
+            if(userSkrg.toLowerCase() === "daniel") return alert("Pemilik dilarang vote!");
+            const ref = doc(db, "ratings", userSkrg.toLowerCase());
+            if((await getDoc(ref)).exists()) return alert("Sudah vote!");
+            await setDoc(ref, { val: n });
+            document.getElementById('s' + n).classList.add('voted');
+            alert("Voted ⭐" + n);
+        };
+
+        window.like = async (id, cur) => { await updateDoc(doc(db, "posts", id), { likes: cur + 1 }); };
+
+        window.gasChat = async () => {
+            const m = document.getElementById('chat-msg');
+            if(m.value) { await addDoc(collection(db, "chats"), { user: userSkrg, text: m.value, time: serverTimestamp() }); m.value = ""; }
+        };
+
+        // DATA
+        let hChart, rChart;
+        function mulaiRealtime() {
+            if(userSkrg.toLowerCase() === "daniel") document.getElementById('rate-panel').innerHTML = "<h3>Admin View Only</h3>";
+
+            // Members
+            onSnapshot(collection(db, "members"), s => {
+                document.getElementById('users-list').innerHTML = s.docs.map(d => `<div class="user-item"><div class="user-avatar">${d.data().nama.charAt(0).toUpperCase()}</div><b>${d.data().nama}</b></div>`).join('');
+            });
+
+            // Feed & Rank
+            onSnapshot(query(collection(db, "posts"), orderBy("time", "desc")), s => {
+                let html = "", dL = 0, all = [];
+                s.forEach(d => {
+                    const data = d.data();
+                    if(data.user.toLowerCase() === 'daniel') dL += (data.likes || 0);
+                    all.push({id: d.id, ...data});
+                    const isMe = data.user.toLowerCase() === userSkrg.toLowerCase();
+                    html += `<div class="card">${isMe ? `<div class="post-menu" onclick="showMenu('${d.id}')">⋮</div>`:''}<b>@${data.user}</b><p>${data.text}</p><button onclick="like('${d.id}', ${data.likes||0})">❤️ ${data.likes||0}</button><div id="del-${d.id}" class="delete-btn" onclick="hapusPost('${d.id}')">Hapus Postingan</div></div>`;
+                });
+                document.getElementById('feed-list').innerHTML = html;
+                document.getElementById('h-lik').innerText = dL;
+                const topD = all.filter(p => p.user.toLowerCase() === 'daniel').sort((a,b) => (b.likes||0) - (a.likes||0)).slice(0,5);
+                document.getElementById('rank-list').innerHTML = topD.map((p,i) => `<div class="card">Juara ${i+1}: ${p.text} (❤️ ${p.likes||0})</div>`).join('');
+            });
+
+            // Chat
+            onSnapshot(query(collection(db, "chats"), orderBy("time", "asc")), s => {
+                document.getElementById('chat-list').innerHTML = s.docs.map(d => `<div><b>${d.data().user}:</b> ${d.data().text}</div>`).join('');
+                document.getElementById('chat-list').scrollTop = 9999;
+            });
+
+            // Follower Count & Chart
+            onSnapshot(collection(db, "meta"), s => {
+                let f = 0; s.forEach(d => { if(d.id.startsWith("f_")) f++; });
+                document.getElementById('h-fol').innerText = f;
+                if(hChart) hChart.destroy();
+                hChart = new Chart(document.getElementById('chartHome'), { type: 'pie', data: { labels: ['Followers', 'Others'], datasets: [{ data: [f, 100-f], backgroundColor: ['#0fe', '#333'] }] }});
+            });
+
+            // Rating Chart
+            onSnapshot(collection(db, "ratings"), s => {
+                let r = [0,0,0,0,0]; s.forEach(d => { r[d.data().val-1]++; });
+                if(rChart) rChart.destroy();
+                rChart = new Chart(document.getElementById('rateChart'), { type: 'bar', data: { labels: ['⭐1','⭐2','⭐3','⭐4','⭐5'], datasets: [{ data: r, backgroundColor: '#e5b026' }] }});
+            });
+        }
+    </script>
 </body>
 </html>
