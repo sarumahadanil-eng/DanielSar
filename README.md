@@ -1,297 +1,279 @@
+<!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>DANIEL NOXCTRYA | CEO</title>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
-    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AUREATE PRESTIGE - DANIEL DOLAR</title>
+    <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        /* AUREATE OVERLORD ENGINE - INFINITY MAX 10^9 */
-        :root {
-            --pure-gold: #FFD700;
-            --dark-gold: #B8860B;
-            --void-black: #000000;
-            --ethereal-glow: rgba(255, 215, 0, 0.4);
-        }
+        :root { --gold: #FFD700; --bg: #050505; --card: #111; --border: rgba(255,255,255,0.1); }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background: var(--bg); color: white; overflow: hidden; height: 100vh; }
 
-        * { cursor: crosshair; box-sizing: border-box; }
+        /* --- AUTH SCREEN --- */
+        #login-screen { position: fixed; inset: 0; z-index: 9999; background: #000; display: flex; align-items: center; justify-content: center; }
+        .login-card { background: var(--card); border: 1px solid var(--border); padding: 40px; border-radius: 30px; width: 380px; text-align: center; }
+        .login-card input { width: 100%; padding: 14px; margin-bottom: 12px; border-radius: 12px; border: 1px solid var(--border); background: #000; color: white; text-align: center; outline: none; }
+        .btn-main { width: 100%; padding: 14px; border-radius: 12px; border: none; font-weight: bold; cursor: pointer; margin-bottom: 10px; transition: 0.3s; }
+        .btn-login { background: white; color: black; }
+        .btn-reg { background: transparent; border: 1px solid var(--gold); color: var(--gold); }
+
+        /* --- INTRO --- */
+        #intro-screen { position: fixed; inset: 0; z-index: 10000; background: black; display: none; flex-direction: column; align-items: center; justify-content: center; }
+        #intro-video { width: 450px; border-radius: 20px; box-shadow: 0 0 40px var(--gold); }
+        #welcome-text { margin-top: 25px; font-size: 2rem; font-weight: 900; color: var(--gold); display: none; }
+
+        /* --- MAIN APP --- */
+        #main-app { display: none; height: 100vh; width: 100%; flex-direction: row; }
         
-        body { 
-            background: var(--void-black); 
-            color: #ffffff; 
-            margin: 0; 
-            padding: 80px 20px; 
-            font-family: 'Times New Roman', serif;
-            overflow-x: hidden;
-        }
+        /* SIDEBAR (5 MENU LENGKAP) */
+        .sidebar { width: 100px; background: #0a0a0a; border-right: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; padding: 40px 0; gap: 40px; flex-shrink: 0; }
+        .nav-btn { color: #555; cursor: pointer; transition: 0.3s; display: flex; flex-direction: column; align-items: center; gap: 5px; }
+        .nav-btn:hover, .nav-btn.active { color: var(--gold); }
+        .nav-btn span { font-size: 9px; font-weight: bold; }
 
-        .throne-container {
-            width: 100%;
-            max-width: 1600px;
-            margin: auto;
-            border: 2px solid var(--dark-gold);
-            background: rgba(5, 5, 5, 0.98);
-            box-shadow: 0 0 120px var(--ethereal-glow), inset 0 0 50px rgba(184, 134, 11, 0.15);
-            position: relative;
-        }
+        /* CONTENT */
+        .content { flex: 1; padding: 50px; overflow-y: auto; background: var(--bg); }
+        .tab-content { display: none; animation: fadeIn 0.4s ease; }
+        .tab-content.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Header Absolute */
-        .header-overlord {
-            background: linear-gradient(180deg, #0a0a0a 0%, #000 100%);
-            padding: 130px 20px;
-            text-align: center;
-            border-bottom: 5px solid var(--pure-gold);
-            position: relative;
-        }
+        /* HOME PROFILE SECTION */
+        .profile-header { display: flex; align-items: center; gap: 30px; margin-bottom: 50px; background: var(--card); padding: 30px; border-radius: 30px; border: 1px solid var(--border); }
+        .my-photo { width: 120px; height: 120px; border-radius: 50%; border: 3px solid var(--gold); background: #222; background-size: cover; background-position: center; flex-shrink: 0; }
+        .profile-info h2 { font-size: 24px; color: var(--gold); }
+        .follow-btn { margin-top: 15px; padding: 10px 25px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        .btn-follow-active { background: var(--gold); color: black; }
+        .btn-follow-inactive { background: #333; color: white; }
 
-        .ceo-name-max {
-            font-size: 85px;
-            font-weight: 900;
-            color: var(--pure-gold);
-            letter-spacing: 35px;
-            margin: 0;
-            text-transform: uppercase;
-            text-shadow: 0 0 30px var(--pure-gold), 0 0 60px var(--dark-gold);
-        }
+        /* DASHBOARD CIRCLES */
+        .stat-row { display: flex; gap: 40px; margin-bottom: 40px; }
+        .circle { width: 130px; height: 130px; border-radius: 50%; border: 4px solid var(--gold); display: flex; align-items: center; justify-content: center; position: relative; }
+        .circle span { font-size: 1.8rem; font-weight: 800; color: var(--gold); }
 
-        /* Sidebar: Command Core */
-        .sidebar-core {
-            background: #000;
-            border-right: 1px solid var(--dark-gold);
-            vertical-align: top;
-            padding: 60px 20px;
-        }
-
-        .nav-link-infinity {
-            display: block;
-            padding: 30px;
-            color: #777;
-            text-decoration: none;
-            font-size: 15px;
-            font-weight: bold;
-            letter-spacing: 8px;
-            transition: 0.7s cubic-bezier(0.19, 1, 0.22, 1);
-            margin-bottom: 15px;
-            text-transform: uppercase;
-            border-left: 0px solid var(--pure-gold);
-        }
-
-        .nav-link-infinity:hover {
-            color: #fff;
-            background: rgba(184, 134, 11, 0.1);
-            border-left: 10px solid var(--pure-gold);
-            padding-left: 50px;
-            text-shadow: 0 0 20px #fff;
-        }
-
-        /* Content Area */
-        .content-overlord {
-            padding: 100px;
-            vertical-align: top;
-            background: radial-gradient(circle at 50% 0%, #0f0f0f 0%, #000 100%);
-        }
-
-        .title-aura {
-            font-size: 55px;
-            color: #fff;
-            margin: 0 0 50px 0;
-            letter-spacing: 12px;
-            text-transform: uppercase;
-            border-left: 20px solid var(--pure-gold);
-            padding-left: 35px;
-        }
-
-        /* Terminal Firebase Infinity */
-        .infinity-terminal {
-            background: #050505;
-            border: 1px solid var(--dark-gold);
-            padding: 60px;
-            margin-top: 60px;
-            box-shadow: 0 40px 80px rgba(0,0,0,0.9);
-        }
-
-        .input-overlord {
-            width: 100%;
-            background: #000;
-            border: 1px solid #222;
-            color: var(--pure-gold);
-            padding: 35px;
-            font-size: 24px;
-            font-family: inherit;
-            margin: 35px 0;
-            outline: none;
-            transition: 0.6s;
-        }
-
-        .input-overlord:focus {
-            border-color: var(--pure-gold);
-            box-shadow: 0 0 40px rgba(255, 215, 0, 0.15);
-        }
-
-        .btn-overlord {
-            background: linear-gradient(45deg, var(--dark-gold), var(--pure-gold));
-            color: #000;
-            border: none;
-            padding: 35px;
-            font-weight: 900;
-            letter-spacing: 20px;
-            cursor: pointer;
-            width: 100%;
-            transition: 0.5s;
-            text-transform: uppercase;
-            font-size: 20px;
-        }
-
-        .btn-overlord:hover {
-            background: #fff;
-            box-shadow: 0 0 80px #fff;
-            letter-spacing: 25px;
-        }
-
-        /* Footer: Eternal Domain */
-        .footer-eternal {
-            padding: 120px;
-            text-align: center;
-            background: #000;
-            border-top: 1px solid var(--dark-gold);
-        }
-
-        .social-infinity {
-            color: var(--dark-gold);
-            text-decoration: none;
-            margin: 0 50px;
-            font-size: 16px;
-            letter-spacing: 7px;
-            font-weight: bold;
-            transition: 0.4s;
-        }
-
-        .social-infinity:hover { color: var(--pure-gold); text-shadow: 0 0 25px var(--pure-gold); }
+        /* CHAT & FEED CARDS */
+        .card { background: var(--card); border: 1px solid var(--border); padding: 25px; border-radius: 25px; margin-bottom: 20px; }
+        .chat-msg { padding: 12px; border-radius: 15px; margin-bottom: 10px; max-width: 80%; background: #222; }
+        .chat-me { align-self: flex-end; background: var(--gold); color: black; margin-left: auto; }
+        
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; }
+        .hidden { display: none !important; }
     </style>
 </head>
 <body>
 
-    <table class="throne-container" border="0" cellpadding="0" cellspacing="0">
-        <tr>
-            <td colspan="2" class="header-overlord">
-                <h1 class="ceo-name-max">DANIEL NOXCYTRA CYBER</h1>
-                <p style="color: #444; letter-spacing: 25px; margin-top: 30px; font-size: 18px; font-weight: 900;">
-                    CEO | MANSA GROUP
-                </p>
-            </td>
-        </tr>
+    <div id="login-screen">
+        <div class="login-card">
+            <h1 style="color: var(--gold); margin-bottom: 20px;">AUREATE</h1>
+            <p id="auth-msg" style="font-size: 11px; margin-bottom: 15px; color: #888;">Silakan mendaftar jika baru pertama kali.</p>
+            <input type="text" id="name-in" placeholder="Nama Lengkap">
+            <input type="password" placeholder="Password">
+            <button class="btn-main btn-login" onclick="doLogin()">LOGIN</button>
+            <button class="btn-main btn-reg" onclick="doRegister()">DAFTAR</button>
+        </div>
+    </div>
 
-        <tr>
-            <td width="22%" class="sidebar-core">
-                <center>
-                    <div style="padding: 15px; border: 2px solid var(--pure-gold); background: #000; box-shadow: 0 0 60px rgba(255, 215, 0, 0.5);">
-                        <img src="danieldolar.png" alt="OVERLORD" width="300" style="display: block;">
+    <div id="intro-screen">
+        <video id="v-intro" muted><source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4"></video>
+        <div id="welcome-text">WELCOME MASTER DANIEL</div>
+    </div>
+
+    <div id="main-app">
+        <aside class="sidebar">
+            <div class="nav-btn active" onclick="goTab('home', this)"><i data-lucide="home"></i><span>HOME</span></div>
+            <div class="nav-btn" onclick="goTab('feed', this)"><i data-lucide="layout"></i><span>FEED</span></div>
+            <div class="nav-btn" onclick="goTab('chat', this)"><i data-lucide="message-square"></i><span>CHAT</span></div>
+            <div class="nav-btn" onclick="goTab('photo', this)"><i data-lucide="image"></i><span>PHOTO</span></div>
+            <div id="menu-admin" class="nav-btn hidden" style="color: red;" onclick="goTab('users', this)"><i data-lucide="users"></i><span>USERS</span></div>
+            <div class="nav-btn" style="margin-top: auto;" onclick="location.reload()"><i data-lucide="log-out"></i><span>EXIT</span></div>
+        </aside>
+
+        <main class="content">
+            <section id="tab-home" class="tab-content active">
+                <div class="profile-header">
+                    <div class="my-photo" id="profile-pic" style="background-image: url('https://via.placeholder.com/150/FFD700/000000?text=DANIEL');"></div>
+                    <div class="profile-info">
+                        <h2 id="display-name">Daniel Dolar</h2>
+                        <p style="color: #666; font-size: 14px;">Owner & Developer of Aureate</p>
+                        <button id="follow-btn" class="follow-btn btn-follow-inactive" onclick="followLogic()">+ FOLLOW</button>
                     </div>
-                    <br><br><br>
-                    <font size="3" color="#1a1a1a" style="letter-spacing: 12px;">SYSTEM CONTROL</font>
-                    <hr color="#111" width="60%" style="margin: 60px 0;">
-                </center>
-                
-                <a href="HOME.html" class="nav-link-infinity">1.HOME</a>
-                <a href="PROFILE.html" class="nav-link-infinity">2.PROFILE</a>
-                <a href="ACTIVITY.html" class="nav-link-infinity">3.ACTIVITY</a>
-                <a href="GALLERY.html" class="nav-link-infinity">4.GALLERY</a>
-                <a href="POETRY.html" class="nav-link-infinity">5.POETRY</a>
-                <a href="mailto:danieldolarsarumaha14@gmail.com" class="nav-link-infinity">6.EMAIL</a>
-            </td>
-
-            <td width="78%" class="content-overlord">
-                <h2 class="title-aura">Wellcome</h2>
-                
-                <p style="font-size: 30px; line-height: 2.5; color: #666; text-align: justify; font-weight: 300;">
-                    Selamat datang di perusahaan mansa group dengan CEO terbaik atas nama <b>Daniel Noxctrya Cyber</b>. 
-                    Seluruh infrastruktur data di sini berada dalam otoritas penuh CEO. 
-                    Platform ini beroperasi dalam sinkronisasi instan dengan <b>Firebase Cloud Engine</b>.
-                </p>
-
-                <div class="infinity-terminal">
-                    <h3 style="color: var(--pure-gold); margin: 0; letter-spacing: 15px; font-size: 24px;">INFINITY SYNC CORE</h3>
-                    <p style="color: #333; font-size: 14px; margin-top: 15px; letter-spacing: 4px;">TRANSMIT YOUR SUPREME COMMAND TO THE CLOUD.</p>
-                    
-                    <textarea id="infinityInput" class="input-overlord" rows="4" placeholder="ENTER YOUR VISION..."></textarea>
-                    
-                    <button class="btn-overlord" onclick="transmitInfinity()">TRANSMIT TO INFINITY</button>
-                    
-                    <p id="infinity-msg" style="color: #00FF00; display: none; margin-top: 50px; font-weight: 900; text-align: center; letter-spacing: 12px; text-shadow: 0 0 25px #00FF00;">
-                        [ STATUS ] : TRANSMISSION ABSOLUTE. DATA ETERNALIZED IN FIREBASE.
-                    </p>
                 </div>
 
-                <table border="0" width="100%" cellspacing="35" style="margin-top: 100px;">
-                    <tr>
-                        <td align="center" bgcolor="#000" style="padding: 70px; border: 1px solid #1a1a1a; transition: 0.8s;" onmouseover="this.style.borderColor='#FFD700'" onmouseout="this.style.borderColor='#1a1a1a'">
-                            <a href="Status.html" style="color: #fff; text-decoration: none; letter-spacing: 15px; font-size: 20px; font-weight: 900;">DOMAIN STATUS</a>
-                        </td>
-                        <td align="center" bgcolor="#000" style="padding: 70px; border: 1px solid #1a1a1a; transition: 0.8s;" onmouseover="this.style.borderColor='#FFD700'" onmouseout="this.style.borderColor='#1a1a1a'">
-                            <a href="Skill.html" style="color: #fff; text-decoration: none; letter-spacing: 15px; font-size: 20px; font-weight: 900;">INFINITE SKILLS</a>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-
-        <tr>
-            <td colspan="2" class="footer-eternal">
-                <div style="margin-bottom: 70px;">
-                    <a href="https://api.whatsapp.com/send?phone=628226150043" class="social-infinity">WHATSAPP SUPREME</a>
-                    <a href="https://instagram.com/daniel_sarumaha" class="social-infinity">INSTAGRAM</a>
-                    <a href="#" class="social-infinity">GLOBAL ARCHIVE</a>
+                <h3 style="margin-bottom: 25px;">Statistik Real-Time</h3>
+                <div class="stat-row">
+                    <div style="text-align:center;">
+                        <div class="circle"><span id="stat-f">0</span></div>
+                        <p style="font-size: 10px; margin-top: 10px; font-weight: bold;">FOLLOWERS</p>
+                    </div>
+                    <div style="text-align:center;">
+                        <div class="circle"><span id="stat-r">0</span></div>
+                        <p style="font-size: 10px; margin-top: 10px; font-weight: bold;">RATING LIKES</p>
+                    </div>
                 </div>
-                <p style="font-size: 14px; color: #111; letter-spacing: 12px; font-weight: 900;">
-                    &copy; 2026 AUREATE INFINITY | THE ABSOLUTE SIGNATURE OF DANIEL DOLAR
-                </p>
-            </td>
-        </tr>
-    </table>
+            </section>
+
+            <section id="tab-feed" class="tab-content">
+                <div class="card">
+                    <textarea id="p-txt" style="width:100%; background:transparent; border:none; color:white; outline:none;" placeholder="Tulis sesuatu..."></textarea>
+                    <button class="btn-main btn-login" style="width:auto; padding:8px 30px; margin-top:10px;" onclick="addPost()">KIRIM</button>
+                </div>
+                <div id="feed-container"></div>
+            </section>
+
+            <section id="tab-chat" class="tab-content">
+                <div id="chat-box" class="card" style="height: 400px; overflow-y: auto; display: flex; flex-direction: column;"></div>
+                <div style="display: flex; gap: 10px; margin-top: 10px;">
+                    <input type="text" id="c-in" style="flex:1; padding:15px; border-radius:12px; background:#111; border:1px solid var(--border); color:white;" placeholder="Ketik pesan...">
+                    <button class="btn-main btn-login" style="width:auto; padding:0 25px;" onclick="sendChat()">KIRIM</button>
+                </div>
+            </section>
+
+            <section id="tab-photo" class="tab-content">
+                <div style="display:flex; justify-content:space-between; margin-bottom:20px;">
+                    <h2>Galeri Photo</h2>
+                    <input type="file" id="up-file" class="hidden" onchange="addPhoto(event)">
+                    <button class="btn-main btn-login" style="width:auto; padding:5px 20px;" onclick="document.getElementById('up-file').click()">UPLOAD</button>
+                </div>
+                <div id="photo-grid" class="grid"></div>
+            </section>
+
+            <section id="tab-users" class="tab-content">
+                <h2 style="color:red; margin-bottom:20px;">Database Admin</h2>
+                <div id="user-list-admin"></div>
+            </section>
+        </main>
+    </div>
 
     <script>
-        // --- FIREBASE INFINITY CONFIGURATION (DANIEL'S REAL CONFIG) ---
-        const firebaseConfig = {
-            apiKey: "AIzaSyAaW8jwL5yT-uZZglS2gA_HWRJvdUG-nZA",
-            authDomain: "danieldolar-9bca1.firebaseapp.com",
-            projectId: "danieldolar-9bca1",
-            storageBucket: "danieldolar-9bca1.firebasestorage.app",
-            messagingSenderId: "4879222744",
-            appId: "1:4879222744:web:e441fe6b15b34fb42314ad",
-            measurementId: "G-G5WWSCH9BH"
-        };
+        lucide.createIcons();
+        let sessionUser = "";
+        
+        // Database
+        let dbUsers = [{name: "Daniel", role: "admin"}, {name: "Daniel Dolar", role: "admin"}];
+        let posts = [];
+        let followers = 0;
+        let followClicks = 0;
 
-        // Inisialisasi Sistem
-        if (!firebase.apps.length) {
-            firebase.initializeApp(firebaseConfig);
+        // --- LOGIKA FOLLOW (+) KLIK 1 (+1) KLIK 2 (-1) ---
+        function followLogic() {
+            const btn = document.getElementById('follow-btn');
+            followClicks++;
+
+            if(followClicks === 1) {
+                followers += 1;
+                btn.innerText = "✓ UNFOLLOW";
+                btn.classList.replace('btn-follow-inactive', 'btn-follow-active');
+            } else if (followClicks === 2) {
+                followers -= 1;
+                btn.innerText = "+ FOLLOW";
+                btn.classList.replace('btn-follow-active', 'btn-follow-inactive');
+                followClicks = 0; // Reset agar bisa klik lagi
+            }
+            updateStats();
         }
-        const db = firebase.firestore();
 
-        function transmitInfinity() {
-            const data = document.getElementById('infinityInput').value;
-            const msg = document.getElementById('infinity-msg');
+        // --- AUTH ---
+        function doRegister() {
+            const n = document.getElementById('name-in').value.trim();
+            if(!n) return alert("Isi nama!");
+            if(dbUsers.find(u => u.name.toLowerCase() === n.toLowerCase())) {
+                document.getElementById('auth-msg').innerText = "Sudah terdaftar! Langsung Login.";
+            } else {
+                dbUsers.push({name: n, role: "user"});
+                document.getElementById('auth-msg').innerText = "Berhasil Daftar! Silakan Login.";
+            }
+        }
 
-            if (data.trim() === "") {
-                alert("The Overlord cannot transmit void.");
+        function doLogin() {
+            const n = document.getElementById('name-in').value.trim();
+            const user = dbUsers.find(u => u.name.toLowerCase() === n.toLowerCase());
+            if(!user) {
+                document.getElementById('auth-msg').innerText = "NAMA TIDAK DITEMUKAN. DAFTAR DULU!";
                 return;
             }
+            sessionUser = user.name;
+            document.getElementById('display-name').innerText = sessionUser;
+            if(user.role === "admin") document.getElementById('menu-admin').classList.remove('hidden');
 
-            // Kirim ke koleksi 'aktivitas_ceo' milik Daniel
-            db.collection("aktivitas_ceo").add({
-                command: data,
-                timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-                owner: "Daniel Dolar",
-                status: "Absolute"
-            })
-            .then(() => {
-                msg.style.display = "block";
-                document.getElementById('infinityInput').value = "";
-                setTimeout(() => { msg.style.display = "none"; }, 8000);
-            })
-            .catch((e) => { 
-                console.error("Critical System Error: ", e);
-                alert("Koneksi Firebase gagal. Pastikan Firestore 'Rules' kamu sudah diatur ke 'true'.");
-            });
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('intro-screen').style.display = 'flex';
+            const vid = document.getElementById('v-intro'); vid.play();
+
+            setTimeout(() => { document.getElementById('welcome-text').style.display = 'block'; }, 7000);
+            setTimeout(() => {
+                document.getElementById('intro-screen').style.display = 'none';
+                document.getElementById('main-app').style.display = 'flex';
+                updateStats();
+            }, 10000);
+        }
+
+        // --- NAV & STATS ---
+        function goTab(id, el) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.getElementById('tab-' + id).classList.add('active');
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            el.classList.add('active');
+            lucide.createIcons();
+        }
+
+        function updateStats() {
+            document.getElementById('stat-f').innerText = followers; // Diambil dari klik follow profil
+            let likesTotal = posts.reduce((s, p) => s + p.likes, 0);
+            document.getElementById('stat-r').innerText = likesTotal;
+            renderUserList();
+        }
+
+        // --- FEED & LIKE (KLIK 1 +1, KLIK 2 -1) ---
+        function addPost() {
+            const t = document.getElementById('p-txt').value;
+            if(!t) return;
+            posts.unshift({ id: Date.now(), author: sessionUser, text: t, likes: 0, clicks: 0 });
+            document.getElementById('p-txt').value = "";
+            renderFeed();
+            updateStats();
+        }
+
+        function renderFeed() {
+            const cont = document.getElementById('feed-container');
+            cont.innerHTML = posts.map(p => `
+                <div class="card">
+                    <p><strong>@${p.author}</strong></p>
+                    <p style="margin:10px 0;">${p.text}</p>
+                    <span style="cursor:pointer; color:var(--gold);" onclick="likeLogic(${p.id})">❤️ ${p.likes} Likes</span>
+                </div>
+            `).join('');
+        }
+
+        function likeLogic(id) {
+            const p = posts.find(x => x.id === id);
+            p.clicks++;
+            if(p.clicks === 1) p.likes += 1;
+            else if(p.clicks === 2) { p.likes -= 1; p.clicks = 0; }
+            renderFeed();
+            updateStats();
+        }
+
+        // --- CHAT & PHOTO ---
+        function sendChat() {
+            const i = document.getElementById('c-in');
+            const b = document.getElementById('chat-box');
+            if(!i.value) return;
+            b.innerHTML += `<div class="chat-msg chat-me"><small>@${sessionUser}</small><br>${i.value}<div style="font-size:8px; opacity:0.5; margin-top:5px; cursor:pointer;" onclick="this.parentElement.remove()">HAPUS</div></div>`;
+            i.value = ""; b.scrollTop = b.scrollHeight;
+        }
+
+        function addPhoto(e) {
+            const f = e.target.files[0];
+            if(f) {
+                const reader = new FileReader();
+                reader.onload = (x) => { document.getElementById('photo-grid').innerHTML += `<div class="photo-item" style="background-image:url('${x.target.result}')"></div>`; };
+                reader.readAsDataURL(f);
+            }
+        }
+
+        function renderUserList() {
+            const l = document.getElementById('user-list-admin');
+            l.innerHTML = dbUsers.map(u => `<div class="card"><span>${u.name} (${u.role})</span></div>`).join('');
         }
     </script>
 </body>
