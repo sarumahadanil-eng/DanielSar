@@ -173,13 +173,14 @@
         <!-- Section: PROFILE -->
         <section id="profile">
             <div class="content-card">
-                <h2>Profile Daniel</h2>
+                <h2>Profile</h2>
                 <p>Nama Lengkap: <strong>Daniel Dolar Sarumaha</strong></p>
-                <p>Saya adalah seorang pengembang web yang berdedikasi untuk menciptakan website berstandar internasional. Fokus utama saya adalah pada fungsionalitas dan estetika digital.</p>
-                <p><strong>Media Sosial:</strong><br>
-                Instagram: @DanielDolarSar<br>
-                Facebook: Daniel Sarumaha<br>
-				Whatsapp : +6282261500043</p>
+                <p>perkenalkan saya adalah daniel, orang yang kalian nanti-nantikan, saya memiliki hobi melakukan gebrakan maut,wkwwkwkk.saya semangat dalam belajar web, sekali lagi semangat belajar web. dan saat ini saya sedang mempelajari menggunakan css maupun js.</p>
+               <p><strong>Media Sosial:</strong><br>
+    <a href="https://www.instagram.com/DanielDolarSar" target="_blank" style="text-decoration: none; color: #2c3e50;">📸 Instagram: @DanielDolarSar</a><br>
+    <a href="https://www.facebook.com/daniel.sarumaha" target="_blank" style="text-decoration: none; color: #2c3e50;">👥 Facebook: Daniel Sarumaha</a><br>
+    <a href="https://wa.me/6282261500043" target="_blank" style="text-decoration: none; color: #2c3e50;">💬 Whatsapp: +6282261500043</a>
+</p>
             </div>
         </section>
 
