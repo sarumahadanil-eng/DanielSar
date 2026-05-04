@@ -139,7 +139,7 @@
 <div class="glass-container">
     <!-- Sidebar -->
     <aside class="sidebar">
-        <img src="daniel.JPEG" alt="Daniel Sarumaha" class="profile-pic">
+        <img src="DANIEL.jpeg" alt="Daniel Sarumaha" class="profile-pic">
         <h2>Daniel Noxctrya</h2>
         <ul class="menu-nav">
             <li><a onclick="showSection('home')">Home</a></li>
@@ -200,9 +200,9 @@
             <div class="content-card">
                 <h2>Galeri Foto</h2>
                 <div class="gallery-grid">
-                    <img src="dolar.JPEG alt="Foto 1">
+                    <img src="dolar.jpeg"alt="Foto 1">
                     <!-- Tambahkan foto lainnya di sini -->
-					<img src="sarumaha.JPEG"alt="foto 2">
+					<img src="sarumaha.jpeg"alt="foto 2">
                 </div>
             </div>
         </section>
