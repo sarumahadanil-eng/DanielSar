@@ -198,7 +198,7 @@
         <!-- Section: GAMBAR -->
         <section id="gambar">
             <div class="content-card">
-                <h2>Galeri Gambar</h2>
+                <h2>Gambar</h2>
                     <img src="dolar.jpeg"height="500"width="300">
 					<img src="sarumaha.jpeg"height="500"width="300">
             </div>
