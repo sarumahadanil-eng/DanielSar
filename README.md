@@ -41,6 +41,7 @@
             flex-direction: column;
             align-items: center;
             border-right: 1px solid rgba(255, 255, 255, 0.3);
+            z-index: 10;
         }
 
         .profile-pic {
@@ -59,6 +60,7 @@
             width: 100%;
             list-style: none;
             padding: 0;
+            margin: 0;
         }
 
         .menu-nav li { margin: 8px 0; }
@@ -137,7 +139,7 @@
 <div class="glass-container">
     <!-- Sidebar -->
     <aside class="sidebar">
-        <img src="DANIEL.jpeg" alt="Daniel Sarumaha" class="profile-pic">
+        <img src="DANIEL.jpeg" alt="Daniel" class="profile-pic">
         <h2>Daniel Noxctrya</h2>
         <ul class="menu-nav">
             <li><a onclick="showSection('home')">Home</a></li>
@@ -158,7 +160,7 @@
             <div class="content-card" style="text-align: center;">
                 <h1><b>WELCOME TO DANIEL WEBSITE</b></h1>
                 <hr color="white">
-                <p><i>Terimakasih telah join di website seorang CEO mahal,wkwk.</i></p>
+                <p><i>Terimakasih telah join di website seorang CEO mahal, wkwk.</i></p>
                 <div style="margin-top: 30px;">
                     <p><strong>Aku dan Dia</strong></p>
                     <i>ubur-ubur ikan lele...<br>
@@ -174,11 +176,11 @@
             <div class="content-card">
                 <h2>Profile</h2>
                 <p>Nama Lengkap: <strong>Daniel Dolar Sarumaha</strong></p>
-                <p>perkenalkan saya adalah daniel, orang yang kalian nanti-nantikan, saya memiliki hobi melakukan gebrakan maut,wkwwkwkk.saya semangat dalam belajar web, sekali lagi semangat belajar web. dan saat ini saya sedang mempelajari menggunakan css maupun js.</p>
+                <p>Perkenalkan saya adalah Daniel. Saya semangat dalam belajar web, saat ini saya sedang mempelajari CSS maupun JS.</p>
                 <p><strong>Media Sosial:</strong><br>
-                <a href="https://www.instagram.com/DanielDolarSar" target="_blank" style="text-decoration: none; color: #2c3e50;">📸 Instagram: @DanielDolarSar</a><br>
-                <a href="https://www.facebook.com/daniel.sarumaha" target="_blank" style="text-decoration: none; color: #2c3e50;">👥 Facebook: Daniel Sarumaha</a><br>
-                <a href="https://wa.me/6282261500043" target="_blank" style="text-decoration: none; color: #2c3e50;">💬 Whatsapp: +6282261500043</a>
+                    <a href="https://www.instagram.com/DanielDolarSar" target="_blank" style="text-decoration: none; color: #2c3e50;">📸 Instagram: @DanielDolarSar</a><br>
+                    <a href="https://www.facebook.com/daniel.sarumaha" target="_blank" style="text-decoration: none; color: #2c3e50;">👥 Facebook: Daniel Sarumaha</a><br>
+                    <a href="https://wa.me/6282261500043" target="_blank" style="text-decoration: none; color: #2c3e50;">💬 Whatsapp: +6282261500043</a>
                 </p>
             </div>
         </section>
@@ -188,9 +190,9 @@
             <div class="content-card">
                 <h2>Aktivitas Terbaru</h2>
                 <ul>
-                    <li><strong>Proyek Website:</strong> menciptakan sebuah website standar dengan menggunakan css</li>
-                    <li><strong>Edukasi:</strong> Mendalami teknik akselerasi memori untuk memahami logika pemrograman lebih cepat.</li>
-                    <li><strong>Teknologi:</strong> Eksperimen infrastruktur database menggunakan Firebase.</li>
+                    <li><strong>Proyek Website:</strong> Menciptakan website standar dengan CSS.</li>
+                    <li><strong>Edukasi:</strong> Teknik akselerasi memori untuk logika pemrograman.</li>
+                    <li><strong>Teknologi:</strong> Eksperimen database menggunakan Firebase.</li>
                 </ul>
             </div>
         </section>
@@ -200,8 +202,8 @@
             <div class="content-card">
                 <h2>Gambar</h2>
                 <div class="gallery-grid">
-                    <img src="dolar.jpeg" alt="Gambar Dolar" style="width: 100%; max-width: 300px; height: auto;">
-                    <img src="sarumaha.jpeg" alt="Gambar Sarumaha" style="width: 100%; max-width: 300px; height: auto;">
+                    <img src="dolar.jpeg" alt="Gambar Dolar">
+                    <img src="sarumaha.jpeg" alt="Gambar Sarumaha">
                 </div>
             </div>
         </section>
@@ -210,38 +212,21 @@
         <section id="puisi">
             <div class="content-card">
                 <h2 style="text-align: center;">Karya Puisi</h2>
-                <div style="font-style: italic; text-align: center;">
+                <div style="font-style: italic; text-align: center; margin-bottom: 30px;">
                     <p><strong>Aku dan Tuhanku</strong></p>
                     ketika aku memandang langit<br>
                     aku bertanya pada diriku sendiri<br>
-                    aku....<br><br>
                     siapakah aku sebenarnya?<br>
                     darimanakah aku berasal?<br>
-                    jauhkah aku dari tuhanku?<br>
-                    aku...<br><br>
-                    Tuhan....<br>
-                    betapa kuasanya engkau<br>
-                    menciptakan langit dan bumi<br>
-                    untuk menghidupi orang-orang<br>
-                    seperti aku
+                    jauhkah aku dari tuhanku?<br><br>
+                    Tuhan.... betapa kuasanya engkau
                 </div>
-                <hr color="white" style="margin: 20px 0;">
-                <div style="font-style:italic;text-align:center;">
+                <hr color="white">
+                <div style="font-style:italic; text-align:center; margin-top: 30px;">
                     <p><strong>IBU</strong></p>
-                    Di matamu, aku menemukan telaga teduh<br>
-                    Tempatku membasuh segala lelah dan keluh<br>
-                    Tak perlu kata, kau tahu kapan hatiku rapuh<br>
-                    Hanya dengan usapan, duniaku kembali utuh.<br>
-                    <br>
-                    Kau adalah doa yang terbang paling pagi<br>
-                    Mengetuk pintu langit sebelum matahari bersemi<br>
-                    Meminta keselamatan bagi langkahku yang seringkali<br>
-                    Lupa jalan pulang karena terlalu sibuk mencari diri.<br>
-                    <br>
-                    Ibu, kau adalah rumah yang tak pernah terkunci<br>
-                    Meski aku pergi jauh dan berkali-kali menyakiti<br>
-                    Kasihmu tak berkurang, tetap tulus dan suci<br>
-                    Menjadi kompas saat aku kehilangan arah di bumi.<br>
+                    Di matamu, aku menemukan telaga teduh...<br>
+                    Kau adalah doa yang terbang paling pagi...<br>
+                    Ibu, kau adalah rumah yang tak pernah terkunci.
                 </div>
             </div>
         </section>
@@ -250,20 +235,17 @@
         <section id="games">
             <div class="content-card">
                 <h2>Mini Games</h2>
-                <p>Mainkan game santai langsung di sini sambil menjelajahi website saya.</p>
-                <div style="width: 100%; height: 500px; border-radius: 15px; overflow: hidden; border: 2px solid white;">
-                    <iframe src="https://play2048.co/" 
+                <p>Mainkan game santai langsung di sini.</p>
+                <div style="width: 100%; height: 500px; border-radius: 15px; overflow: hidden; border: 2px solid white; background: #eee;">
+                    <!-- Menggunakan sumber game 2048 yang lebih kompatibel -->
+                    <iframe src="https://2048game.com/" 
                             style="width: 100%; height: 100%; border: none;"
                             title="Game 2048">
                     </iframe>
                 </div>
-                <div style="margin-top: 20px;">
-                    <p>Rekomendasi game lainnya:</p>
-                    <ul>
-                        <li><a href="https://poki.com/id" target="_blank" style="color: #2c3e50; font-weight: bold;">Poki Games Online</a></li>
-                        <li><a href="https://slither.io/" target="_blank" style="color: #2c3e50; font-weight: bold;">Slither.io</a></li>
-                    </ul>
-                </div>
+                <p style="margin-top: 15px; font-size: 0.9em; text-align: center;">
+                    Jika game tidak muncul, <a href="https://poki.com/id" target="_blank" style="color: #2c3e50; font-weight: bold;">Klik di sini untuk main di Poki</a>
+                </p>
             </div>
         </section>
 
@@ -272,16 +254,18 @@
 
 <script>
     function showSection(sectionId) {
-        // Sembunyikan semua section
+        // Ambil semua elemen section
         const sections = document.querySelectorAll('section');
-        sections.forEach(section => {
-            section.classList.remove('active');
+        
+        // Sembunyikan semua
+        sections.forEach(sec => {
+            sec.classList.remove('active');
         });
 
-        // Tampilkan section yang dipilih
-        const activeSection = document.getElementById(sectionId);
-        if(activeSection) {
-            activeSection.classList.add('active');
+        // Tampilkan yang diklik
+        const target = document.getElementById(sectionId);
+        if (target) {
+            target.classList.add('active');
         }
     }
 </script>
