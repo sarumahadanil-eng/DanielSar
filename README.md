@@ -199,11 +199,8 @@
         <section id="gambar">
             <div class="content-card">
                 <h2>Galeri Foto</h2>
-                <div class="gallery-grid">
                     <img src="dolar.jpeg"alt="Foto 1">
-                    <!-- Tambahkan foto lainnya di sini -->
 					<img src="sarumaha.jpeg"alt="foto 2">
-                </div>
             </div>
         </section>
 
@@ -228,7 +225,6 @@
                 </div>
             </div>
         </section>
-
     </main>
 </div>
 
