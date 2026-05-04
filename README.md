@@ -47,7 +47,7 @@
             width: 130px;
             height: 130px;
             border: 4px solid white;
-            border-radius: 50%; /* Dibuat bulat agar lebih modern */
+            border-radius: 50%;
             object-fit: cover;
             margin-bottom: 20px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
@@ -90,7 +90,6 @@
             scroll-behavior: smooth;
         }
 
-        /* Menyembunyikan section yang tidak aktif */
         section {
             display: none; 
             animation: fadeIn 0.5s ease;
@@ -111,11 +110,11 @@
             border-radius: 20px;
             line-height: 1.7;
             box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
         }
 
         h2 { border-bottom: 2px solid #fff; padding-bottom: 10px; margin-top: 0; }
 
-        /* Gaya Khusus Galeri */
         .gallery-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
@@ -127,7 +126,6 @@
             border: 2px solid white;
         }
 
-        /* Responsif */
         @media (max-width: 768px) {
             .glass-container { flex-direction: column; height: auto; margin: 10px; }
             .sidebar { width: 100%; border-right: none; border-bottom: 1px solid white; }
@@ -147,8 +145,8 @@
             <li><a onclick="showSection('aktivitas')">Aktivitas</a></li>
             <li><a onclick="showSection('gambar')">Gambar</a></li>
             <li><a onclick="showSection('puisi')">Puisi</a></li>
-            <li><a onclick="mailto:danieldolarsarumaha14@gmail.com">Email</a></li>
-			<li><a onclick="Games">Games</a></li>
+            <li><a onclick="showSection('games')">Games</a></li>
+            <li><a href="mailto:danieldolarsarumaha14@gmail.com">Email</a></li>
         </ul>
     </aside>
 
@@ -162,10 +160,10 @@
                 <hr color="white">
                 <p><i>Terimakasih telah join di website seorang CEO mahal,wkwk.</i></p>
                 <div style="margin-top: 30px;">
-                    <p><strong>Aku dan Dia/strong></p>
+                    <p><strong>Aku dan Dia</strong></p>
                     <i>ubur-ubur ikan lele...<br>
                     kamu cantik, karena ga mandi...<br>
-    				wkwkwkwkwkw<br>
+                    wkwkwkwkwkw<br>
                     berikan tepuk tangannya dong</i>
                 </div>
             </div>
@@ -177,11 +175,11 @@
                 <h2>Profile</h2>
                 <p>Nama Lengkap: <strong>Daniel Dolar Sarumaha</strong></p>
                 <p>perkenalkan saya adalah daniel, orang yang kalian nanti-nantikan, saya memiliki hobi melakukan gebrakan maut,wkwwkwkk.saya semangat dalam belajar web, sekali lagi semangat belajar web. dan saat ini saya sedang mempelajari menggunakan css maupun js.</p>
-               <p><strong>Media Sosial:</strong><br>
-    <a href="https://www.instagram.com/DanielDolarSar" target="_blank" style="text-decoration: none; color: #2c3e50;">📸 Instagram: @DanielDolarSar</a><br>
-    <a href="https://www.facebook.com/daniel.sarumaha" target="_blank" style="text-decoration: none; color: #2c3e50;">👥 Facebook: Daniel Sarumaha</a><br>
-    <a href="https://wa.me/6282261500043" target="_blank" style="text-decoration: none; color: #2c3e50;">💬 Whatsapp: +6282261500043</a>
-</p>
+                <p><strong>Media Sosial:</strong><br>
+                <a href="https://www.instagram.com/DanielDolarSar" target="_blank" style="text-decoration: none; color: #2c3e50;">📸 Instagram: @DanielDolarSar</a><br>
+                <a href="https://www.facebook.com/daniel.sarumaha" target="_blank" style="text-decoration: none; color: #2c3e50;">👥 Facebook: Daniel Sarumaha</a><br>
+                <a href="https://wa.me/6282261500043" target="_blank" style="text-decoration: none; color: #2c3e50;">💬 Whatsapp: +6282261500043</a>
+                </p>
             </div>
         </section>
 
@@ -190,23 +188,24 @@
             <div class="content-card">
                 <h2>Aktivitas Terbaru</h2>
                 <ul>
-                    <li><strong>Proyek Website:</strong> menciptakan sebuah website standar ddengan menggunakan css</li>
+                    <li><strong>Proyek Website:</strong> menciptakan sebuah website standar dengan menggunakan css</li>
                     <li><strong>Edukasi:</strong> Mendalami teknik akselerasi memori untuk memahami logika pemrograman lebih cepat.</li>
                     <li><strong>Teknologi:</strong> Eksperimen infrastruktur database menggunakan Firebase.</li>
                 </ul>
             </div>
         </section>
 
-       <!-- Section: GAMBAR -->
-<section id="gambar">
-    <div class="content-card">
-        <h2>Gambar</h2>
-        <div class="gallery-grid">
-            <img src="dolar.jpeg" alt="Gambar Dolar" style="width: 100%; max-width: 300px; height: auto;">
-            <img src="sarumaha.jpeg" alt="Gambar Sarumaha" style="width: 100%; max-width: 300px; height: auto;">
-        </div>
-    </div>
-</section>
+        <!-- Section: GAMBAR -->
+        <section id="gambar">
+            <div class="content-card">
+                <h2>Gambar</h2>
+                <div class="gallery-grid">
+                    <img src="dolar.jpeg" alt="Gambar Dolar" style="width: 100%; max-width: 300px; height: auto;">
+                    <img src="sarumaha.jpeg" alt="Gambar Sarumaha" style="width: 100%; max-width: 300px; height: auto;">
+                </div>
+            </div>
+        </section>
+
         <!-- Section: PUISI -->
         <section id="puisi">
             <div class="content-card">
@@ -226,51 +225,51 @@
                     untuk menghidupi orang-orang<br>
                     seperti aku
                 </div>
-				<tr>
-				<div style="font-style:italic;text-align:center;">
-					<p><strong>IBU</strong></p>
-					Di matamu, aku menemukan telaga teduh<br>
-					Tempatku membasuh segala lelah dan keluh<br>
-					Tak perlu kata, kau tahu kapan hatiku rapuh<br>
-					Hanya dengan usapan, duniaku kembali utuh.<br>
-					<br>
-					Kau adalah doa yang terbang paling pagi<br>
-					Mengetuk pintu langit sebelum matahari bersemi<br>
-					Meminta keselamatan bagi langkahku yang seringkali<br>
-					Lupa jalan pulang karena terlalu sibuk mencari diri.<br>
-					<br>
-					Ibu, kau adalah rumah yang tak pernah terkunci<br>
-					Meski aku pergi jauh dan berkali-kali menyakiti<br>
-					Kasihmu tak berkurang, tetap tulus dan suci<br>
-					Menjadi kompas saat aku kehilangan arah di bumi.<br>
+                <hr color="white" style="margin: 20px 0;">
+                <div style="font-style:italic;text-align:center;">
+                    <p><strong>IBU</strong></p>
+                    Di matamu, aku menemukan telaga teduh<br>
+                    Tempatku membasuh segala lelah dan keluh<br>
+                    Tak perlu kata, kau tahu kapan hatiku rapuh<br>
+                    Hanya dengan usapan, duniaku kembali utuh.<br>
+                    <br>
+                    Kau adalah doa yang terbang paling pagi<br>
+                    Mengetuk pintu langit sebelum matahari bersemi<br>
+                    Meminta keselamatan bagi langkahku yang seringkali<br>
+                    Lupa jalan pulang karena terlalu sibuk mencari diri.<br>
+                    <br>
+                    Ibu, kau adalah rumah yang tak pernah terkunci<br>
+                    Meski aku pergi jauh dan berkali-kali menyakiti<br>
+                    Kasihmu tak berkurang, tetap tulus dan suci<br>
+                    Menjadi kompas saat aku kehilangan arah di bumi.<br>
+                </div>
             </div>
         </section>
-				<!-- Section: GAMES -->
-<section id="games">
-    <div class="content-card">
-        <h2>Mini Games</h2>
-        <p>Mainkan game santai langsung di sini sambil menjelajahi website saya.</p>
-        
-        <!-- Wadah Game (Iframe) -->
-        <div style="width: 100%; height: 500px; border-radius: 15px; overflow: hidden; border: 2px solid white;">
-            <!-- Contoh: Game 2048 (Sangat ringan dan cocok untuk web personal) -->
-            <iframe src="https://play2048.co/" 
-                    style="width: 100%; height: 100%; border: none;"
-                    title="Game 2048">
-            </iframe>
-        </div>
 
-        <div style="margin-top: 20px;">
-            <p>Rekomendasi game lainnya:</p>
-            <ul>
-                <li><a href="https://poki.com/id" target="_blank" style="color: #2c3e50; font-weight: bold;">Poki Games Online</a></li>
-                <li><a href="https://slither.io/" target="_blank" style="color: #2c3e50; font-weight: bold;">Slither.io</a></li>
-            </ul>
-        </div>
-    </div>
-</section>
+        <!-- Section: GAMES -->
+        <section id="games">
+            <div class="content-card">
+                <h2>Mini Games</h2>
+                <p>Mainkan game santai langsung di sini sambil menjelajahi website saya.</p>
+                <div style="width: 100%; height: 500px; border-radius: 15px; overflow: hidden; border: 2px solid white;">
+                    <iframe src="https://play2048.co/" 
+                            style="width: 100%; height: 100%; border: none;"
+                            title="Game 2048">
+                    </iframe>
+                </div>
+                <div style="margin-top: 20px;">
+                    <p>Rekomendasi game lainnya:</p>
+                    <ul>
+                        <li><a href="https://poki.com/id" target="_blank" style="color: #2c3e50; font-weight: bold;">Poki Games Online</a></li>
+                        <li><a href="https://slither.io/" target="_blank" style="color: #2c3e50; font-weight: bold;">Slither.io</a></li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
     </main>
 </div>
+
 <script>
     function showSection(sectionId) {
         // Sembunyikan semua section
@@ -281,7 +280,9 @@
 
         // Tampilkan section yang dipilih
         const activeSection = document.getElementById(sectionId);
-        activeSection.classList.add('active');
+        if(activeSection) {
+            activeSection.classList.add('active');
+        }
     }
 </script>
 
