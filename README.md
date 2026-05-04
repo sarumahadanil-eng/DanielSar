@@ -195,15 +195,16 @@
             </div>
         </section>
 
-        <!-- Section: GAMBAR -->
-        <section id="gambar">
-            <div class="content-card">
-                <h2>Gambar</h2>
-                    <img src="dolar.jpeg"height="500"width="300">
-					<img src="sarumaha.jpeg"height="500"width="300">
-            </div>
-        </section>
-
+       <!-- Section: GAMBAR -->
+<section id="gambar">
+    <div class="content-card">
+        <h2>Gambar</h2>
+        <div class="gallery-grid">
+            <img src="dolar.jpeg" alt="Gambar Dolar" style="width: 100%; max-width: 300px; height: auto;">
+            <img src="sarumaha.jpeg" alt="Gambar Sarumaha" style="width: 100%; max-width: 300px; height: auto;">
+        </div>
+    </div>
+</section>
         <!-- Section: PUISI -->
         <section id="puisi">
             <div class="content-card">
