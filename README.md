@@ -147,7 +147,8 @@
             <li><a onclick="showSection('aktivitas')">Aktivitas</a></li>
             <li><a onclick="showSection('gambar')">Gambar</a></li>
             <li><a onclick="showSection('puisi')">Puisi</a></li>
-            <li><a href="mailto:danieldolarsarumaha14@gmail.com">Email</a></li>
+            <li><a onclick="mailto:danieldolarsarumaha14@gmail.com">Email</a></li>
+			<li><a onclick="Games">Games</a></li>
         </ul>
     </aside>
 
@@ -157,15 +158,15 @@
         <!-- Section: HOME -->
         <section id="home" class="active">
             <div class="content-card" style="text-align: center;">
-                <h1>WELCOME TO MY WEBSITE</h1>
+                <h1><b>WELCOME TO DANIEL WEBSITE</b></h1>
                 <hr color="white">
-                <p><i>Saya ucapkan terimakasih atas dukungan anda dan kunjungan anda terhadap website saya.</i></p>
+                <p><i>Terimakasih telah join di website seorang CEO mahal,wkwk.</i></p>
                 <div style="margin-top: 30px;">
-                    <p><strong>Aku dan Tuhanku</strong></p>
-                    <i>ketika aku memandang langit...<br>
-                    aku bertanya pada diriku sendiri...<br>
-                    siapakah aku sebenarnya?<br>
-                    darimanakah aku berasal?</i>
+                    <p><strong>Aku dan Dia/strong></p>
+                    <i>ubur-ubur ikan lele...<br>
+                    kamu cantik, karena ga mandi...<br>
+    				wkwkwkwkwkw<br>
+                    berikan tepuk tangannya dong</i>
                 </div>
             </div>
         </section>
@@ -244,6 +245,30 @@
 					Menjadi kompas saat aku kehilangan arah di bumi.<br>
             </div>
         </section>
+				<!-- Section: GAMES -->
+<section id="games">
+    <div class="content-card">
+        <h2>Mini Games</h2>
+        <p>Mainkan game santai langsung di sini sambil menjelajahi website saya.</p>
+        
+        <!-- Wadah Game (Iframe) -->
+        <div style="width: 100%; height: 500px; border-radius: 15px; overflow: hidden; border: 2px solid white;">
+            <!-- Contoh: Game 2048 (Sangat ringan dan cocok untuk web personal) -->
+            <iframe src="https://play2048.co/" 
+                    style="width: 100%; height: 100%; border: none;"
+                    title="Game 2048">
+            </iframe>
+        </div>
+
+        <div style="margin-top: 20px;">
+            <p>Rekomendasi game lainnya:</p>
+            <ul>
+                <li><a href="https://poki.com/id" target="_blank" style="color: #2c3e50; font-weight: bold;">Poki Games Online</a></li>
+                <li><a href="https://slither.io/" target="_blank" style="color: #2c3e50; font-weight: bold;">Slither.io</a></li>
+            </ul>
+        </div>
+    </div>
+</section>
     </main>
 </div>
 <script>
