@@ -163,10 +163,10 @@
                 <p><i>Terimakasih telah join di website seorang CEO mahal, wkwk.</i></p>
                 <div style="margin-top: 30px;">
                     <p><strong>Aku dan Dia</strong></p>
-                    <i>ubur-ubur ikan lele...<br>
-                    kamu cantik, karena ga mandi...<br>
-                    wkwkwkwkwkw<br>
-                    berikan tepuk tangannya dong</i>
+                    <i>Ubur-ubur ikan lele<br>
+                    Beli pulsa di terminal.<br>
+                    Gaya lu udah kayak CEO kece<br>
+                    Tapi login Google aja masih gagal.</i>
                 </div>
             </div>
         </section>
