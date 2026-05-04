@@ -162,7 +162,7 @@
                 <hr color="white">
                 <p><i>Terimakasih telah join di website seorang CEO mahal, wkwk.</i></p>
                 <div style="margin-top: 30px;">
-                    <p><strong>Aku dan Dia</strong></p>
+                    <p><strong>Pantun</strong></p>
                     <i>Ubur-ubur ikan lele<br>
                     Beli pulsa di terminal.<br>
                     Gaya lu udah kayak CEO kece<br>
