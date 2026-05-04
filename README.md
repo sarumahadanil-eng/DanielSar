@@ -199,8 +199,8 @@
         <section id="gambar">
             <div class="content-card">
                 <h2>Galeri Foto</h2>
-                    <img src="dolar.jpeg"alt="Foto 1">
-					<img src="sarumaha.jpeg"alt="foto 2">
+                    <img src="dolar.jpeg"height="500"width="300">
+					<img src="sarumaha.jpeg"height="500"width="300">
             </div>
         </section>
 
@@ -223,11 +223,27 @@
                     untuk menghidupi orang-orang<br>
                     seperti aku
                 </div>
+				<tr>
+				<div style="font-style:italic;text-align:center;">
+					<p><strong>IBU</strong></p>
+					Di matamu, aku menemukan telaga teduh<br>
+					Tempatku membasuh segala lelah dan keluh<br>
+					Tak perlu kata, kau tahu kapan hatiku rapuh<br>
+					Hanya dengan usapan, duniaku kembali utuh.<br>
+					<br>
+					Kau adalah doa yang terbang paling pagi<br>
+					Mengetuk pintu langit sebelum matahari bersemi<br>
+					Meminta keselamatan bagi langkahku yang seringkali<br>
+					Lupa jalan pulang karena terlalu sibuk mencari diri.<br>
+					<br>
+					Ibu, kau adalah rumah yang tak pernah terkunci<br>
+					Meski aku pergi jauh dan berkali-kali menyakiti<br>
+					Kasihmu tak berkurang, tetap tulus dan suci<br>
+					Menjadi kompas saat aku kehilangan arah di bumi.<br>
             </div>
         </section>
     </main>
 </div>
-
 <script>
     function showSection(sectionId) {
         // Sembunyikan semua section
